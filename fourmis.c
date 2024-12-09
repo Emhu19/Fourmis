@@ -100,10 +100,8 @@ void maj_predateur(Predateurs p, Environnement e, Temps t /*Liste_fourmilière f
     //met a jour les infos du predateur (position, dort ou pas, traverse la rivière ou pas etc...), et gère les combats avec les fourmis s'ils se rencontrent
 
 void clear_termial() {
-
-	for(int i = 0; i < 50; i++){
+	for(int i = 0; i < 50; i++)
 		printf("\n");
-	}
 }
 
 void afficherFourmiliereNiveau1() {
@@ -189,7 +187,7 @@ void afficherFourmiliere(int niveau) {
 	}
 	afficherRessources();
 
-	printf("\n====================================================================================================== Fin Fourmilière ======================================================================================================\n\n\n\n\n");
+	printf("\n===================================================================================================== Fin Fourmilière ======================================================================================================\n\n\n\n\n");
 }
 
 void afficher(){
