@@ -1,79 +1,76 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct ListAnt ListAnt;
-typedef struct ListQueen ListQueen;
-typedef struct RoomTree RoomTree;
-typedef struct ListResources ListResources;
+typedef struct ListFourmi ListFourmi;
+typedef struct ListReine ListReine;
+typedef struct ArbrePiece ArbrePiece;
+typedef struct ListRessource ListRessource;
 
-struct ListAnt{
-    Fourmi *fourmi; //je suppose une structure ant on pourra changer le nom en fonction de ce qu'emilien fait
-    ListAnt *next;
-    ListAnt *prev; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente 
+struct ListFourmi{
+    Fourmis *fourmi; //je suppose une structure ant on pourra changer le nom en fonction de ce qu'emilien fait
+    ListFourmi *suivant;
+    ListFourmi *precedent; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente 
 };
 
-struct ListQueen{
+struct ListReine{
     Reine *reine;
-    ListQueen *next;
-    ListQueen *prev; //même raison que pour ListAnt
+    ListReine *suivant;
+    ListReine *precedent; //même raison que pour ListFourmi
 };
 
-struct RoomTree{
-    Room *salle;
-    RoomTree *leftSon;
-    RoomTree *rightSon;
+struct ArbrePiece{
+    Piece *salle;
+    ArbrePiece *filsG;
+    ArbrePiece *filsD;
 };
 
 typedef struct{
-    char *resourceType;
+    char *typeRessource;
     int id;
-    int *quantityResource;
+    int *quantiteRessource;
 }Resource;
 
-struct ListResources{
+struct ListRessource{
     Resource *resource;
-    ListResources *next;
-    ListResources *prev
+    ListRessource *suivant;
+    ListRessource *precedent
 };
 
 typedef struct{
-    ListAnt *firstAnt; //liste chainée car on aura besoin d'augmenter et de baisser les nombre de fourmis
-    ListQueen *firstQueen; //liste chainée car on aura besoin d'augmenter et de baisser les nombre de reine (il est possible qu'il y ait plusieur reine dans la fourmilière)
-    RoomTree *firstRoom; //plus simple a parcourir pour savoir quelle salle mêne a ou
+    ListFourmi *fourmi; //liste chainée car on aura besoin d'augmenter et de baisser les nombre de fourmis
+    ListReine *reine; //liste chainée car on aura besoin d'augmenter et de baisser les nombre de reine (il est possible qu'il y ait plusieur reine dans la fourmilière)
+    ArbrePiece *piece; //plus simple a parcourir pour savoir quelle salle mêne a ou
 }Fourmilière;
 
 typedef struct{
     int taille;
     int id; //j'hésite avec un char * mais si il n'y a pas beaucoup de salle un int permet des comparaison plus simple a vous de voir
-    char *roomType;
-    ListResources *firstResource;
-    int maxCapacity;
-}Room;
+    char *typePiece;
+    ListRessource *ressource;
+    int capaciteMax;
+}Piece;
 
 
 typedef struct{
-    char *sicknessType;
+    char *typeMaladie;
     int id;
     
-}sickness;
+}Maladie;
 
-void addRoom(RoomTree *T, Room *R, ListResources *L);
+void ajoutePiece(ArbrePiece *T, Piece *R, ListRessource *L);
 // permet d'ajouter une salle si on a les ressources nécéssaire
 
-void moveRoom(RoomTree *T, Room *R);
-//permet de deplacer une salle dans l'arbre
-
-Resource *destroyRoom(RoomTree *T, Room *R);
+Resource *detruitPiece(ArbrePiece *T, Piece *R);
 // permet de détruire une salle renvoie les matériaux que la destrucion donne
 
-sickness generateSickness();
+Maladie genereMaladie();
 // permet de generer des maladie au sein de la fourmilière de manière aléatoire
 
-void sicknessEffect(Fourmi *A, sickness *S);
+void effetMaladie(Fourmis *A, Maladie *S);
 //donne a la fourmi infecté les effet de la maladie qui l'infecte peut être faire une fonction par maladie?
 
-void cureSickness();
+void soigneMaladie();
 //permet de soigner les maladie
 
-void store(Fourmi *A, Room *T);
+void stock(Fourmis *A, Piece *T);
 // permet a une fourmi de stocker les materiaux qu'elle a récupere si la salle le permet
