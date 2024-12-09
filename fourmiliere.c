@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct ListAnt ListAnt;
+typedef struct ListQueen ListQueen;
+typedef struct RoomTree RoomTree;
+typedef struct ListResources ListResources;
+
+struct ListAnt{
+    Fourmi *fourmi; //je suppose une structure ant on pourra changer le nom en fonction de ce qu'emilien fait
+    ListAnt *next;
+    ListAnt *prev; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente 
+};
+
+struct ListQueen{
+    Reine *reine;
+    ListQueen *next;
+    ListQueen *prev; //même raison que pour ListAnt
+};
+
+struct RoomTree{
+    Room *salle;
+    RoomTree *leftSon;
+    RoomTree *rightSon;
+};
+
+typedef struct{
+    char *resourceType;
+    int id;
+    int *quantityResource;
+}Resource;
+
+struct ListResources{
+    Resource *resource;
+    ListResources *next;
+    ListResources *prev
+};
+
+typedef struct{
+    ListAnt *firstAnt; //liste chainée car on aura besoin d'augmenter et de baisser les nombre de fourmis
+    ListQueen *firstQueen; //liste chainée car on aura besoin d'augmenter et de baisser les nombre de reine (il est possible qu'il y ait plusieur reine dans la fourmilière)
+    RoomTree *firstRoom; //plus simple a parcourir pour savoir quelle salle mêne a ou
+}Fourmilière;
+
+typedef struct{
+    int taille;
+    int id; //j'hésite avec un char * mais si il n'y a pas beaucoup de salle un int permet des comparaison plus simple a vous de voir
+    char *roomType;
+    ListResources *firstResource;
+    int maxCapacity;
+}Room;
+
+
+typedef struct{
+    char *sicknessType;
+    int id;
+    
+}sickness;
+
+void addRoom(RoomTree *T, Room *R, ListResources *L);
+// permet d'ajouter une salle si on a les ressources nécéssaire
+
+void moveRoom(RoomTree *T, Room *R);
+//permet de deplacer une salle dans l'arbre
+
+Resource *destroyRoom(RoomTree *T, Room *R);
+// permet de détruire une salle renvoie les matériaux que la destrucion donne
+
+sickness generateSickness();
+// permet de generer des maladie au sein de la fourmilière de manière aléatoire
+
+void sicknessEffect(Fourmi *A, sickness *S);
+//donne a la fourmi infecté les effet de la maladie qui l'infecte peut être faire une fonction par maladie?
+
+void cureSickness();
+//permet de soigner les maladie
+
+void store(Fourmi *A, Room *T);
+// permet a une fourmi de stocker les materiaux qu'elle a récupere si la salle le permet
