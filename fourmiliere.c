@@ -54,6 +54,7 @@ typedef struct{
 typedef struct{
     char *sicknessType;
     int id;
+    
 }sickness;
 
 void addRoom(RoomTree *T, Room *R, ListResources *L);
