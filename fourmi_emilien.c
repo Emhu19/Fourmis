@@ -3,35 +3,33 @@
 #include <stdbool.h>
 #include <string.h>
 
-// Constantes
-#define MAX_SALLE_NOM 50
-#define MAX_ROLE 50
-#define MAX_MALADIE 50
+#define MAX_CHAR_SALLE_NOM 50
+#define MAX_CHAR_ROLE 50
+#define MAX_CHAR_MALADIE 50
 
-// Structures de données
 typedef struct {
-    char espece[MAX_SALLE_NOM];
+    char espece[MAX_CHAR_SALLE_NOM];
     int id_reine;
-    char role[MAX_ROLE];
+    char role[MAX_CHAR_ROLE];
     int spermatec;
     int age;
-    float cgt; // Charge génétique
+    float cgt;
     int faim;
     int eau;
     int sante;
-    char maladie[MAX_MALADIE];
+    char maladie[MAX_CHAR_MALADIE];
 } Reine;
 
 typedef struct {
-    char espece[MAX_SALLE_NOM];
+    char espece[MAX_CHAR_SALLE_NOM];
     int id_fourmi;
     bool sexe;
-    char role[MAX_ROLE];
+    char role[MAX_CHAR_ROLE];
     int age;
     int faim;
     int eau;
     bool sante;
-    char maladie[MAX_MALADIE];
+    char maladie[MAX_CHAR_MALADIE];
     float cgt;
     int coord_x;
     int coord_y;
@@ -40,13 +38,13 @@ typedef struct {
 typedef struct {
     float temperature_moyenne;
     float variation_temperature;
-    float temperature; // Température actuelle
-    int precipitation; // Niveau de précipitation
+    float temperature;
+    int precipitation;
 } Meteo;
 
 typedef struct {
     int id_predateur;
-    char nom[MAX_SALLE_NOM];
+    char nom[MAX_CHAR_SALLE_NOM];
     int coord_x;
     int coord_y;
     int sante;
@@ -55,7 +53,7 @@ typedef struct {
 } Predateur;
 
 typedef struct {
-    char biome[MAX_SALLE_NOM];
+    char biome[MAX_CHAR_SALLE_NOM];
 } Environnement;
 
 typedef struct {
@@ -65,13 +63,12 @@ typedef struct {
 } Temps;
 
 typedef struct {
-    char type[MAX_SALLE_NOM];
+    char type[MAX_CHAR_SALLE_NOM];
     int nourriture;
     int materiaux;
     int eau;
 } Chunk;
 
-// Fonctions utilitaires
 void clear_terminal() {
     printf("\033[H\033[J");
 }
@@ -80,7 +77,6 @@ void afficher_titre(const char *titre) {
     printf("\n===== %s =====\n", titre);
 }
 
-// Affichage ASCII des salles
 void afficher_salle(const char *nom, const char *connexions) {
     printf("    +-----------------+\n");
     printf("    |                 |\n");
@@ -92,7 +88,6 @@ void afficher_salle(const char *nom, const char *connexions) {
     }
 }
 
-// Fonctions d'affichage pour les niveaux
 void afficher_fourmiliere_niveau(int niveau) {
     switch (niveau) {
         case 1:
@@ -116,7 +111,6 @@ void afficher_fourmiliere_niveau(int niveau) {
     }
 }
 
-// Affichage de la légende
 void afficher_legende() {
     printf("\nLégende :\n");
     printf("A : Salle de la reine\n");
@@ -125,7 +119,6 @@ void afficher_legende() {
     printf("D : Stockage de ressources\n");
 }
 
-// Fonction principale d'affichage
 void afficher_fourmiliere(int niveau) {
     clear_terminal();
     afficher_titre("Fourmilière");
@@ -133,7 +126,6 @@ void afficher_fourmiliere(int niveau) {
     afficher_legende();
 }
 
-// Fonction principale
 int main() {
     for (int niveau = 1; niveau <= 3; niveau++) {
         afficher_fourmiliere(niveau);
