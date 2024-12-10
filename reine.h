@@ -2,6 +2,7 @@
 #define REINE_H
 
 #include <stdbool.h>
+#include "liste_fourmis.h"
 
 #define MAX_CHAR 50
 

@@ -2,6 +2,7 @@
 #define FOURMI_H
 
 #include <stdbool.h>
+#include "reine.h"
 
 #define MAX_CHAR 50
 

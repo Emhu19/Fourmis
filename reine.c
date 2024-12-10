@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "fourmi.h"
 
 Reine* creationReine(int id, const char* espece) {
     Reine* nouvelle_reine = (Reine*)malloc(sizeof(Reine));
@@ -12,7 +13,7 @@ Reine* creationReine(int id, const char* espece) {
     strcpy(nouvelle_reine->espece, espece);
     nouvelle_reine->id_reine = id;
     strcpy(nouvelle_reine->role, "Reine");
-    nouvelle_reine->spermatec = 1;
+    nouvelle_reine->spermatec = 5;
     nouvelle_reine->age = 1;
     nouvelle_reine->cgt = 0.0f;
     nouvelle_reine->faim = 0;
