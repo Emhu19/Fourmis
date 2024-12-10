@@ -5,6 +5,7 @@
 #include "fourmi.h"
 
 Reine* creationReine(int id, const char* espece) {
+
     Reine* nouvelle_reine = (Reine*)malloc(sizeof(Reine));
     if (nouvelle_reine == NULL) {
         perror("Erreur d'allocation mémoire pour la reine");
@@ -21,6 +22,7 @@ Reine* creationReine(int id, const char* espece) {
     nouvelle_reine->sante = 100;
     strcpy(nouvelle_reine->maladie, "Rien");
     return nouvelle_reine;
+
 }
 
 void afficher_Reine(const Reine* reine) {

@@ -4,10 +4,4 @@
 #include "fourmi.h"
 
 
-typedef struct ListFourmis {
-    Fourmi *fourmi;
-    struct ListFourmis *suivant;
-    struct ListFourmis *precedent;
-} ListFourmis;
-
 #endif
