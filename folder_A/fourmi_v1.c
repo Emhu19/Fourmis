@@ -34,16 +34,16 @@ typedef struct {
 }Predateurs;
 
 typedef struct {
-    int quantite_nourriture;
-    int quantite_materiaux;
-    int quantite_eau;
+    int nourriture;
+    int materiaux;
+    int eau;
     int type; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
 }Chunk;
 
 // Structure pour l'environnement
 typedef struct {
     int biome;               // Biome (forêt, désert, plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
-    Chunk chunks[50][50];
+    Chunk chunks[25][25];
 }Environnement;
 
 
@@ -56,7 +56,7 @@ typedef struct {
 
 
 void generer_rivière(Environnement* E,int x, int y){
-    if (x >= 50 || x < 0 || y >= 50 || y< 0){
+    if (x >= 25 || x < 0 || y >= 25 || y< 0){
         return;
     }
     E->chunks[x][y].type = 1;
@@ -75,9 +75,104 @@ void generer_rivière(Environnement* E,int x, int y){
             y --;
             break;
     }
-    //printf("%d ", alea);
     
     generer_rivière(E, x, y);
+}
+
+//generer_lac
+
+
+Environnement ajout_eau_miam(Environnement E, Meteo M){
+
+    Environnement E_final;
+    E_final.biome = E.biome;
+    for (int i = 0; i< 25; i++){    // copie l'Environnement
+        for (int j = 0; j< 25; j++){
+            E_final.chunks[i][j].type = E.chunks[i][j].type;
+        }
+    }
+
+
+
+    for (int i = 0; i< 25; i++){   // ajoute des points d'eau sur la map
+        for (int j = 0; j< 25; j++){    
+            int p_eau = 0;
+            int alea = nombreAleatoire(99);
+            switch(E.chunks[i][j].type){
+                case(0):
+                    p_eau = 50; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    break;
+                case(1):
+                    p_eau = 100; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    break;
+                case(2):
+                    p_eau = 10; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    break;
+                case(3):
+                    p_eau = 25; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    break;
+                case(4):
+                    p_eau = 5; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    break;
+                case(5):
+                    p_eau = 0; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    break;
+                case(6):
+                    p_eau = 7; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    break;
+                
+            }
+            if(alea <= p_eau && E.chunks[i][j].eau< alea){
+                E.chunks[i][j].eau = alea;
+            }
+            if(E.chunks[i][j].type == 1){   //met a 100 le niveau d'eau si on est dans une rivière
+                E.chunks[i][j].eau = 99;
+            }
+
+        }
+    }
+
+    for (int i = 0; i< 25; i++){
+        for (int j = 0; j< 25; j++){
+            if (E.chunks[i][j].type == 1){
+                E.chunks[i][j].eau = 49;
+            }
+        }
+    }
+
+
+
+    for (int i = 1; i< 24; i++){
+        for (int j = 1; j< 24; j++){
+            E_final.chunks[i][j].eau = (E.chunks[i-1][j].eau+E.chunks[i-1][j-1].eau+E.chunks[i-1][j+1].eau+E.chunks[i][j-1].eau+E.chunks[i][j+1].eau+E.chunks[i+1][j-1].eau+E.chunks[i+1][j].eau+E.chunks[i+1][j+1].eau+(8*E.chunks[i][j].eau))/16;
+        }
+    }
+    for (int i = 1; i< 24; i++){
+        E_final.chunks[i][0].eau = (E.chunks[i-1][0].eau+E.chunks[i-1][1].eau+E.chunks[i][1].eau+E.chunks[i+1][0].eau+E.chunks[i+1][1].eau+(8*E.chunks[i][0].eau))/13;
+        E_final.chunks[0][i].eau = (E.chunks[0][i-1].eau+E.chunks[0][i+1].eau+E.chunks[1][i-1].eau+E.chunks[1][i].eau+E.chunks[1][i+1].eau+(8*E.chunks[0][i].eau))/13;
+        E_final.chunks[i][24].eau = (E.chunks[i-1][24].eau+E.chunks[i-1][23].eau+E.chunks[i][23].eau+E.chunks[i+1][23].eau+E.chunks[i+1][24].eau+(8*E.chunks[i][24].eau))/13;
+        E_final.chunks[24][i].eau = (E.chunks[23][i].eau+E.chunks[23][i-1].eau+E.chunks[23][i+1].eau+E.chunks[24][i-1].eau+E.chunks[24][i+1].eau+(8*E.chunks[24][i].eau))/13;
+
+    }
+    E_final.chunks[0][0].eau = (E.chunks[0][1].eau+E.chunks[1][0].eau+E.chunks[1][1].eau+(8*E.chunks[0][0].eau))/11;
+
+    E_final.chunks[0][24].eau = (E.chunks[0][23].eau+E.chunks[1][23].eau+E.chunks[1][24].eau+(8*E.chunks[0][24].eau))/11;
+
+    E_final.chunks[24][0].eau = (E.chunks[23][0].eau+E.chunks[23][1].eau+E.chunks[24][1].eau+(8*E.chunks[24][0].eau))/11;
+
+    E_final.chunks[24][24].eau = (E.chunks[23][24].eau+E.chunks[23][23].eau+E.chunks[24][23].eau+(8*E.chunks[24][24].eau))/11;
+
+
+    for (int i = 0; i< 25; i++){
+        for (int j = 0; j< 25; j++){
+            if (E.chunks[i][j].type == 1){
+                E_final.chunks[i][j].eau = 49;
+            }
+        }
+    }
+
+
+    return E_final;
 }
 
 
@@ -97,14 +192,14 @@ Environnement genererEnvironnement(){
 
     scanf("%d", &E.biome);
 
-    for (int i = 0; i< 50; i++){
-        for (int j = 0; j<50; j++){
+    for (int i = 0; i< 25; i++){
+        for (int j = 0; j<25; j++){
             E.chunks[i][j].type = -1;  
         }
     }
 
     int x = 0;
-    int y = nombreAleatoire(49);
+    int y = nombreAleatoire(24);
 
     generer_rivière(&E, x, y);
 
@@ -190,40 +285,45 @@ Environnement genererEnvironnement(){
             break;
     }
 
-    for (int i = 0; i< 50; i++){
-            for (int j = 0; j< 50; j++){
-                if (E.chunks[i][j].type != 1){
+    for (int i = 0; i< 25; i++){
+        for (int j = 0; j< 25; j++){
+            if (E.chunks[i][j].type != 1){
 
-                    int alea = nombreAleatoire(99);  //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
-                    alea -= p_plaine;  
-                    if (alea <0){
-                        E.chunks[i][j].type = 2;
-                        alea += 200;
-                    }
-                    alea -= p_arbre;  
-                    if (alea <0){
-                        E.chunks[i][j].type = 3;
-                        alea += 200;
-                    }
-                    alea -= p_sable;  
-                    if (alea <0){
-                        E.chunks[i][j].type = 4;
-                        alea += 200;
-                    }
-                    alea -= p_lune;  
-                    if (alea <0){
-                        E.chunks[i][j].type = 5;
-                        alea += 200;
-                    }
-                    alea -= p_roche;  
-                    if (alea <0){
-                        E.chunks[i][j].type = 6;
-                        alea += 200;
-                    }
+                int alea = nombreAleatoire(99);  //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                alea -= p_plaine;  
+                if (alea <0){
+                    E.chunks[i][j].type = 2;
+                    alea += 200;
+                }
+                alea -= p_arbre;  
+                if (alea <0){
+                    E.chunks[i][j].type = 3;
+                    alea += 200;
+                }
+                alea -= p_sable;  
+                if (alea <0){
+                    E.chunks[i][j].type = 4;
+                    alea += 200;
+                }
+                alea -= p_lune;  
+                if (alea <0){
+                    E.chunks[i][j].type = 5;
+                    alea += 200;
+                }
+                alea -= p_roche;  
+                if (alea <0){
+                    E.chunks[i][j].type = 6;
+                    alea += 200;
                 }
             }
+        }
     }
+    Meteo M;
+    for (int i = 0; i< 10; i++){
 
+    
+    E = ajout_eau_miam(E, M);
+    }
 
     return E;
 }
@@ -357,11 +457,6 @@ void init_meteo(Environnement* E){
     }
 }
 */
-/*
-void maj_meteo(Meteo* m, Environnement* e, Temps* t){
-    //printf("%d\n", nombreAleatoire(10));
-}
-*/
     //initialise le temps
 /*
 void maj_meteo(Meteo m, Environnement e, Temps t)
@@ -378,8 +473,8 @@ void maj_predateur(Predateur p, Environnement e, Temps t, Liste_fourmilière fl)
 
 
 void afficher_envi(Environnement E) {
-    for (int i = 0; i < 50; i++) {
-        for (int j = 0; j < 50; j++) {
+    for (int i = 0; i < 25; i++) {
+        for (int j = 0; j < 25; j++) {
             switch (E.chunks[i][j].type) {
                 case -1:
                     printf("\033[47m  \033[0m"); // Blanc
@@ -413,9 +508,9 @@ void afficher_envi(Environnement E) {
 
 
 void afficher_envi_v(Environnement E){
-    for (int i = 0; i< 50; i++){
-        for (int j = 0; j< 50; j++){
-            printf("%2d ", E.chunks[i][j].type);
+    for (int i = 0; i< 25; i++){
+        for (int j = 0; j< 25; j++){
+            printf("%2d ", E.chunks[i][j].eau);
         }
         printf("\n");
     }
@@ -426,10 +521,8 @@ void afficher_envi_v(Environnement E){
 int main() {
     srand(time(NULL));
 
-    //printf("%d\n", nombreAleatoire(10));
-
     Environnement E = genererEnvironnement();
-    afficher_envi(E);
+    afficher_envi_v(E);
 
     return 0;
 }
