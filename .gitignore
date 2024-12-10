@@ -1,2 +1,8 @@
 test.c
 test
+fourmi
+fourmiliere.o
+liste_fourmis.o
+main.o
+reine.o
+fourmi.o
