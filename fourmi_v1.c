@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 #define point_virgule ;
+#define taille X 25;
 
 // Fonction pour générer un nombre aléatoire entre 0 et n
 int nombreAleatoire(int n) {
@@ -82,6 +83,7 @@ void generer_rivière(Environnement* E,int x, int y){
 
 Environnement genererEnvironnement(){
     Environnement E;
+
     printf("dans quel biome est votre fourmilière ?\n");
     printf("Tapez 0 pour la forêt,\n");
     printf("Tapez 1 pour la desert,\n");
@@ -431,9 +433,3 @@ int main() {
 
     return 0;
 }
-
-
-
-
-
-

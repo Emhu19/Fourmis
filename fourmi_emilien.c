@@ -41,6 +41,40 @@ typedef struct ListFourmis{
     struct ListFourmis *precedent; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente
 }ListFourmis;
 
+Fourmi* creationFourmi(int id, char* espece_fourmi, char* role_fourmi) {
+    Fourmi* nouvelle_fourmi = (Fourmi*)malloc(sizeof(Fourmi));
+    if (nouvelle_fourmi == NULL) {
+        perror("Erreur d'allocation mémoire pour la reine");
+        return NULL;
+    }
+
+    strcpy(nouvelle_fourmi->espece, espece_fourmi);
+    nouvelle_fourmi->id_fourmi = id;
+    strcpy(nouvelle_fourmi->role, role_fourmi);
+    nouvelle_fourmi->age = 1;
+    nouvelle_fourmi->sexe = true;
+    nouvelle_fourmi->cgt = 0.00f;
+    nouvelle_fourmi->faim = 0;
+    nouvelle_fourmi->eau = 0;
+    nouvelle_fourmi->sante = 1;
+    strcpy(nouvelle_fourmi->maladie, "Rien");
+    nouvelle_fourmi->coord_x = 25;
+    nouvelle_fourmi->coord_y = 25;
+    return nouvelle_fourmi;
+}
+
+void afficher_fourmi(Fourmi* fourmi) {
+    if (fourmi == NULL) return;
+    printf("\n--- Fourmi %d ---\n", fourmi->id_fourmi);
+    printf("Espèce : %s\n", fourmi->espece);
+    printf("Âge : %d\n", fourmi->age);
+    printf("Faim : %d\n", fourmi->faim);
+    printf("Eau : %d\n", fourmi->eau);
+    printf("Santé : %s\n", fourmi->sante ? "En bonne santé" : "Morte");
+    printf("Maladie : %s\n", fourmi->maladie);
+    printf("Coordonnées : (%d, %d)\n", fourmi->coord_x, fourmi->coord_y);
+}
+
 typedef struct ListReines{
     Reine *reine;
     struct ListReines *suivant;
@@ -68,6 +102,19 @@ Reine* creationReine(int id, char* espece) {
     return nouvelle_reine;
 }
 
+void afficher_Reine(Reine* reine){
+
+//     printf("Reine créée avec succès :\n");
+    printf("Espèce : %s\n", reine->espece);
+    printf("ID : %d\n", reine->id_reine);
+    printf("Rôle : %s\n", reine->role);
+    printf("Spermatec : %d\n", reine->spermatec);
+    printf("Âge : %d\n", reine->age);
+    printf("Faim : %d\n", reine->faim);
+    printf("Eau : %d\n", reine->eau);
+    printf("Santé : %d\n", reine->sante);
+    printf("Maladie : %s\n", reine->maladie);
+}
 
 void clear_terminal() {
     printf("\033[H\033[J");
@@ -176,29 +223,107 @@ void afficher_fourmiliere(int niveau) {
     getchar();
 }
 
-int main() {
-//     for (int niveau = 1; niveau <= MAX_NIVEAUX; niveau++) {
-//         afficher_fourmiliere(niveau);
-//     }
-    afficher_fourmiliere(1);
+void mise_a_jour_fourmi(Fourmi* fourmi) {
+    if (fourmi == NULL) return;
 
-    Reine* reine = creationReine(1, "Libre");
-    if (reine != NULL) {
-        printf("Reine créée avec succès :\n");
-        printf("Espèce : %s\n", reine->espece);
-        printf("ID : %d\n", reine->id_reine);
-        printf("Rôle : %s\n", reine->role);
-        printf("Spermatec : %d\n", reine->spermatec);
-        printf("Âge : %d\n", reine->age);
-        printf("Faim : %d\n", reine->faim);
-        printf("Eau : %d\n", reine->eau);
-        printf("Santé : %d\n", reine->sante);
-        printf("Maladie : %s\n", reine->maladie);
+    fourmi->age++;
+    fourmi->faim += 5;
+    fourmi->eau -= 1;
 
-        free(reine);
-    } else {
-        printf("Erreur lors de la création de la reine.\n");
+    if (fourmi->faim > 100 || fourmi->eau <= 0) {
+        fourmi->sante = 0;
+        strcpy(fourmi->maladie, "Mort");
+    } else if (fourmi->faim > 70) {
+        strcpy(fourmi->maladie, "Sous-alimentation");
     }
-    return 0;
 }
 
+void nourrir_fourmi(Fourmi* fourmi) {
+    if (fourmi == NULL) return;
+    fourmi->faim -= 30;
+    if (fourmi->faim < 0) fourmi->faim = 0;
+    strcpy(fourmi->maladie, "Rien");
+}
+
+void deplacer_fourmi(Fourmi* fourmi, int x, int y) {
+    if (fourmi == NULL) return;
+    fourmi->coord_x = x;
+    fourmi->coord_y = y;
+    printf("Fourmi %d déplacée à (%d, %d).\n", fourmi->id_fourmi, x, y);
+}
+
+ListFourmis* ajouter_fourmi(ListFourmis* liste, Fourmi* fourmi) {
+    ListFourmis* nouvel_element = (ListFourmis*)malloc(sizeof(ListFourmis));
+    if (nouvel_element == NULL) {
+        perror("Erreur d'allocation pour la liste des fourmis");
+        return liste;
+    }
+    nouvel_element->fourmi = fourmi;
+    nouvel_element->suivant = liste;
+    nouvel_element->precedent = NULL;
+    if (liste != NULL) {
+        liste->precedent = nouvel_element;
+    }
+    return nouvel_element;
+}
+
+void cycle_de_vie(ListFourmis* liste) {
+    ListFourmis* courant = liste;
+    while (courant != NULL) {
+        mise_a_jour_fourmi(courant->fourmi);
+        afficher_fourmi(courant->fourmi);
+        courant = courant->suivant;
+    }
+}
+
+ListFourmis* supprimer_fourmi(ListFourmis* liste, Fourmi* fourmi) {
+    ListFourmis* courant = liste;
+    while (courant != NULL) {
+        if (courant->fourmi == fourmi) {
+            if (courant->precedent) {
+                courant->precedent->suivant = courant->suivant;
+            }
+            if (courant->suivant) {
+                courant->suivant->precedent = courant->precedent;
+            }
+            if (courant == liste) {
+                liste = courant->suivant;
+            }
+            free(courant);
+            break;
+        }
+        courant = courant->suivant;
+    }
+    return liste;
+}
+
+int main() {
+    Reine* reine = creationReine(1, "Formica");
+    if (reine != NULL) {
+        afficher_Reine(reine);
+    }
+
+    ListFourmis* liste_fourmis = NULL;
+    Fourmi* fourmi1 = creationFourmi(1, "Formica", "Ouvrière");
+    Fourmi* fourmi2 = creationFourmi(2, "Formica", "Soldat");
+
+    liste_fourmis = ajouter_fourmi(liste_fourmis, fourmi1);
+    liste_fourmis = ajouter_fourmi(liste_fourmis, fourmi2);
+
+    for (int jour = 1; jour <= 5; jour++) {
+        printf("\n--- Jour %d ---\n", jour);
+        cycle_de_vie(liste_fourmis);
+
+        nourrir_fourmi(fourmi1);
+        nourrir_fourmi(fourmi2);
+    }
+
+    free(reine);
+    while (liste_fourmis != NULL) {
+        Fourmi* a_supprimer = liste_fourmis->fourmi;
+        liste_fourmis = supprimer_fourmi(liste_fourmis, a_supprimer);
+        free(a_supprimer);
+    }
+
+    return 0;
+}
