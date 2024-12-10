@@ -82,7 +82,7 @@ typedef struct Temps {
 struct ListFourmi{
     Fourmis *fourmi; //je suppose une structure ant on pourra changer le nom en fonction de ce qu'emilien fait
     ListFourmi *suivant;
-    ListFourmi *precedent; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente 
+    ListFourmi *precedent; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente
 };
 
 struct ListReine{
@@ -127,7 +127,7 @@ typedef struct{
 typedef struct{
     char *typeMaladie;
     int id;
-    
+
 }Maladie;
 
 Environnement genererEnvironnement(){}

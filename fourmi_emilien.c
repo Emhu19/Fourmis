@@ -35,6 +35,40 @@ typedef struct {
     int coord_y;
 } Fourmi;
 
+typedef struct ListFourmis{
+    Fourmi *fourmi; //je suppose une structure ant on pourra changer le nom en fonction de ce qu'emilien fait
+    struct ListFourmis *suivant;
+    struct ListFourmis *precedent; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente
+}ListFourmis;
+
+typedef struct ListReines{
+    Reine *reine;
+    struct ListReines *suivant;
+    struct ListReines *precedent;
+}ListReines;
+
+Reine* creationReine(int id, char* espece) {
+    Reine* nouvelle_reine = (Reine*)malloc(sizeof(Reine));
+    if (nouvelle_reine == NULL) {
+        perror("Erreur d'allocation mémoire pour la reine");
+        return NULL;
+    }
+
+    strcpy(nouvelle_reine->espece, espece);
+    nouvelle_reine->id_reine = id;
+    strcpy(nouvelle_reine->role, "Reine");
+    nouvelle_reine->spermatec = 1;
+    nouvelle_reine->age = 1;
+    nouvelle_reine->cgt = 0.00f;
+    nouvelle_reine->faim = 0;
+    nouvelle_reine->eau = 0;
+    nouvelle_reine->sante = 1;
+    strcpy(nouvelle_reine->maladie, "Rien");
+
+    return nouvelle_reine;
+}
+
+
 void clear_terminal() {
     printf("\033[H\033[J");
 }
@@ -86,6 +120,7 @@ void afficher_salles_alignees_3(const char *nom1, const char *nom2, const char *
     printf("|                 |         |                 |         |                 |\n");
     printf("+-----------------+         +-----------------+         +-----------------+\n");
 }
+
 void afficher_fourmiliere_niveau(int niveau) {
     switch (niveau) {
         case 1:
@@ -142,9 +177,28 @@ void afficher_fourmiliere(int niveau) {
 }
 
 int main() {
-    for (int niveau = 1; niveau <= MAX_NIVEAUX; niveau++) {
-        afficher_fourmiliere(niveau);
-    }
+//     for (int niveau = 1; niveau <= MAX_NIVEAUX; niveau++) {
+//         afficher_fourmiliere(niveau);
+//     }
+    afficher_fourmiliere(1);
 
+    Reine* reine = creationReine(1, "Libre");
+    if (reine != NULL) {
+        printf("Reine créée avec succès :\n");
+        printf("Espèce : %s\n", reine->espece);
+        printf("ID : %d\n", reine->id_reine);
+        printf("Rôle : %s\n", reine->role);
+        printf("Spermatec : %d\n", reine->spermatec);
+        printf("Âge : %d\n", reine->age);
+        printf("Faim : %d\n", reine->faim);
+        printf("Eau : %d\n", reine->eau);
+        printf("Santé : %d\n", reine->sante);
+        printf("Maladie : %s\n", reine->maladie);
+
+        free(reine);
+    } else {
+        printf("Erreur lors de la création de la reine.\n");
+    }
     return 0;
 }
+
