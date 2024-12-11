@@ -3,8 +3,11 @@
 #include <time.h>
 #include <string.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 #define point_virgule ;
+//#define entier int 
+
 
 // Fonction pour générer un nombre aléatoire entre 0 et n
 int nombreAleatoire(int n) {
@@ -78,7 +81,6 @@ void generer_rivière(Environnement* E,int x, int y){
     generer_rivière(E, x, y) point_virgule
 }
 
-//generer_lac
 void generer_lac(int x, int y, Environnement* E, int proba){
     int alea = nombreAleatoire(99) point_virgule
     alea ++ point_virgule
@@ -199,6 +201,14 @@ Environnement ajout_eau_miam(Environnement E, Meteo M){
         for (int j = 0 point_virgule j< 25 point_virgule j++){
             if (E.chunks[i][j].type == 1){
                 E_final.chunks[i][j].eau = 49 point_virgule
+            }
+        }
+    }
+
+    if (M.precipitation){
+        for (int i = 0; i< 25; i++){
+            for (int j = 0; j< 25; j++){
+                E.chunks[i][j].eau += M.force_precipitation;
             }
         }
     }
@@ -358,96 +368,112 @@ Environnement genererEnvironnement(){
         }
     }
     Meteo M point_virgule
-    //for (int i = 0 point_virgule i< 10 point_virgule i++){
-
-    
+    M.force_precipitation = 0 point_virgule
+    M.precipitation = false point_virgule
     E = ajout_eau_miam(E, M) point_virgule
-    //}
 
     return E point_virgule
 }
     //permet de générer l'environnement en fonction des préférences de l'utilisateur (avec une part d'aléatoire) génération procédurale
 
 
-void incr_temp(Temps* t){
+void incr_temp(Temps* t) {
+    // Incrémentation du jour
+    t->jour++;
 
-    t->jour++ point_virgule
-    switch(t->mois){
-        case(0):
-            if (t->jour >31){
-                t->jour-= 31 point_virgule
-                t->mois++ point_virgule
+    // Vérification du mois et ajustement des jours et mois
+    switch (t->mois) {
+        case 0: // Janvier
+            if (t->jour > 31) {
+                t->jour -= 31;
+                t->mois++;
             }
-            break point_virgule
-        case(1):
-            if (t->jour >28){
-                t->jour-= 28 point_virgule
-                t->mois++ point_virgule
+            break;
+        case 1: // Février
+            if (t->jour > 28) {
+                t->jour -= 28;
+                t->mois++;
             }
-            break point_virgule
-        case(2):
-            if (t->jour >31){
-                t->jour-= 31 point_virgule
-                t->mois++ point_virgule
+            break;
+        case 2: // Mars
+            if (t->jour > 31) {
+                t->jour -= 31;
+                t->mois++;
             }
-            break point_virgule
-        case(3):
-            if (t->jour >30){
-                t->jour-= 30 point_virgule
-                t->mois++ point_virgule
+            break;
+        case 3: // Avril
+            if (t->jour > 30) {
+                t->jour -= 30;
+                t->mois++;
             }
-            break point_virgule
-        case(4):
-            if (t->jour >31){
-                t->jour-= 31 point_virgule
-                t->mois++ point_virgule
+            break;
+        case 4: // Mai
+            if (t->jour > 31) {
+                t->jour -= 31;
+                t->mois++;
             }
-            break point_virgule
-        case(5):
-            if (t->jour >30){
-                t->jour-= 30 point_virgule
-                t->mois++ point_virgule
+            break;
+        case 5: // Juin
+            if (t->jour > 30) {
+                t->jour -= 30;
+                t->mois++;
             }
-            break point_virgule
-        case(6):
-            if (t->jour >31){
-                t->jour-= 31 point_virgule
-                t->mois++ point_virgule
+            break;
+        case 6: // Juillet
+            if (t->jour > 31) {
+                t->jour -= 31;
+                t->mois++;
             }
-            break point_virgule
-        case(7):
-            if (t->jour >31){
-                t->
-            jour-= 31 point_virgule
-                t->mois++ point_virgule
+            break;
+        case 7: // Août
+            if (t->jour > 31) {
+                t->jour -= 31;
+                t->mois++;
             }
-            break point_virgule
-        case(8):
-            if (t->jour >30){
-                t->jour-= 30 point_virgule
-                t->mois++ point_virgule
+            break;
+        case 8: // Septembre
+            if (t->jour > 30) {
+                t->jour -= 30;
+                t->mois++;
             }
-            break point_virgule
-        case(9):
-            if (t->jour >31){
-                t->jour-= 31 point_virgule
-                t->mois++ point_virgule
+            break;
+        case 9: // Octobre
+            if (t->jour > 31) {
+                t->jour -= 31;
+                t->mois++;
             }
-            break point_virgule
-        case(10):
-            if (t->jour >30){
-                t->jour-= 30 point_virgule
-                t->mois++ point_virgule
+            break;
+        case 10: // Novembre
+            if (t->jour > 30) {
+                t->jour -= 30;
+                t->mois++;
             }
-            break point_virgule
-        case(11):
-            if (t->jour >31){
-                t->jour-= 31 point_virgule
-                t->mois++ point_virgule
+            break;
+        case 11: // Décembre
+            if (t->jour > 31) {
+                t->jour -= 31;
+                t->mois = 0; // Retour au mois de janvier
             }
-            break point_virgule
+            break;
+    }
+
+    // Mise à jour de la saison
+    // Les saisons sont définies comme suit :
+    // - Hiver : Décembre, Janvier, Février (mois 11, 0, 1)
+    // - Printemps : Mars, Avril, Mai (mois 2, 3, 4)
+    // - Été : Juin, Juillet, Août (mois 5, 6, 7)
+    // - Automne : Septembre, Octobre, Novembre (mois 8, 9, 10)
+    if (t->mois == 11 || t->mois == 0 || t->mois == 1) {
+        t->saison = 0; // Hiver
+    } else if (t->mois >= 2 && t->mois <= 4) {
+        t->saison = 1; // Printemps
+    } else if (t->mois >= 5 && t->mois <= 7) {
+        t->saison = 2; // Été
+    } else if (t->mois >= 8 && t->mois <= 10) {
+        t->saison = 3; // Automne
     }
 }
+
 
 
 
@@ -459,56 +485,158 @@ Temps init_temps(){
     tps.saison = 0 point_virgule
     return tps point_virgule
 }
-/*
-void init_meteo(Environnement* E){
-    Meteo m point_virgule
-    switch(E->biome){
-        case(0):
-            m.proba_precipitation = 10 point_virgule
-            m.force_precipitation = 10 point_virgule
-        case(1):
-            m.proba_precipitation = 1 point_virgule
-            m.force_precipitation = 25 point_virgule
-        case(2):
-            m.proba_precipitation = 10 point_virgule
-            m.force_precipitation = 10 point_virgule
-        case(3):
-            m.proba_precipitation = 70 point_virgule
-            m.force_precipitation = 25 point_virgule
-        case(4):
-            m.proba_precipitation = 10 point_virgule
-            m.force_precipitation = 10 point_virgule
-        case(5):   //0: forêt,1: désert,2: plaine, 3:foret tropicale,4: ville,5: toundra, 6:taiga,7: montagne,8: haute montagne,1969: espace
-            m.proba_precipitation = 10 point_virgule
-            m.force_precipitation = 10 point_virgule
-        case(6):
-            m.proba_precipitation = 10 point_virgule
-            m.force_precipitation = 10 point_virgule
-        case(7):
-            m.proba_precipitation = 10 point_virgule
-            m.force_precipitation = 10 point_virgule
-        case(8):
-            m.proba_precipitation = 10 point_virgule
-            m.force_precipitation = 10 point_virgule
-        case(1969):
-            m.proba_precipitation = 0 point_virgule
-            m.force_precipitation = 0 point_virgule
+
+
+
+Meteo init_meteo(Environnement E) {
+    Meteo m;
+
+    switch (E.biome) {
+        case 0: // Forêt
+            m.proba_precipitation = 10;
+            m.force_precipitation = 15;
+            m.temperature_moyenne = 15.0;
+            m.variation_temperature = 5.0;
+            break;
+
+        case 1: // Désert
+            m.proba_precipitation = 1;
+            m.force_precipitation = 5;
+            m.temperature_moyenne = 35.0;
+            m.variation_temperature = 5.0;
+            break;
+
+        case 2: // Plaine
+            m.proba_precipitation = 10;
+            m.force_precipitation = 10;
+            m.temperature_moyenne = 20.0;
+            m.variation_temperature = 4.5;
+            break;
+
+        case 3: // Forêt tropicale
+            m.proba_precipitation = 50;
+            m.force_precipitation = 30;
+            m.temperature_moyenne = 25.0;
+            m.variation_temperature = 2.5;
+            break;
+
+        case 4: // Ville
+            m.proba_precipitation = 10;
+            m.force_precipitation = 20;
+            m.temperature_moyenne = 18.0;
+            m.variation_temperature = 3.0;
+            break;
+
+        case 5: // Toundra
+            m.proba_precipitation = 10;
+            m.force_precipitation = 10;
+            m.temperature_moyenne = -10.0;
+            m.variation_temperature = 4.5;
+            break;
+
+        case 6: // Taïga
+            m.proba_precipitation = 20;
+            m.force_precipitation = 15;
+            m.temperature_moyenne = 0.0;
+            m.variation_temperature = 5.0;
+            break;
+
+        case 7: // Montagne
+            m.proba_precipitation = 15;
+            m.force_precipitation = 15;
+            m.temperature_moyenne = 5.0;
+            m.variation_temperature = 4.5;
+            break;
+
+        case 8: // Haute montagne
+            m.proba_precipitation = 15;
+            m.force_precipitation = 20;
+            m.temperature_moyenne = -5.0;
+            m.variation_temperature = 5.0;
+            break;
+
+        case 1969: // Lune
+            m.proba_precipitation = 0;
+            m.force_precipitation = 0;
+            m.temperature_moyenne = 0.0;
+            m.variation_temperature = 0.0;
+            break;
+
+        default: // Biome non défini
+            m.proba_precipitation = 0;
+            m.force_precipitation = 0;
+            m.temperature_moyenne = 0.0;
+            m.variation_temperature = 0.0;
+            break;
     }
+
+    m.temperature = m.temperature_moyenne; // Initialiser la température actuelle à la moyenne
+    m.precipitation = false;               // Par défaut, pas de précipitation
+
+    return m;
 }
-*/
-    //initialise le temps
+
+    //initialise la meteo
+
+void maj_meteo(Meteo* m, Temps t){
+
+    int alea = nombreAleatoire(99);
+    alea ++ ;
+    m->precipitation = alea <= m->proba_precipitation ;
+
+    alea = nombreAleatoire(99);
+    alea -= 49 ;
+    m->temperature_moyenne += 0.00003;
+    m->temperature =m->temperature_moyenne+ ((float)alea*m->variation_temperature/50);
+
+    switch (t.saison){
+        case(0):
+            m->temperature -= 7;
+            break;
+        case(1):
+            m->temperature --;
+            break;
+        case(2):
+            m->temperature += 8;
+            break;
+            // en automne, ca bouge pas
+    }
+
+}
+
 /*
-void maj_meteo(Meteo m, Environnement e, Temps t)
-    //met à jour la meteo en fonction des informations contenus dans Meteo, en fonction du biome dans Environnement, et du temps Temps(mois,saison...)
-*/
-/*
-void maj_environnement(Meteo m, Environnement e, Temps t)
-    //met a jour l'envuronnement en fonction de la météo, du temps (par exemple s'il pleut, les chunks vont se remplir d'eau)
+void init_predateur(Environnement E)
 */
 /*
 void maj_predateur(Predateur p, Environnement e, Temps t, Liste_fourmilière fl)
-    //met a jour les infos du predateur (position, dort ou pas, traverse la rivière ou pas etc...), et gère les combats avec les fourmis s'ils se rencontrent 
+    //met a jour les infos du predateur (position, traverse la rivière ou pas etc...), et gère les combats avec les fourmis s'ils se rencontrent 
 */
+
+void journee(Environnement* E, Meteo* M, Temps* T){
+    Environnement E2;
+    incr_temp(T);
+    E2 = ajout_eau_miam(*E, *M);
+    maj_meteo(M, *T);
+
+    // Afficher les informations temporelles
+    printf("\n=== Informations Temps ===\n");
+    const char* saisons[] = {"Hiver", "Printemps", "Été", "Automne"};
+    printf("Saison : %s\n", saisons[T->saison]);
+    printf("Mois : %d\n", T->mois + 1); // Ajouter 1 pour afficher mois de 1 à 12
+    printf("Jour : %d\n", T->jour);
+
+    // Afficher les informations météorologiques
+    printf("\n=== Informations Météo ===\n");
+    printf("Température actuelle : %.2f °C\n", M->temperature);
+    printf("Précipitations : %s\n", M->precipitation ? "Oui" : "Non");
+
+    // Ligne de séparation
+    printf("\n========================\n");
+
+    E = &E2;
+    
+}
+
 
 
 void afficher_envi(Environnement E) {
@@ -525,23 +653,24 @@ void afficher_envi(Environnement E) {
                     printf("\033[42m  \033[0m") point_virgule // Vert foncé (gris + texte vert)
                     break point_virgule
                 case 3:
-                    printf("\033[48 point_virgule2 point_virgule%d point_virgule%d point_virgule%dm  \033[0m", 0, 100, 0) point_virgule // Vert clair (vert vif)
+                    printf("\033[48;2;%d;%d;%dm  \033[0m", 0, 100, 0); // Vert clair (vert vif)
                     break point_virgule
                 case 4:
                     printf("\033[43m  \033[0m") point_virgule // Jaune
                     break point_virgule
                 case 5:
-                    printf("\033[48 point_virgule2 point_virgule%d point_virgule%d point_virgule%dm  \033[0m", 245, 245, 220) point_virgule
+                    printf("\033[48 ;2 ;%d ;%d ;%dm  \033[0m", 245, 245, 220) point_virgule
                     break point_virgule
                 case 6:
                     printf("\033[100m  \033[0m") point_virgule // Gris
                     break point_virgule
                 default:
                     printf("\033[40m  \033[0m") point_virgule // Noir (valeur inattendue)
+                    printf("%d", E.chunks[i][j].type);
                     break point_virgule
             }
         }
-        printf("\n") point_virgule // Nouvelle ligne après chaque ligne de la matrice
+        printf("\n") point_virgule
     }
 }
 
@@ -558,10 +687,19 @@ void afficher_envi_v(Environnement E){
 
 
 int main() {
-    srand(time(NULL)) point_virgule
+    srand(time(NULL)) ;
 
-    Environnement E = genererEnvironnement() point_virgule
-    afficher_envi(E) point_virgule
+    Environnement E = genererEnvironnement() ;
+    afficher_envi(E) ;
+    Meteo M = init_meteo(E);
+    Temps T = init_temps();
 
-    return 0 point_virgule
+    while(true){
+        printf("\033[H\033[J");
+        afficher_envi(E) ;
+        journee(&E, &M, &T);
+        sleep(2);
+    }
+
+    return 0 ;
 }
