@@ -5,7 +5,6 @@
 #include <stdbool.h>
 
 #define point_virgule ;
-#define taille X 25;
 
 // Fonction pour générer un nombre aléatoire entre 0 et n
 int nombreAleatoire(int n) {
@@ -80,6 +79,25 @@ void generer_rivière(Environnement* E,int x, int y){
 }
 
 //generer_lac
+void generer_lac(int x, int y, Environnement* E, int proba){
+    int alea = nombreAleatoire(99);
+    alea ++;
+    if(alea<= proba){
+        E->chunks[x][y].type = 1;
+        if (x>0){
+            generer_lac(x-1, y, E, (proba)*2/3);
+        }
+        if (x<24){
+            generer_lac(x+1, y, E, (proba)*2/3);
+        }
+        if (y>0){
+            generer_lac(x, y-1, E, (proba)*2/3);
+        }
+        if (y<24){
+            generer_lac(x, y+1, E, (proba)*2/3);
+        }
+    }
+}
 
 
 Environnement ajout_eau_miam(Environnement E, Meteo M){
@@ -95,30 +113,40 @@ Environnement ajout_eau_miam(Environnement E, Meteo M){
 
 
     for (int i = 0; i< 25; i++){   // ajoute des points d'eau sur la map
-        for (int j = 0; j< 25; j++){    
+        for (int j = 0; j< 25; j++){
             int p_eau = 0;
+            int p_miam = 0;
+            
             int alea = nombreAleatoire(99);
+            int alea2 = nombreAleatoire(99);
             switch(E.chunks[i][j].type){
                 case(0):
                     p_eau = 50; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    p_miam = 0;
                     break;
                 case(1):
                     p_eau = 100; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    p_miam = 0;
                     break;
                 case(2):
                     p_eau = 10; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    p_miam = 10;
                     break;
                 case(3):
                     p_eau = 25; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    p_miam = 25;
                     break;
                 case(4):
                     p_eau = 5; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    p_miam = 15;
                     break;
                 case(5):
                     p_eau = 0; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    p_miam = 0;
                     break;
                 case(6):
                     p_eau = 7; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    p_miam = 15;
                     break;
                 
             }
@@ -129,6 +157,10 @@ Environnement ajout_eau_miam(Environnement E, Meteo M){
                 E.chunks[i][j].eau = 99;
             }
 
+
+            if(alea2 <= p_miam && E.chunks[i][j].nourriture< alea2){
+                E_final.chunks[i][j].nourriture = alea2;
+            }
         }
     }
 
@@ -194,7 +226,9 @@ Environnement genererEnvironnement(){
 
     for (int i = 0; i< 25; i++){
         for (int j = 0; j<25; j++){
-            E.chunks[i][j].type = -1;  
+            E.chunks[i][j].type = -1; 
+            E.chunks[i][j].eau = 0; 
+            E.chunks[i][j].nourriture = 0; 
         }
     }
 
@@ -202,6 +236,11 @@ Environnement genererEnvironnement(){
     int y = nombreAleatoire(24);
 
     generer_rivière(&E, x, y);
+
+    x = nombreAleatoire(24);
+    y = nombreAleatoire(24);
+
+    generer_lac(x, y, &E, 100);
 
     
 
@@ -319,11 +358,11 @@ Environnement genererEnvironnement(){
         }
     }
     Meteo M;
-    for (int i = 0; i< 10; i++){
+    //for (int i = 0; i< 10; i++){
 
     
     E = ajout_eau_miam(E, M);
-    }
+    //}
 
     return E;
 }
@@ -510,7 +549,7 @@ void afficher_envi(Environnement E) {
 void afficher_envi_v(Environnement E){
     for (int i = 0; i< 25; i++){
         for (int j = 0; j< 25; j++){
-            printf("%2d ", E.chunks[i][j].eau);
+            printf("%2d ", E.chunks[i][j].nourriture);
         }
         printf("\n");
     }
@@ -522,7 +561,7 @@ int main() {
     srand(time(NULL));
 
     Environnement E = genererEnvironnement();
-    afficher_envi_v(E);
+    afficher_envi(E);
 
     return 0;
 }
