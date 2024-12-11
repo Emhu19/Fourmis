@@ -16,85 +16,85 @@ typedef struct {
     int proba_precipitation point_virgule
     int force_precipitation point_virgule
     float temperature_moyenne point_virgule
-    float variation_temperature;
-    float temperature;             // Température actuelle
-    bool precipitation;            // Niveau de précipitation
-} Meteo;
+    float variation_temperature point_virgule
+    float temperature point_virgule             // Température actuelle
+    bool precipitation point_virgule            // Niveau de précipitation
+} Meteo point_virgule
 
 // Structure pour les prédateurs
 typedef struct {
-    int id_predateur;
-    char nom_predateur[50];
-    int coordonnée_x;
-    int coordonnée_y;
-    int santé;
-    int vitesse;
-    int force;  // le degat qu'il fait
-}Predateurs;
+    int id_predateur point_virgule
+    char nom_predateur[50] point_virgule
+    int coordonnée_x point_virgule
+    int coordonnée_y point_virgule
+    int santé point_virgule
+    int vitesse point_virgule
+    int force point_virgule  // le degat qu'il fait
+}Predateurs point_virgule
 
 typedef struct {
-    int nourriture;
-    int materiaux;
-    int eau;
-    int type; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
-}Chunk;
+    int nourriture point_virgule
+    int materiaux point_virgule
+    int eau point_virgule
+    int type point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+}Chunk point_virgule
 
 // Structure pour l'environnement
 typedef struct {
-    int biome;               // Biome (forêt, désert, plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
-    Chunk chunks[25][25];
-}Environnement;
+    int biome point_virgule               // Biome (forêt, désert, plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
+    Chunk chunks[25][25] point_virgule
+}Environnement point_virgule
 
 
 // Structure pour le temps
 typedef struct {
-    int saison;
-    int mois;
-    int jour;
-} Temps;
+    int saison point_virgule
+    int mois point_virgule
+    int jour point_virgule
+} Temps point_virgule
 
 
 void generer_rivière(Environnement* E,int x, int y){
     if (x >= 25 || x < 0 || y >= 25 || y< 0){
-        return;
+        return point_virgule
     }
-    E->chunks[x][y].type = 1;
-    int alea = nombreAleatoire(3);
+    E->chunks[x][y].type = 1 point_virgule
+    int alea = nombreAleatoire(3) point_virgule
     switch(alea){
         case(0):
-            x ++;
-            break;
+            x ++ point_virgule
+            break point_virgule
         case(1):
-            x ++;
-            break;
+            x ++ point_virgule
+            break point_virgule
         case(2):
-            y ++;
-            break;
+            y ++ point_virgule
+            break point_virgule
         case(3):
-            y --;
-            break;
+            y -- point_virgule
+            break point_virgule
     }
     
-    generer_rivière(E, x, y);
+    generer_rivière(E, x, y) point_virgule
 }
 
 //generer_lac
 void generer_lac(int x, int y, Environnement* E, int proba){
-    int alea = nombreAleatoire(99);
-    alea ++;
+    int alea = nombreAleatoire(99) point_virgule
+    alea ++ point_virgule
     if(alea<= proba){
-        E->chunks[x][y].type = 1;
+        E->chunks[x][y].type = 1 point_virgule
         if (x>0){
-            generer_lac(x-1, y, E, (proba)*2/3);
+            generer_lac(x-1, y, E, (proba)*2/3) point_virgule
         }
         if (x<24){
-            generer_lac(x+1, y, E, (proba)*2/3);
+            generer_lac(x+1, y, E, (proba)*2/3) point_virgule
         }
         if (y>0){
-            generer_lac(x, y-1, E, (proba)*2/3);
+            generer_lac(x, y-1, E, (proba)*2/3) point_virgule
         }
         if (y<24){
-            generer_lac(x, y+1, E, (proba)*2/3);
+            generer_lac(x, y+1, E, (proba)*2/3) point_virgule
         }
     }
 }
@@ -102,397 +102,397 @@ void generer_lac(int x, int y, Environnement* E, int proba){
 
 Environnement ajout_eau_miam(Environnement E, Meteo M){
 
-    Environnement E_final;
-    E_final.biome = E.biome;
-    for (int i = 0; i< 25; i++){    // copie l'Environnement
-        for (int j = 0; j< 25; j++){
-            E_final.chunks[i][j].type = E.chunks[i][j].type;
+    Environnement E_final point_virgule
+    E_final.biome = E.biome point_virgule
+    for (int i = 0 point_virgule i< 25 point_virgule i++){    // copie l'Environnement
+        for (int j = 0 point_virgule j< 25 point_virgule j++){
+            E_final.chunks[i][j].type = E.chunks[i][j].type point_virgule
         }
     }
 
 
 
-    for (int i = 0; i< 25; i++){   // ajoute des points d'eau sur la map
-        for (int j = 0; j< 25; j++){
-            int p_eau = 0;
-            int p_miam = 0;
+    for (int i = 0 point_virgule i< 25 point_virgule i++){   // ajoute des points d'eau sur la map
+        for (int j = 0 point_virgule j< 25 point_virgule j++){
+            int p_eau = 0 point_virgule
+            int p_miam = 0 point_virgule
             
-            int alea = nombreAleatoire(99);
-            int alea2 = nombreAleatoire(99);
+            int alea = nombreAleatoire(99) point_virgule
+            int alea2 = nombreAleatoire(99) point_virgule
             switch(E.chunks[i][j].type){
                 case(0):
-                    p_eau = 50; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
-                    p_miam = 0;
-                    break;
+                    p_eau = 50 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    p_miam = 0 point_virgule
+                    break point_virgule
                 case(1):
-                    p_eau = 100; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
-                    p_miam = 0;
-                    break;
+                    p_eau = 100 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    p_miam = 0 point_virgule
+                    break point_virgule
                 case(2):
-                    p_eau = 10; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
-                    p_miam = 10;
-                    break;
+                    p_eau = 10 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    p_miam = 10 point_virgule
+                    break point_virgule
                 case(3):
-                    p_eau = 25; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
-                    p_miam = 25;
-                    break;
+                    p_eau = 25 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    p_miam = 25 point_virgule
+                    break point_virgule
                 case(4):
-                    p_eau = 5; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
-                    p_miam = 15;
-                    break;
+                    p_eau = 5 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    p_miam = 15 point_virgule
+                    break point_virgule
                 case(5):
-                    p_eau = 0; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
-                    p_miam = 0;
-                    break;
+                    p_eau = 0 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    p_miam = 0 point_virgule
+                    break point_virgule
                 case(6):
-                    p_eau = 7; //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
-                    p_miam = 15;
-                    break;
+                    p_eau = 7 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                    p_miam = 15 point_virgule
+                    break point_virgule
                 
             }
             if(alea <= p_eau && E.chunks[i][j].eau< alea){
-                E.chunks[i][j].eau = alea;
+                E.chunks[i][j].eau = alea point_virgule
             }
             if(E.chunks[i][j].type == 1){   //met a 100 le niveau d'eau si on est dans une rivière
-                E.chunks[i][j].eau = 99;
+                E.chunks[i][j].eau = 99 point_virgule
             }
 
 
             if(alea2 <= p_miam && E.chunks[i][j].nourriture< alea2){
-                E_final.chunks[i][j].nourriture = alea2;
+                E_final.chunks[i][j].nourriture = alea2 point_virgule
             }
         }
     }
 
-    for (int i = 0; i< 25; i++){
-        for (int j = 0; j< 25; j++){
+    for (int i = 0 point_virgule i< 25 point_virgule i++){
+        for (int j = 0 point_virgule j< 25 point_virgule j++){
             if (E.chunks[i][j].type == 1){
-                E.chunks[i][j].eau = 49;
+                E.chunks[i][j].eau = 49 point_virgule
             }
         }
     }
 
 
 
-    for (int i = 1; i< 24; i++){
-        for (int j = 1; j< 24; j++){
-            E_final.chunks[i][j].eau = (E.chunks[i-1][j].eau+E.chunks[i-1][j-1].eau+E.chunks[i-1][j+1].eau+E.chunks[i][j-1].eau+E.chunks[i][j+1].eau+E.chunks[i+1][j-1].eau+E.chunks[i+1][j].eau+E.chunks[i+1][j+1].eau+(8*E.chunks[i][j].eau))/16;
+    for (int i = 1 point_virgule i< 24 point_virgule i++){
+        for (int j = 1 point_virgule j< 24 point_virgule j++){
+            E_final.chunks[i][j].eau = (E.chunks[i-1][j].eau+E.chunks[i-1][j-1].eau+E.chunks[i-1][j+1].eau+E.chunks[i][j-1].eau+E.chunks[i][j+1].eau+E.chunks[i+1][j-1].eau+E.chunks[i+1][j].eau+E.chunks[i+1][j+1].eau+(8*E.chunks[i][j].eau))/16 point_virgule
         }
     }
-    for (int i = 1; i< 24; i++){
-        E_final.chunks[i][0].eau = (E.chunks[i-1][0].eau+E.chunks[i-1][1].eau+E.chunks[i][1].eau+E.chunks[i+1][0].eau+E.chunks[i+1][1].eau+(8*E.chunks[i][0].eau))/13;
-        E_final.chunks[0][i].eau = (E.chunks[0][i-1].eau+E.chunks[0][i+1].eau+E.chunks[1][i-1].eau+E.chunks[1][i].eau+E.chunks[1][i+1].eau+(8*E.chunks[0][i].eau))/13;
-        E_final.chunks[i][24].eau = (E.chunks[i-1][24].eau+E.chunks[i-1][23].eau+E.chunks[i][23].eau+E.chunks[i+1][23].eau+E.chunks[i+1][24].eau+(8*E.chunks[i][24].eau))/13;
-        E_final.chunks[24][i].eau = (E.chunks[23][i].eau+E.chunks[23][i-1].eau+E.chunks[23][i+1].eau+E.chunks[24][i-1].eau+E.chunks[24][i+1].eau+(8*E.chunks[24][i].eau))/13;
+    for (int i = 1 point_virgule i< 24 point_virgule i++){
+        E_final.chunks[i][0].eau = (E.chunks[i-1][0].eau+E.chunks[i-1][1].eau+E.chunks[i][1].eau+E.chunks[i+1][0].eau+E.chunks[i+1][1].eau+(8*E.chunks[i][0].eau))/13 point_virgule
+        E_final.chunks[0][i].eau = (E.chunks[0][i-1].eau+E.chunks[0][i+1].eau+E.chunks[1][i-1].eau+E.chunks[1][i].eau+E.chunks[1][i+1].eau+(8*E.chunks[0][i].eau))/13 point_virgule
+        E_final.chunks[i][24].eau = (E.chunks[i-1][24].eau+E.chunks[i-1][23].eau+E.chunks[i][23].eau+E.chunks[i+1][23].eau+E.chunks[i+1][24].eau+(8*E.chunks[i][24].eau))/13 point_virgule
+        E_final.chunks[24][i].eau = (E.chunks[23][i].eau+E.chunks[23][i-1].eau+E.chunks[23][i+1].eau+E.chunks[24][i-1].eau+E.chunks[24][i+1].eau+(8*E.chunks[24][i].eau))/13 point_virgule
 
     }
-    E_final.chunks[0][0].eau = (E.chunks[0][1].eau+E.chunks[1][0].eau+E.chunks[1][1].eau+(8*E.chunks[0][0].eau))/11;
+    E_final.chunks[0][0].eau = (E.chunks[0][1].eau+E.chunks[1][0].eau+E.chunks[1][1].eau+(8*E.chunks[0][0].eau))/11 point_virgule
 
-    E_final.chunks[0][24].eau = (E.chunks[0][23].eau+E.chunks[1][23].eau+E.chunks[1][24].eau+(8*E.chunks[0][24].eau))/11;
+    E_final.chunks[0][24].eau = (E.chunks[0][23].eau+E.chunks[1][23].eau+E.chunks[1][24].eau+(8*E.chunks[0][24].eau))/11 point_virgule
 
-    E_final.chunks[24][0].eau = (E.chunks[23][0].eau+E.chunks[23][1].eau+E.chunks[24][1].eau+(8*E.chunks[24][0].eau))/11;
+    E_final.chunks[24][0].eau = (E.chunks[23][0].eau+E.chunks[23][1].eau+E.chunks[24][1].eau+(8*E.chunks[24][0].eau))/11 point_virgule
 
-    E_final.chunks[24][24].eau = (E.chunks[23][24].eau+E.chunks[23][23].eau+E.chunks[24][23].eau+(8*E.chunks[24][24].eau))/11;
+    E_final.chunks[24][24].eau = (E.chunks[23][24].eau+E.chunks[23][23].eau+E.chunks[24][23].eau+(8*E.chunks[24][24].eau))/11 point_virgule
 
 
-    for (int i = 0; i< 25; i++){
-        for (int j = 0; j< 25; j++){
+    for (int i = 0 point_virgule i< 25 point_virgule i++){
+        for (int j = 0 point_virgule j< 25 point_virgule j++){
             if (E.chunks[i][j].type == 1){
-                E_final.chunks[i][j].eau = 49;
+                E_final.chunks[i][j].eau = 49 point_virgule
             }
         }
     }
 
 
-    return E_final;
+    return E_final point_virgule
 }
 
 
 Environnement genererEnvironnement(){
-    Environnement E;
+    Environnement E point_virgule
 
-    printf("dans quel biome est votre fourmilière ?\n");
-    printf("Tapez 0 pour la forêt,\n");
-    printf("Tapez 1 pour la desert,\n");
-    printf("Tapez 2 pour la plaine,\n");
-    printf("Tapez 3 pour la forêt tropicale,\n");
-    printf("Tapez 4 pour la ville,\n");
-    printf("Tapez 5 pour la toundra,\n");
-    printf("Tapez 6 pour la taiga,\n");
-    printf("Tapez 7 pour la montagne,\n");
-    printf("Tapez 8 pour la haute montagne,\n");
+    printf("dans quel biome est votre fourmilière ?\n") point_virgule
+    printf("Tapez 0 pour la forêt,\n") point_virgule
+    printf("Tapez 1 pour la desert,\n") point_virgule
+    printf("Tapez 2 pour la plaine,\n") point_virgule
+    printf("Tapez 3 pour la forêt tropicale,\n") point_virgule
+    printf("Tapez 4 pour la ville,\n") point_virgule
+    printf("Tapez 5 pour la toundra,\n") point_virgule
+    printf("Tapez 6 pour la taiga,\n") point_virgule
+    printf("Tapez 7 pour la montagne,\n") point_virgule
+    printf("Tapez 8 pour la haute montagne,\n") point_virgule
 
-    scanf("%d", &E.biome);
+    scanf("%d", &E.biome) point_virgule
 
-    for (int i = 0; i< 25; i++){
-        for (int j = 0; j<25; j++){
-            E.chunks[i][j].type = -1; 
-            E.chunks[i][j].eau = 0; 
-            E.chunks[i][j].nourriture = 0; 
+    for (int i = 0 point_virgule i< 25 point_virgule i++){
+        for (int j = 0 point_virgule j<25 point_virgule j++){
+            E.chunks[i][j].type = -1 point_virgule 
+            E.chunks[i][j].eau = 0 point_virgule 
+            E.chunks[i][j].nourriture = 0 point_virgule 
         }
     }
 
-    int x = 0;
-    int y = nombreAleatoire(24);
+    int x = 0 point_virgule
+    int y = nombreAleatoire(24) point_virgule
 
-    generer_rivière(&E, x, y);
+    generer_rivière(&E, x, y) point_virgule
 
-    x = nombreAleatoire(24);
-    y = nombreAleatoire(24);
+    x = nombreAleatoire(24) point_virgule
+    y = nombreAleatoire(24) point_virgule
 
-    generer_lac(x, y, &E, 100);
+    generer_lac(x, y, &E, 100) point_virgule
 
     
 
     //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
-    int p_plaine;
-    int p_arbre;
-    int p_sable;
-    int p_lune;
-    int p_roche;
+    int p_plaine point_virgule
+    int p_arbre point_virgule
+    int p_sable point_virgule
+    int p_lune point_virgule
+    int p_roche point_virgule
 
     switch(E.biome){
         case (0):
-            p_plaine = 20;
-            p_arbre = 70;
-            p_sable = 1;
-            p_lune = 0;
-            p_roche = 9;
-            break;
+            p_plaine = 20 point_virgule
+            p_arbre = 70 point_virgule
+            p_sable = 1 point_virgule
+            p_lune = 0 point_virgule
+            p_roche = 9 point_virgule
+            break point_virgule
         case (1):
-            p_plaine = 1;
-            p_arbre = 5;
-            p_sable = 74;
-            p_lune = 0;
-            p_roche = 20;
-            break;
+            p_plaine = 1 point_virgule
+            p_arbre = 5 point_virgule
+            p_sable = 74 point_virgule
+            p_lune = 0 point_virgule
+            p_roche = 20 point_virgule
+            break point_virgule
         case (2):
-            p_plaine = 75;
-            p_arbre = 15;
-            p_sable = 1;
-            p_lune = 0;
-            p_roche = 9;
-            break;
+            p_plaine = 75 point_virgule
+            p_arbre = 15 point_virgule
+            p_sable = 1 point_virgule
+            p_lune = 0 point_virgule
+            p_roche = 9 point_virgule
+            break point_virgule
         case (3):
-            p_plaine = 1;
-            p_arbre = 98;
-            p_sable = 0;
-            p_lune = 0;
-            p_roche = 1;
-            break;
+            p_plaine = 1 point_virgule
+            p_arbre = 98 point_virgule
+            p_sable = 0 point_virgule
+            p_lune = 0 point_virgule
+            p_roche = 1 point_virgule
+            break point_virgule
         case (4):
-            p_plaine = 10;
-            p_arbre = 10;
-            p_sable = 0;
-            p_lune = 0;
-            p_roche = 80;
-            break;
+            p_plaine = 10 point_virgule
+            p_arbre = 10 point_virgule
+            p_sable = 0 point_virgule
+            p_lune = 0 point_virgule
+            p_roche = 80 point_virgule
+            break point_virgule
         case (5):  
-            p_plaine = 75;
-            p_arbre = 15;
-            p_sable = 1;
-            p_lune = 0;
-            p_roche = 9;
-            break;
+            p_plaine = 75 point_virgule
+            p_arbre = 15 point_virgule
+            p_sable = 1 point_virgule
+            p_lune = 0 point_virgule
+            p_roche = 9 point_virgule
+            break point_virgule
         case (6):
-            p_plaine = 30;
-            p_arbre = 70;
-            p_sable = 0;
-            p_lune = 0;
-            p_roche = 10;
-            break;
+            p_plaine = 30 point_virgule
+            p_arbre = 70 point_virgule
+            p_sable = 0 point_virgule
+            p_lune = 0 point_virgule
+            p_roche = 10 point_virgule
+            break point_virgule
         case (7):
-            p_plaine = 30;
-            p_arbre = 30;
-            p_sable = 0;
-            p_lune = 0;
-            p_roche = 40;
-            break;
+            p_plaine = 30 point_virgule
+            p_arbre = 30 point_virgule
+            p_sable = 0 point_virgule
+            p_lune = 0 point_virgule
+            p_roche = 40 point_virgule
+            break point_virgule
         case (8):
-            p_plaine = 40;
-            p_arbre = 10;
-            p_sable = 0;
-            p_lune = 0;
-            p_roche = 50;
-            break;
+            p_plaine = 40 point_virgule
+            p_arbre = 10 point_virgule
+            p_sable = 0 point_virgule
+            p_lune = 0 point_virgule
+            p_roche = 50 point_virgule
+            break point_virgule
         case (1969):
-            p_plaine = 0;
-            p_arbre = 0;
-            p_sable = 0;
-            p_lune = 100;
-            p_roche = 0;
-            break;
+            p_plaine = 0 point_virgule
+            p_arbre = 0 point_virgule
+            p_sable = 0 point_virgule
+            p_lune = 100 point_virgule
+            p_roche = 0 point_virgule
+            break point_virgule
     }
 
-    for (int i = 0; i< 25; i++){
-        for (int j = 0; j< 25; j++){
+    for (int i = 0 point_virgule i< 25 point_virgule i++){
+        for (int j = 0 point_virgule j< 25 point_virgule j++){
             if (E.chunks[i][j].type != 1){
 
-                int alea = nombreAleatoire(99);  //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
-                alea -= p_plaine;  
+                int alea = nombreAleatoire(99) point_virgule  //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+                alea -= p_plaine point_virgule  
                 if (alea <0){
-                    E.chunks[i][j].type = 2;
-                    alea += 200;
+                    E.chunks[i][j].type = 2 point_virgule
+                    alea += 200 point_virgule
                 }
-                alea -= p_arbre;  
+                alea -= p_arbre point_virgule  
                 if (alea <0){
-                    E.chunks[i][j].type = 3;
-                    alea += 200;
+                    E.chunks[i][j].type = 3 point_virgule
+                    alea += 200 point_virgule
                 }
-                alea -= p_sable;  
+                alea -= p_sable point_virgule  
                 if (alea <0){
-                    E.chunks[i][j].type = 4;
-                    alea += 200;
+                    E.chunks[i][j].type = 4 point_virgule
+                    alea += 200 point_virgule
                 }
-                alea -= p_lune;  
+                alea -= p_lune point_virgule  
                 if (alea <0){
-                    E.chunks[i][j].type = 5;
-                    alea += 200;
+                    E.chunks[i][j].type = 5 point_virgule
+                    alea += 200 point_virgule
                 }
-                alea -= p_roche;  
+                alea -= p_roche point_virgule  
                 if (alea <0){
-                    E.chunks[i][j].type = 6;
-                    alea += 200;
+                    E.chunks[i][j].type = 6 point_virgule
+                    alea += 200 point_virgule
                 }
             }
         }
     }
-    Meteo M;
-    //for (int i = 0; i< 10; i++){
+    Meteo M point_virgule
+    //for (int i = 0 point_virgule i< 10 point_virgule i++){
 
     
-    E = ajout_eau_miam(E, M);
+    E = ajout_eau_miam(E, M) point_virgule
     //}
 
-    return E;
+    return E point_virgule
 }
     //permet de générer l'environnement en fonction des préférences de l'utilisateur (avec une part d'aléatoire) génération procédurale
 
 
 void incr_temp(Temps* t){
 
-    t->jour++;
+    t->jour++ point_virgule
     switch(t->mois){
         case(0):
             if (t->jour >31){
-                t->jour-= 31;
-                t->mois++;
+                t->jour-= 31 point_virgule
+                t->mois++ point_virgule
             }
-            break;
+            break point_virgule
         case(1):
             if (t->jour >28){
-                t->jour-= 28;
-                t->mois++;
+                t->jour-= 28 point_virgule
+                t->mois++ point_virgule
             }
-            break;
+            break point_virgule
         case(2):
             if (t->jour >31){
-                t->jour-= 31;
-                t->mois++;
+                t->jour-= 31 point_virgule
+                t->mois++ point_virgule
             }
-            break;
+            break point_virgule
         case(3):
             if (t->jour >30){
-                t->jour-= 30;
-                t->mois++;
+                t->jour-= 30 point_virgule
+                t->mois++ point_virgule
             }
-            break;
+            break point_virgule
         case(4):
             if (t->jour >31){
-                t->jour-= 31;
-                t->mois++;
+                t->jour-= 31 point_virgule
+                t->mois++ point_virgule
             }
-            break;
+            break point_virgule
         case(5):
             if (t->jour >30){
-                t->jour-= 30;
-                t->mois++;
+                t->jour-= 30 point_virgule
+                t->mois++ point_virgule
             }
-            break;
+            break point_virgule
         case(6):
             if (t->jour >31){
-                t->jour-= 31;
-                t->mois++;
+                t->jour-= 31 point_virgule
+                t->mois++ point_virgule
             }
-            break;
+            break point_virgule
         case(7):
             if (t->jour >31){
                 t->
-            jour-= 31;
-                t->mois++;
+            jour-= 31 point_virgule
+                t->mois++ point_virgule
             }
-            break;
+            break point_virgule
         case(8):
             if (t->jour >30){
-                t->jour-= 30;
-                t->mois++;
+                t->jour-= 30 point_virgule
+                t->mois++ point_virgule
             }
-            break;
+            break point_virgule
         case(9):
             if (t->jour >31){
-                t->jour-= 31;
-                t->mois++;
+                t->jour-= 31 point_virgule
+                t->mois++ point_virgule
             }
-            break;
+            break point_virgule
         case(10):
             if (t->jour >30){
-                t->jour-= 30;
-                t->mois++;
+                t->jour-= 30 point_virgule
+                t->mois++ point_virgule
             }
-            break;
+            break point_virgule
         case(11):
             if (t->jour >31){
-                t->jour-= 31;
-                t->mois++;
+                t->jour-= 31 point_virgule
+                t->mois++ point_virgule
             }
-            break;
+            break point_virgule
     }
 }
 
 
 
 Temps init_temps(){
-    Temps tps;
+    Temps tps point_virgule
 
-    tps.mois = 0;
-    tps.jour = 0;
-    tps.saison = 0;
-    return tps;
+    tps.mois = 0 point_virgule
+    tps.jour = 0 point_virgule
+    tps.saison = 0 point_virgule
+    return tps point_virgule
 }
 /*
 void init_meteo(Environnement* E){
-    Meteo m;
+    Meteo m point_virgule
     switch(E->biome){
         case(0):
-            m.proba_precipitation = 10;
-            m.force_precipitation = 10;
+            m.proba_precipitation = 10 point_virgule
+            m.force_precipitation = 10 point_virgule
         case(1):
-            m.proba_precipitation = 1;
-            m.force_precipitation = 25;
+            m.proba_precipitation = 1 point_virgule
+            m.force_precipitation = 25 point_virgule
         case(2):
-            m.proba_precipitation = 10;
-            m.force_precipitation = 10;
+            m.proba_precipitation = 10 point_virgule
+            m.force_precipitation = 10 point_virgule
         case(3):
-            m.proba_precipitation = 70;
-            m.force_precipitation = 25;
+            m.proba_precipitation = 70 point_virgule
+            m.force_precipitation = 25 point_virgule
         case(4):
-            m.proba_precipitation = 10;
-            m.force_precipitation = 10;
+            m.proba_precipitation = 10 point_virgule
+            m.force_precipitation = 10 point_virgule
         case(5):   //0: forêt,1: désert,2: plaine, 3:foret tropicale,4: ville,5: toundra, 6:taiga,7: montagne,8: haute montagne,1969: espace
-            m.proba_precipitation = 10;
-            m.force_precipitation = 10;
+            m.proba_precipitation = 10 point_virgule
+            m.force_precipitation = 10 point_virgule
         case(6):
-            m.proba_precipitation = 10;
-            m.force_precipitation = 10;
+            m.proba_precipitation = 10 point_virgule
+            m.force_precipitation = 10 point_virgule
         case(7):
-            m.proba_precipitation = 10;
-            m.force_precipitation = 10;
+            m.proba_precipitation = 10 point_virgule
+            m.force_precipitation = 10 point_virgule
         case(8):
-            m.proba_precipitation = 10;
-            m.force_precipitation = 10;
+            m.proba_precipitation = 10 point_virgule
+            m.force_precipitation = 10 point_virgule
         case(1969):
-            m.proba_precipitation = 0;
-            m.force_precipitation = 0;
+            m.proba_precipitation = 0 point_virgule
+            m.force_precipitation = 0 point_virgule
     }
 }
 */
@@ -512,56 +512,56 @@ void maj_predateur(Predateur p, Environnement e, Temps t, Liste_fourmilière fl)
 
 
 void afficher_envi(Environnement E) {
-    for (int i = 0; i < 25; i++) {
-        for (int j = 0; j < 25; j++) {
+    for (int i = 0 point_virgule i < 25 point_virgule i++) {
+        for (int j = 0 point_virgule j < 25 point_virgule j++) {
             switch (E.chunks[i][j].type) {
                 case -1:
-                    printf("\033[47m  \033[0m"); // Blanc
-                    break;
+                    printf("\033[47m  \033[0m") point_virgule // Blanc
+                    break point_virgule
                 case 1:
-                    printf("\033[44m  \033[0m"); // Bleu
-                    break;
+                    printf("\033[44m  \033[0m") point_virgule // Bleu
+                    break point_virgule
                 case 2:
-                    printf("\033[42m  \033[0m"); // Vert foncé (gris + texte vert)
-                    break;
+                    printf("\033[42m  \033[0m") point_virgule // Vert foncé (gris + texte vert)
+                    break point_virgule
                 case 3:
-                    printf("\033[48;2;%d;%d;%dm  \033[0m", 0, 100, 0); // Vert clair (vert vif)
-                    break;
+                    printf("\033[48 point_virgule2 point_virgule%d point_virgule%d point_virgule%dm  \033[0m", 0, 100, 0) point_virgule // Vert clair (vert vif)
+                    break point_virgule
                 case 4:
-                    printf("\033[43m  \033[0m"); // Jaune
-                    break;
+                    printf("\033[43m  \033[0m") point_virgule // Jaune
+                    break point_virgule
                 case 5:
-                    printf("\033[48;2;%d;%d;%dm  \033[0m", 245, 245, 220);
-                    break;
+                    printf("\033[48 point_virgule2 point_virgule%d point_virgule%d point_virgule%dm  \033[0m", 245, 245, 220) point_virgule
+                    break point_virgule
                 case 6:
-                    printf("\033[100m  \033[0m"); // Gris
-                    break;
+                    printf("\033[100m  \033[0m") point_virgule // Gris
+                    break point_virgule
                 default:
-                    printf("\033[40m  \033[0m"); // Noir (valeur inattendue)
-                    break;
+                    printf("\033[40m  \033[0m") point_virgule // Noir (valeur inattendue)
+                    break point_virgule
             }
         }
-        printf("\n"); // Nouvelle ligne après chaque ligne de la matrice
+        printf("\n") point_virgule // Nouvelle ligne après chaque ligne de la matrice
     }
 }
 
 
 void afficher_envi_v(Environnement E){
-    for (int i = 0; i< 25; i++){
-        for (int j = 0; j< 25; j++){
-            printf("%2d ", E.chunks[i][j].nourriture);
+    for (int i = 0 point_virgule i< 25 point_virgule i++){
+        for (int j = 0 point_virgule j< 25 point_virgule j++){
+            printf("%2d ", E.chunks[i][j].nourriture) point_virgule
         }
-        printf("\n");
+        printf("\n") point_virgule
     }
 }
 
 
 
 int main() {
-    srand(time(NULL));
+    srand(time(NULL)) point_virgule
 
-    Environnement E = genererEnvironnement();
-    afficher_envi(E);
+    Environnement E = genererEnvironnement() point_virgule
+    afficher_envi(E) point_virgule
 
-    return 0;
+    return 0 point_virgule
 }
