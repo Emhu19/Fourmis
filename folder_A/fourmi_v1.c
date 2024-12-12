@@ -663,44 +663,43 @@ void afficher_envi_v(Environnement E){
     }
 }
 
-Predateur* ajouter_predateur(Predateur* LP, Predateur P){
-    
-    if (LP == NULL){
-        //printf("%p, %p\n", P, LP);
-        //LP = &P;
-        //printf("%p, %p\n", P, LP);
-        LP = malloc(sizeof(Predateur));
-        LP->type = P.type;
-        strcpy(LP->nom_predateur, P.nom_predateur);
-        LP->x = P.x;
-        LP->y = P.y;
-        LP->sante = P.sante;
-        LP->vitesse = P.vitesse;
-        LP->force = P.force;
-        LP->victimes = P.victimes;
-        LP->suivant = NULL;
+Predateur* ajouter_predateur(Predateur* LP, Predateur P) {
+    // Allouer de la mémoire pour le nouveau prédateur
+    Predateur* nouveau = malloc(sizeof(Predateur));
+    if (nouveau == NULL) {
+        printf("Erreur d'allocation mémoire\n");
         return LP;
     }
+    
+    // Copier les données du prédateur
+    nouveau->type = P.type;
+    strcpy(nouveau->nom_predateur, P.nom_predateur);
+    nouveau->x = P.x;
+    nouveau->y = P.y;
+    nouveau->sante = P.sante;
+    nouveau->vitesse = P.vitesse;
+    nouveau->force = P.force;
+    nouveau->victimes = P.victimes;
+    nouveau->suivant = NULL;
+
+    // Si la liste est vide, retourner le nouveau prédateur comme tête de liste
+    if (LP == NULL) {
+        return nouveau;
+    }
+
+    // Sinon, parcourir la liste jusqu'à la fin et ajouter le nouveau prédateur
     Predateur* copie = LP;
-    while (copie->suivant != NULL){
+    while (copie->suivant != NULL) {
         copie = copie->suivant;
     }
-    //copie->suivant = P;
-    copie->suivant = malloc(sizeof(Predateur));
-    copie->suivant->type = P.type;
-    strcpy(copie->suivant->nom_predateur, P.nom_predateur);
-    copie->suivant->x = P.x;
-    copie->suivant->y = P.y;
-    copie->suivant->sante = P.sante;
-    copie->suivant->vitesse = P.vitesse;
-    copie->suivant->force = P.force;
-    copie->suivant->victimes = P.victimes;
-    copie->suivant->suivant = NULL;
+    
+    copie->suivant = nouveau;
+
     return LP;
 }
 
 
-void generer_predateur(Environnement E, Predateur* LP){
+void generer_predateur(Environnement E, Predateur** LP){
     int p_enfant;
     int p_fourmilier;
     int p_fourmilier_lunaire;
@@ -712,7 +711,7 @@ void generer_predateur(Environnement E, Predateur* LP){
 
     switch(E.biome){  //les probabilites sont sur 1000
         case(0):// Biome (forêt, désert, plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
-            p_enfant = 1000;
+            p_enfant = 1;
             p_fourmilier = 3;
             p_fourmilier_lunaire = 0;
             p_araignée = 15;
@@ -811,11 +810,8 @@ void generer_predateur(Environnement E, Predateur* LP){
     int alea_renard_polaire = nombreAleatoire(999);
 
     if (alea_enfant<p_enfant){
-        //printf("gvgvhgvhgvhg");
-        //sleep(1);
         Predateur P;
         P.type = 0;
-        //P.nom_predateur = "enfant de 4 ans";
         strcpy(P.nom_predateur, "enfant de 4 ans");
         P.sante = 10000;
         P.vitesse = 3;
@@ -826,8 +822,6 @@ void generer_predateur(Environnement E, Predateur* LP){
         
 
         int alea = nombreAleatoire(0);
-        //printf("     %d\n", alea);
-        //sleep(1);
         switch(alea){
             case(0):
                 P.x = 0;
@@ -867,11 +861,7 @@ void generer_predateur(Environnement E, Predateur* LP){
                 break;
 
         }
-        //printf("ajouter_predateur");
-        printf("dans la fonction %p, %p\n", &P, LP);
-        LP = ajouter_predateur(LP, P);
-        printf("dans la fonction %p, %p\n", &P, LP);
-
+        *LP = ajouter_predateur(*LP, P);
     }
     
     if (alea_fourmilier<p_fourmilier){
@@ -924,8 +914,8 @@ void generer_predateur(Environnement E, Predateur* LP){
                 break;
 
         }
-        LP = ajouter_predateur(LP, P1);
 
+        *LP = ajouter_predateur(*LP, P1);
     }
     if (alea_fourmilier_lunaire<p_fourmilier_lunaire){
         Predateur P2;
@@ -978,7 +968,7 @@ void generer_predateur(Environnement E, Predateur* LP){
                 break;
 
         }
-        LP = ajouter_predateur(LP, P2);
+        *LP = ajouter_predateur(*LP, P2);
 
     }
     if (alea_araignee<p_araignée){
@@ -1032,7 +1022,7 @@ void generer_predateur(Environnement E, Predateur* LP){
                 break;
 
         }
-        LP = ajouter_predateur(LP, P3);
+        *LP = ajouter_predateur(*LP, P3);
 
     }
     if (alea_serpent<p_serpent){
@@ -1086,7 +1076,7 @@ void generer_predateur(Environnement E, Predateur* LP){
                 break;
 
         }
-        LP = ajouter_predateur(LP, P4);
+        *LP = ajouter_predateur(*LP, P4);
 
     }
     if (alea_renard_roux<p_renard_roux){
@@ -1140,7 +1130,7 @@ void generer_predateur(Environnement E, Predateur* LP){
                 break;
 
         }
-        LP = ajouter_predateur(LP, P5);
+        *LP = ajouter_predateur(*LP, P5);
 
     }
     if (alea_renard_polaire<p_renard_polaire){
@@ -1194,11 +1184,11 @@ void generer_predateur(Environnement E, Predateur* LP){
                 break;
 
         }
-        LP = ajouter_predateur(LP, P6);   
+        *LP = ajouter_predateur(*LP, P6);   
     }
 }
 
-void journee(Environnement* E, Meteo* M, Temps* T, Predateur* LP){
+void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
     Environnement E2;
     incr_temp(T);
     E2 = ajout_eau_miam(*E, *M);
@@ -1206,7 +1196,7 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur* LP){
     generer_predateur(*E, LP);
 
     // Afficher les informations temporelles
-    /*
+    
     printf("\n=== Informations Temps ===\n");
     const char* saisons[] = {"Hiver", "Printemps", "Été", "Automne"};
     printf("Saison : %s\n", saisons[T->saison]);
@@ -1217,16 +1207,13 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur* LP){
     printf("\n=== Informations Météo ===\n");
     printf("Température actuelle : %.2f °C\n", M->temperature);
     printf("Précipitations : %s\n", M->precipitation ? "Oui" : "Non");
-*/
-    //printf("\n=== Informations Prédateurs ===\n");
-    printf("LP = %p", LP);
-    if (LP == NULL){
+    
+    printf("\n=== Informations Prédateurs ===\n");
+    if (*LP == NULL) {
         printf("il n'y a aucun prédateur dans les environs\n");
-    }
-
-    else {
-        Predateur* copie = LP;
-        while(copie!= NULL){
+    } else {
+        Predateur* copie = *LP;
+        while (copie != NULL) {
             printf("Il y a un %s, qui a déjà fait %d victimes !\n", copie->nom_predateur, copie->victimes);
             copie = copie->suivant;
         }
@@ -1235,8 +1222,7 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur* LP){
     // Ligne de séparation
     printf("\n========================\n");
 
-    E = &E2;
-    
+    *E = E2;
 }
 
 
@@ -1253,7 +1239,7 @@ int main() {
     while(true){
         //printf("\033[H\033[J");
         //afficher_envi(E) ;
-        journee(&E, &M, &T, LP);
+        journee(&E, &M, &T, &LP);
         sleep(2);
     }
 
