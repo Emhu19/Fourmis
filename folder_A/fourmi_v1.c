@@ -25,15 +25,19 @@ typedef struct {
 } Meteo point_virgule
 
 // Structure pour les prédateurs
-typedef struct {
-    int id_predateur point_virgule
+
+typedef struct Predateur Predateur;
+struct Predateur{
+    int type;
     char nom_predateur[50] point_virgule
-    int coordonnée_x point_virgule
-    int coordonnée_y point_virgule
-    int santé point_virgule
+    int x point_virgule
+    int y point_virgule
+    int sante point_virgule
     int vitesse point_virgule
     int force point_virgule  // le degat qu'il fait
-}Predateurs point_virgule
+    int victimes;
+    Predateur* suivant;
+};
 
 typedef struct {
     int nourriture point_virgule
@@ -612,31 +616,6 @@ void maj_predateur(Predateur p, Environnement e, Temps t, Liste_fourmilière fl)
     //met a jour les infos du predateur (position, traverse la rivière ou pas etc...), et gère les combats avec les fourmis s'ils se rencontrent 
 */
 
-void journee(Environnement* E, Meteo* M, Temps* T){
-    Environnement E2;
-    incr_temp(T);
-    E2 = ajout_eau_miam(*E, *M);
-    maj_meteo(M, *T);
-
-    // Afficher les informations temporelles
-    printf("\n=== Informations Temps ===\n");
-    const char* saisons[] = {"Hiver", "Printemps", "Été", "Automne"};
-    printf("Saison : %s\n", saisons[T->saison]);
-    printf("Mois : %d\n", T->mois + 1); // Ajouter 1 pour afficher mois de 1 à 12
-    printf("Jour : %d\n", T->jour);
-
-    // Afficher les informations météorologiques
-    printf("\n=== Informations Météo ===\n");
-    printf("Température actuelle : %.2f °C\n", M->temperature);
-    printf("Précipitations : %s\n", M->precipitation ? "Oui" : "Non");
-
-    // Ligne de séparation
-    printf("\n========================\n");
-
-    E = &E2;
-    
-}
-
 
 
 void afficher_envi(Environnement E) {
@@ -684,6 +663,581 @@ void afficher_envi_v(Environnement E){
     }
 }
 
+Predateur* ajouter_predateur(Predateur* LP, Predateur P){
+    
+    if (LP == NULL){
+        //printf("%p, %p\n", P, LP);
+        //LP = &P;
+        //printf("%p, %p\n", P, LP);
+        LP = malloc(sizeof(Predateur));
+        LP->type = P.type;
+        strcpy(LP->nom_predateur, P.nom_predateur);
+        LP->x = P.x;
+        LP->y = P.y;
+        LP->sante = P.sante;
+        LP->vitesse = P.vitesse;
+        LP->force = P.force;
+        LP->victimes = P.victimes;
+        LP->suivant = NULL;
+        return LP;
+    }
+    Predateur* copie = LP;
+    while (copie->suivant != NULL){
+        copie = copie->suivant;
+    }
+    //copie->suivant = P;
+    copie->suivant = malloc(sizeof(Predateur));
+    copie->suivant->type = P.type;
+    strcpy(copie->suivant->nom_predateur, P.nom_predateur);
+    copie->suivant->x = P.x;
+    copie->suivant->y = P.y;
+    copie->suivant->sante = P.sante;
+    copie->suivant->vitesse = P.vitesse;
+    copie->suivant->force = P.force;
+    copie->suivant->victimes = P.victimes;
+    copie->suivant->suivant = NULL;
+    return LP;
+}
+
+
+void generer_predateur(Environnement E, Predateur* LP){
+    int p_enfant;
+    int p_fourmilier;
+    int p_fourmilier_lunaire;
+    int p_araignée;
+    int p_serpent;
+    int p_renard_polaire = 0;
+    int p_renard_roux = 0;
+
+
+    switch(E.biome){  //les probabilites sont sur 1000
+        case(0):// Biome (forêt, désert, plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
+            p_enfant = 1000;
+            p_fourmilier = 3;
+            p_fourmilier_lunaire = 0;
+            p_araignée = 15;
+            p_serpent = 1;
+            p_renard_polaire = 0;
+            p_renard_roux = 0;
+            break;
+        case(1):// Biome (désert, plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
+            p_enfant = 1;
+            p_fourmilier = 0;
+            p_fourmilier_lunaire = 0;
+            p_araignée = 10;
+            p_serpent = 10;
+            p_renard_polaire = 0;
+            p_renard_roux = 0;
+            break;
+        case(2):// Biome (plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
+            p_enfant = 1;
+            p_fourmilier = 1;
+            p_fourmilier_lunaire = 0;
+            p_araignée = 15;
+            p_serpent = 1;
+            p_renard_polaire = 0;
+            p_renard_roux = 0;
+            break;
+        case(3):// Biome (foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
+            p_enfant = 0;
+            p_fourmilier = 0;
+            p_fourmilier_lunaire = 0;
+            p_araignée = 20;
+            p_serpent = 15;
+            p_renard_polaire = 0;
+            p_renard_roux = 0;
+            break;
+        case(4):// Biome (forêt, désert, plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
+            p_enfant = 15;
+            p_fourmilier = 0;
+            p_fourmilier_lunaire = 0;
+            p_araignée = 5;
+            p_serpent = 0;
+            p_renard_polaire = 0;
+            p_renard_roux = 0;
+            break;
+        case(5):// Biome (forêt, désert, plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
+            p_enfant = 0;
+            p_fourmilier = 0;
+            p_fourmilier_lunaire = 0;
+            p_araignée = 5;
+            p_serpent = 0;
+            p_renard_polaire = 5;
+            p_renard_roux = 0;
+            break;
+        case(6):// Biome (taiga, montagne, haute montagne, espace)
+            p_enfant = 0;
+            p_fourmilier = 0;
+            p_fourmilier_lunaire = 0;
+            p_araignée = 5;
+            p_serpent = 0;
+            p_renard_roux = 5;
+            p_renard_polaire = 0;
+            break;
+        case(7):// Biome (montagne, haute montagne, espace)
+            p_enfant = 1;
+            p_fourmilier = 0;
+            p_fourmilier_lunaire = 0;
+            p_araignée = 15;
+            p_serpent = 10;
+            p_renard_polaire = 0;
+            p_renard_roux = 0;
+            break;
+        case(8):// Biome (forêt, désert, plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
+            p_enfant = 1;
+            p_fourmilier = 0;
+            p_fourmilier_lunaire = 0;
+            p_araignée = 15;
+            p_serpent = 10;
+            p_renard_polaire = 0;
+            p_renard_roux = 0;
+            break;
+        case(1969):// Biome (forêt, désert, plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
+            p_enfant = 0;
+            p_fourmilier = 0;
+            p_fourmilier_lunaire = 20;
+            p_araignée = 0;
+            p_serpent = 0;
+            p_renard_polaire = 0;
+            p_renard_roux = 0;
+            break;
+    }
+    int alea_enfant = nombreAleatoire(999);
+    int alea_fourmilier = nombreAleatoire(999);
+    int alea_fourmilier_lunaire = nombreAleatoire(999);
+    int alea_araignee = nombreAleatoire(999);
+    int alea_serpent = nombreAleatoire(999);
+    int alea_renard_roux = nombreAleatoire(999);
+    int alea_renard_polaire = nombreAleatoire(999);
+
+    if (alea_enfant<p_enfant){
+        //printf("gvgvhgvhgvhg");
+        //sleep(1);
+        Predateur P;
+        P.type = 0;
+        //P.nom_predateur = "enfant de 4 ans";
+        strcpy(P.nom_predateur, "enfant de 4 ans");
+        P.sante = 10000;
+        P.vitesse = 3;
+        P.force = 20;
+        P.victimes = 0;
+        P.suivant = NULL;
+
+        
+
+        int alea = nombreAleatoire(0);
+        //printf("     %d\n", alea);
+        //sleep(1);
+        switch(alea){
+            case(0):
+                P.x = 0;
+                P.y = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P.x][P.y].type != 1){
+                    P.y = (P.y+1)%25;
+                }
+                break;
+            case(1):
+                P.x = 24;
+                P.y = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P.x][P.y].type != 1){
+                    P.y = (P.y+1)%25;
+                }
+                break;
+            case(2):
+                P.y = 0;
+                P.x = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P.x][P.y].type != 1){
+                    P.x = (P.x+1)%25;
+                }
+                break;
+            case(3):
+                P.y = 24;
+                P.x = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P.x][P.y].type != 1){
+                    P.x = (P.x+1)%25;
+                }
+                break;
+
+        }
+        //printf("ajouter_predateur");
+        printf("dans la fonction %p, %p\n", &P, LP);
+        LP = ajouter_predateur(LP, P);
+        printf("dans la fonction %p, %p\n", &P, LP);
+
+    }
+    
+    if (alea_fourmilier<p_fourmilier){
+        Predateur P1;
+        P1.type = 1;
+        //P1.nom_predateur = "fourmilier";
+        strcpy(P1.nom_predateur, "fourmilier");
+        P1.sante = 500;
+        P1.vitesse = 2;
+        P1.force = 20;
+        P1.victimes = 0;
+        P1.suivant = NULL;
+
+        int alea = nombreAleatoire(3);
+        switch(alea){
+            case(0):
+                P1.x = 0;
+                P1.y = nombreAleatoire(24);
+            
+                while(E.chunks[P1.x][P1.y].type != 1){
+                    P1.y = (P1.y+1)%25;
+                }
+                break;
+            case(1):
+                P1.x = 24;
+                P1.y = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P1.x][P1.y].type != 1){
+                    P1.y = (P1.y+1)%25;
+                }
+                break;
+            case(2):
+                P1.y = 0;
+                P1.x = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P1.x][P1.y].type != 1){
+                    P1.x = (P1.x+1)%25;
+                }
+                break;
+            case(3):
+                P1.y = 24;
+                P1.x = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P1.x][P1.y].type != 1){
+                    P1.x = (P1.x+1)%25;
+                }
+                break;
+
+        }
+        LP = ajouter_predateur(LP, P1);
+
+    }
+    if (alea_fourmilier_lunaire<p_fourmilier_lunaire){
+        Predateur P2;
+        P2.type = 2;
+        //P2.nom_predateur = "fourmilier lunaire";
+        strcpy(P2.nom_predateur, "fourmilier lunaire");
+        P2.sante = 500;
+        P2.vitesse = 2;
+        P2.force = 20;
+        P2.victimes = 0;
+        P2.suivant = NULL;
+
+        int alea = nombreAleatoire(3);
+        switch(alea){
+            case(0):
+                P2.x = 0;
+                P2.y = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P2.x][P2.y].type != 1){
+                    P2.y = (P2.y+1)%25;
+                }
+                break;
+            case(1):
+                P2.x = 24;
+                P2.y = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P2.x][P2.y].type != 1){
+                    P2.y = (P2.y+1)%25;
+                }
+                break;
+            case(2):
+                P2.y = 0;
+                P2.x = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P2.x][P2.y].type != 1){
+                    P2.x = (P2.x+1)%25;
+                }
+                break;
+            case(3):
+                P2.y = 24;
+                P2.x = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P2.x][P2.y].type != 1){
+                    P2.x = (P2.x+1)%25;
+                }
+                break;
+
+        }
+        LP = ajouter_predateur(LP, P2);
+
+    }
+    if (alea_araignee<p_araignée){
+        Predateur P3;
+        P3.type = 3;
+        //P3.nom_predateur = "araignée";
+        strcpy(P3.nom_predateur, "araignée");
+        P3.sante = 50;
+        P3.vitesse = 3;
+        P3.force = 10;
+        P3.victimes = 0;
+        P3.suivant = NULL;
+
+        int alea = nombreAleatoire(3);
+        switch(alea){
+            case(0):
+                P3.x = 0;
+                P3.y = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P3.x][P3.y].type != 1){
+                    P3.y = (P3.y+1)%25;
+                }
+                break;
+            case(1):
+                P3.x = 24;
+                P3.y = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P3.x][P3.y].type != 1){
+                    P3.y = (P3.y+1)%25;
+                }
+                break;
+            case(2):
+                P3.y = 0;
+                P3.x = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P3.x][P3.y].type != 1){
+                    P3.x = (P3.x+1)%25;
+                }
+                break;
+            case(3):
+                P3.y = 24;
+                P3.x = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P3.x][P3.y].type != 1){
+                    P3.x = (P3.x+1)%25;
+                }
+                break;
+
+        }
+        LP = ajouter_predateur(LP, P3);
+
+    }
+    if (alea_serpent<p_serpent){
+        Predateur P4;
+        P4.type = 4;
+        //P4.nom_predateur = "serpent";
+        strcpy(P4.nom_predateur, "serpent");
+        P4.sante = 200;
+        P4.vitesse = 2;
+        P4.force = 15;
+        P4.victimes = 0;
+        P4.suivant = NULL;
+
+        int alea = nombreAleatoire(3);
+        switch(alea){
+            case(0):
+                P4.x = 0;
+                P4.y = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P4.x][P4.y].type != 1){
+                    P4.y = (P4.y+1)%25;
+                }
+                break;
+            case(1):
+                P4.x = 24;
+                P4.y = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P4.x][P4.y].type != 1){
+                    P4.y = (P4.y+1)%25;
+                }
+                break;
+            case(2):
+                P4.y = 0;
+                P4.x = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P4.x][P4.y].type != 1){
+                    P4.x = (P4.x+1)%25;
+                }
+                break;
+            case(3):
+                P4.y = 24;
+                P4.x = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P4.x][P4.y].type != 1){
+                    P4.x = (P4.x+1)%25;
+                }
+                break;
+
+        }
+        LP = ajouter_predateur(LP, P4);
+
+    }
+    if (alea_renard_roux<p_renard_roux){
+        Predateur P5;
+        P5.type = 5;
+        //P5.nom_predateur = "renard roux";
+        strcpy(P5.nom_predateur, "renard roux");
+        P5.sante = 1000;
+        P5.vitesse = 3;
+        P5.force = 20;
+        P5.victimes = 0;
+        P5.suivant = NULL;
+
+        int alea = nombreAleatoire(3);
+        switch(alea){
+            case(0):
+                P5.x = 0;
+                P5.y = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P5.x][P5.y].type != 1){
+                    P5.y = (P5.y+1)%25;
+                }
+                break;
+            case(1):
+                P5.x = 24;
+                P5.y = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P5.x][P5.y].type != 1){
+                    P5.y = (P5.y+1)%25;
+                }
+                break;
+            case(2):
+                P5.y = 0;
+                P5.x = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P5.x][P5.y].type != 1){
+                    P5.x = (P5.x+1)%25;
+                }
+                break;
+            case(3):
+                P5.y = 24;
+                P5.x = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P5.x][P5.y].type != 1){
+                    P5.x = (P5.x+1)%25;
+                }
+                break;
+
+        }
+        LP = ajouter_predateur(LP, P5);
+
+    }
+    if (alea_renard_polaire<p_renard_polaire){
+        Predateur P6;
+        P6.type = 6;
+        //P6.nom_predateur = "renard polaire";
+        strcpy(P6.nom_predateur, "renard polaire");
+        P6.sante = 1000;
+        P6.vitesse = 3;
+        P6.force = 20;
+        P6.victimes = 0;
+        P6.suivant = NULL;
+
+        int alea = nombreAleatoire(3);
+        switch(alea){
+            case(0):
+                P6.x = 0;
+                P6.y = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P6.x][P6.y].type != 1){
+                    P6.y = (P6.y+1)%25;
+                }
+                break;
+            case(1):
+                P6.x = 24;
+                P6.y = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P6.x][P6.y].type != 1){
+                    P6.y = (P6.y+1)%25;
+                }
+                break;
+            case(2):
+                P6.y = 0;
+                P6.x = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P6.x][P6.y].type != 1){
+                    P6.x = (P6.x+1)%25;
+                }
+                break;
+            case(3):
+                P6.y = 24;
+                P6.x = nombreAleatoire(24);
+                //P.y = 0;
+            
+                while(E.chunks[P6.x][P6.y].type != 1){
+                    P6.x = (P6.x+1)%25;
+                }
+                break;
+
+        }
+        LP = ajouter_predateur(LP, P6);   
+    }
+}
+
+void journee(Environnement* E, Meteo* M, Temps* T, Predateur* LP){
+    Environnement E2;
+    incr_temp(T);
+    E2 = ajout_eau_miam(*E, *M);
+    maj_meteo(M, *T);
+    generer_predateur(*E, LP);
+
+    // Afficher les informations temporelles
+    /*
+    printf("\n=== Informations Temps ===\n");
+    const char* saisons[] = {"Hiver", "Printemps", "Été", "Automne"};
+    printf("Saison : %s\n", saisons[T->saison]);
+    printf("Mois : %d\n", T->mois + 1); // Ajouter 1 pour afficher mois de 1 à 12
+    printf("Jour : %d\n", T->jour);
+
+    // Afficher les informations météorologiques
+    printf("\n=== Informations Météo ===\n");
+    printf("Température actuelle : %.2f °C\n", M->temperature);
+    printf("Précipitations : %s\n", M->precipitation ? "Oui" : "Non");
+*/
+    //printf("\n=== Informations Prédateurs ===\n");
+    printf("LP = %p", LP);
+    if (LP == NULL){
+        printf("il n'y a aucun prédateur dans les environs\n");
+    }
+
+    else {
+        Predateur* copie = LP;
+        while(copie!= NULL){
+            printf("Il y a un %s, qui a déjà fait %d victimes !\n", copie->nom_predateur, copie->victimes);
+            copie = copie->suivant;
+        }
+    }
+
+    // Ligne de séparation
+    printf("\n========================\n");
+
+    E = &E2;
+    
+}
 
 
 int main() {
@@ -693,11 +1247,13 @@ int main() {
     afficher_envi(E) ;
     Meteo M = init_meteo(E);
     Temps T = init_temps();
+    Predateur* LP = NULL;
+
 
     while(true){
-        printf("\033[H\033[J");
-        afficher_envi(E) ;
-        journee(&E, &M, &T);
+        //printf("\033[H\033[J");
+        //afficher_envi(E) ;
+        journee(&E, &M, &T, LP);
         sleep(2);
     }
 
