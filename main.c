@@ -4,6 +4,7 @@
 #include "fourmi.h"
 #include "reine.h"
 #include "animation.h"
+#include "environnement.h"
 
 #define JOUR_SIMULATION 6
 
@@ -40,8 +41,18 @@ void simulation(int type){
 //     if (reine != NULL) {
 //          afficher_Reine(reine);
 //     }
-    for(int i = 1; i <= JOUR_SIMULATION ; i++){
-        liste = cycle_jour(i, liste, reine);
+    srand(time(NULL)) ;
+
+    Environnement E = genererEnvironnement() ;
+    afficher_envi(E) ;
+    Meteo M = init_meteo(E);
+    Temps T = init_temps();
+    Predateur* LP = NULL;
+
+    while(1){
+        liste = cycle_jour(5, liste, reine);
+        journee(&E, &M, &T, &LP);
+        sleep(1);
     }
     afficher_Reine(reine);
     getchar();
