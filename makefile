@@ -6,7 +6,8 @@ SRC = main.c \
       fourmi.c \
       reine.c \
       fourmiliere.c \
-      liste_fourmis.c
+      liste_fourmis.c \
+      animation.c
 
 OBJ = $(SRC:.c=.o)
 

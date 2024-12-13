@@ -3,6 +3,7 @@
 #include "fourmiliere.h"
 #include "fourmi.h"
 #include "reine.h"
+#include "animation.h"
 
 #define JOUR_SIMULATION 6
 
@@ -19,8 +20,7 @@ ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine){
      return liste;
 }
 
-int main() {
-
+void simulation(){
     ListFourmi* liste = Initialisation_List();
     Reine* reine = creationReine(1, "Formica");
 //     getchar();
@@ -37,6 +37,12 @@ int main() {
 //     afficher_Liste_fourmi(liste);
     liberer_liste(liste);
     free(reine);
+}
+
+int main() {
+
+    affichage_animation_debut();
+//     simulation();
 
     return 0;
 }
