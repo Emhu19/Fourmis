@@ -1,6 +1,9 @@
 #ifndef FOURMILIERE_H
 #define FOURMILIERE_H
 
+#include "fourmi.h"
+
+
 void clear_terminal();
 void afficher_titre(const char *titre);
 void afficher_salle_simple(const char *nom);
@@ -12,6 +15,6 @@ void afficher_salles_alignees(const char *nom1, const char *nom2);
 void afficher_salles_alignees_3(const char *nom1, const char *nom2, const char *nom3);
 void afficher_fourmiliere_niveau(int niveau);
 void afficher_legende();
-void afficher_fourmiliere(int niveau);
+void afficher_fourmiliere(int niveau, ListFourmi* liste, Reine* reine);
 
 #endif

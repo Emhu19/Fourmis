@@ -1,5 +1,6 @@
 #include "fourmiliere.h"
 #include <stdio.h>
+#include <unistd.h>
 
 void clear_terminal() {
     printf("\033[H\033[J");
@@ -91,19 +92,31 @@ void afficher_fourmiliere_niveau(int niveau) {
     }
 }
 
-void afficher_legende() {
-    printf("\n\033[1;33mLégende :\033[0m\n");
-    printf("Reine : Salle de la reine\n");
-    printf("Nourriture : Stockage de nourriture\n");
-    printf("Larves : Salle des larves\n");
-    printf("Ressources : Stockage de ressources\n");
+int salle_reine(Reine* reine){
+    if(reine->salle == 1){
+        return 1;
+    }
+    else{
+        return 0;
+    }
 }
 
-void afficher_fourmiliere(int niveau) {
+void afficher_legende(ListFourmi* liste, Reine* reine) {
+    printf("\n\033[1;33mLégende :\033[0m\n");
+    printf("Reine : Salle de la reine (%d/1)\n", salle_reine(reine));
+    printf("Nourriture : Stockage de nourriture(0/120)\n");
+    printf("Larves : Salle des larves(%d/125)\n", compter_fourmi_salle(liste, 2));
+    printf("Ressources : Stockage de ressources(0/100)\n");
+    printf("Exterieur : (%d)\n", compter_fourmi_salle(liste, 0));
+}
+
+void afficher_fourmiliere(int niveau, ListFourmi* liste, Reine* reine) {
     clear_terminal();
     afficher_titre("Fourmilière");
     afficher_fourmiliere_niveau(niveau);
-    afficher_legende();
-    printf("\n\033[1;32mAppuyez sur Entrée pour continuer...\033[0m\n");
-    getchar();
+    afficher_legende(liste, reine);
+    compter_Liste_fourmi(liste);
+//     printf("\n\033[1;32mAppuyez sur Entrée pour continuer...\033[0m\n");
+    usleep(500000);
+//     getchar();
 }
