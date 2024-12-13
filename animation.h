@@ -14,6 +14,8 @@ void afficher_fourmi_animation(int position);
 void afficherMenu_Fourmiliere();
 void afficherMenu_Carte();
 void afficher_logo();
-void affichage_animation_debut();
-
+int affichage_animation_debut();
+void logo_1();
+int logo_2();
+int logo_3();
 #endif

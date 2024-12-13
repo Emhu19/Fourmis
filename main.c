@@ -11,10 +11,10 @@
 // 1 Fourmi coupeuse de feuilles : Atta
 // 2 Fourmis des dunes : Cataglyphis
 // 3 Fourmis des rochers : Messor
-// 4 Fourmis amazoniennes ou guerrières : Eciton
+// 4 Fourmis amazoniennes : Eciton
 // 5 Fourmis forestières : Formica
-// 6 Fourmis du désert : Pogonomyrmex Cataglyphis
-// 7 Fourmis cultivatrices de champignons Acromyrmex
+// 6 Fourmis du désert : Pogonomyrmex
+// 7 Fourmis cultivatrices de champignons : Acromyrmex
 // 8 Fourmis nageuses : Polyrhachis
 
 
@@ -22,7 +22,7 @@ ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine){
 
     for(int i = 1; i <= reine->capacite_ponte ; i++){
 
-        Fourmi* fourmi1 = creationFourmi(i, "Formica", "Ouvrière");
+        Fourmi* fourmi1 = creationFourmi(i, "Ouvrière", reine->type);
         liste = ajout_fourmi(&liste, fourmi1);
     }
      update_day_Reine(reine);
@@ -31,9 +31,9 @@ ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine){
      return liste;
 }
 
-void simulation(){
+void simulation(int type){
     ListFourmi* liste = Initialisation_List();
-    Reine* reine = creationReine(1, "Formica");
+    Reine* reine = creationReine(1, type);
 //     getchar();
 //     afficher_Reine(reine);
 //     getchar();
@@ -43,7 +43,7 @@ void simulation(){
     for(int i = 1; i <= JOUR_SIMULATION ; i++){
         liste = cycle_jour(i, liste, reine);
     }
-//     afficher_Reine(reine);
+    afficher_Reine(reine);
     getchar();
 //     afficher_Liste_fourmi(liste);
     liberer_liste(liste);
@@ -51,9 +51,10 @@ void simulation(){
 }
 
 int main() {
-
-    affichage_animation_debut();
-    simulation();
+    logo_1();
+    int type = logo_2();
+    int biome = logo_3();
+    simulation(type);
 
     return 0;
 }

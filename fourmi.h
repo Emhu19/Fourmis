@@ -30,8 +30,7 @@ typedef struct ListFourmi{
     struct ListFourmi *prev;
     struct ListFourmi *next; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente
 }ListFourmi;
-
-Fourmi* creationFourmi(int id, const char* espece_fourmi, const char* role_fourmi);
+Fourmi* creationFourmi(int id, const char* role_fourmi, int type_fourmi);
 void afficher_fourmi(const Fourmi* fourmi);
 ListFourmi* Initialisation_List();
 void afficher_Liste_fourmi(ListFourmi* liste);

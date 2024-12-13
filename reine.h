@@ -7,7 +7,7 @@
 #define MAX_CHAR 50
 
 typedef struct {
-    char espece[MAX_CHAR];
+    int type;
     int id_reine;
     char role[MAX_CHAR];
     int salle;
@@ -23,7 +23,7 @@ typedef struct {
     char maladie[MAX_CHAR];
 } Reine;
 
-Reine* creationReine(int id, const char* espece);
+Reine* creationReine(int id, int type_reine);
 void afficher_Reine(const Reine* reine);
 void update_day_Reine(Reine* reine);
 void update_year_Reine(Reine* reine);

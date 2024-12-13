@@ -3,13 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-Fourmi* creationFourmi(int id, const char* espece_fourmi, const char* role_fourmi) {
+Fourmi* creationFourmi(int id, const char* role_fourmi, int type_fourmi) {
     Fourmi* nouvelle_fourmi = (Fourmi*)malloc(sizeof(Fourmi));
     if (nouvelle_fourmi == NULL) {
         perror("Erreur d'allocation mémoire pour la fourmi");
         return NULL;
     }
-    strcpy(nouvelle_fourmi->espece, espece_fourmi);
     nouvelle_fourmi->id_fourmi = id;
     strcpy(nouvelle_fourmi->role, role_fourmi);
     nouvelle_fourmi->age = 1;
@@ -102,7 +101,7 @@ int compter_fourmi_salle(ListFourmi* liste, int salle){
 
     if(newList->fourmi == NULL){
         printf("Liste vide\n");
-        return;
+        return 0;
     }
     int i = 0;
     while(newList->next != NULL){

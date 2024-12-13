@@ -186,29 +186,36 @@ void afficher_logo(){
 void logo_1(){
     for (int step = 0; step < ANIMATION_STEPS; step++) {
         afficher_fourmi_animation(step);
-        usleep(100000);
+        usleep(35000);
     }
 
     afficher_logo();
     getchar();
 }
 
-void logo_2(){
+int logo_2(){
     printf("\033[H\033[2J");
     afficherArray(fourmiliere, sizeof(fourmiliere) / sizeof(fourmiliere[0]));
     afficherMenu_Fourmiliere();
+    int choix;
+    scanf("%d", &choix);
     getchar();
+    return choix;
 }
 
-void logo_3(){
+int logo_3(){
     printf("\033[H\033[2J");
     afficherArray(carte, sizeof(carte) / sizeof(carte[0]));
     afficherMenu_Carte();
+    int choix;
+    scanf("%d", &choix);
     getchar();
+    return choix;
 }
 
-void affichage_animation_debut(){
-    logo_1();
-    logo_2();
+int affichage_animation_debut(){
+     logo_1();
+    int result = logo_2();
     logo_3();
+    return result;
 }
