@@ -7,6 +7,17 @@
 
 #define JOUR_SIMULATION 6
 
+// Liste des types de fourmilles
+// 1 Fourmi coupeuse de feuilles : Atta
+// 2 Fourmis des dunes : Cataglyphis
+// 3 Fourmis des rochers : Messor
+// 4 Fourmis amazoniennes ou guerrières : Eciton
+// 5 Fourmis forestières : Formica
+// 6 Fourmis du désert : Pogonomyrmex Cataglyphis
+// 7 Fourmis cultivatrices de champignons Acromyrmex
+// 8 Fourmis nageuses : Polyrhachis
+
+
 ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine){
 
     for(int i = 1; i <= reine->capacite_ponte ; i++){
@@ -42,7 +53,7 @@ void simulation(){
 int main() {
 
     affichage_animation_debut();
-//     simulation();
+    simulation();
 
     return 0;
 }

@@ -153,8 +153,14 @@ void afficherMenu_Fourmiliere() {
     printf("\n|        Quel type de fourmis voulez dans votre fourmilère démarrer la simulation ?     |");
     printf("\n|                          Attention le choix est important                             |");
     printf("\n|                                                                                       |\n");
+    printf("| 1. Fourmilière de feuilles                      |    2. Fourmilière de sable          |\n");
+    printf("| 3. Fourmilière de pierre                        |    4. Fourmilière tropicale         |\n");
+    printf("| 5. Fourmilière forestière                       |    6. Fourmilière désertique        |\n");
+    printf("| 7. Fourmilière de champignon                    |    8. Fourmilière aquatique         |\n");
+    printf("|                                                                                       |\n");
     printf("#=======================================================================================#\n");
 }
+
 
 void afficherMenu_Carte() {
     printf("\n#=============================== Menu Principal ========================================#");
@@ -177,7 +183,7 @@ void afficher_logo(){
     printf("                                                                                     |_|  \\___/ \\__,_|_|  |_| |_| |_|_|_|_|\\___|_|  \\___| \n\n\n");
 }
 
-void affichage_animation_debut(){
+void logo_1(){
     for (int step = 0; step < ANIMATION_STEPS; step++) {
         afficher_fourmi_animation(step);
         usleep(100000);
@@ -185,14 +191,24 @@ void affichage_animation_debut(){
 
     afficher_logo();
     getchar();
+}
 
+void logo_2(){
     printf("\033[H\033[2J");
     afficherArray(fourmiliere, sizeof(fourmiliere) / sizeof(fourmiliere[0]));
     afficherMenu_Fourmiliere();
     getchar();
+}
 
+void logo_3(){
     printf("\033[H\033[2J");
     afficherArray(carte, sizeof(carte) / sizeof(carte[0]));
     afficherMenu_Carte();
     getchar();
+}
+
+void affichage_animation_debut(){
+    logo_1();
+    logo_2();
+    logo_3();
 }
