@@ -52,8 +52,8 @@ void simulation(int type){
 
 int main() {
     logo_1();
-    int type = logo_2();
     int biome = logo_3();
+    int type = logo_2();
     simulation(type);
 
     return 0;
