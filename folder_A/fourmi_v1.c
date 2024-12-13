@@ -903,7 +903,7 @@ void generer_predateur(Environnement E, Predateur** LP){
             p_renard_roux = 0;
             break;
         case(3):// Biome (foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
-            p_enfant = 100;
+            p_enfant = 0;
             p_fourmilier = 0;
             p_fourmilier_lunaire = 0;
             p_araignée = 20;
