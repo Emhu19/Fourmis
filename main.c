@@ -52,7 +52,7 @@ void simulation(int type){
     while(1){
         liste = cycle_jour(5, liste, reine);
         journee(&E, &M, &T, &LP);
-        sleep(1);
+//         sleep(5);
     }
     afficher_Reine(reine);
     getchar();
@@ -62,7 +62,7 @@ void simulation(int type){
 }
 
 int main() {
-    logo_1();
+//     logo_1();
     int biome = logo_3();
     int type = logo_2();
     simulation(type);
