@@ -99,11 +99,12 @@ void afficher_legende() {
     printf("Ressources : Stockage de ressources\n");
 }
 
-void afficher_fourmiliere(int niveau) {
+void afficher_fourmiliere(int niveau, ListFourmi* liste) {
     clear_terminal();
     afficher_titre("Fourmilière");
     afficher_fourmiliere_niveau(niveau);
     afficher_legende();
+    compter_Liste_fourmi(liste);
     printf("\n\033[1;32mAppuyez sur Entrée pour continuer...\033[0m\n");
     getchar();
 }

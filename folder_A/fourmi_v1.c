@@ -1237,7 +1237,7 @@ int main() {
 
 
     while(true){
-        //printf("\033[H\033[J");
+        printf("\033[H\033[J");
         //afficher_envi(E) ;
         journee(&E, &M, &T, &LP);
         sleep(2);

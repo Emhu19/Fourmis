@@ -36,12 +36,6 @@ void afficher_fourmi(const Fourmi* fourmi) {
     printf("Coordonnées : (%d, %d)\n", fourmi->coord_x, fourmi->coord_y);
 }
 
-typedef struct ListFourmi{
-    Fourmi* fourmi; //je suppose une structure ant on pourra changer le nom en fonction de ce qu'emilien fait
-    struct ListFourmi *prev;
-    struct ListFourmi *next; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente
-}ListFourmi;
-
 ListFourmi* Initialisation_List() {
     ListFourmi* newList = (ListFourmi*)malloc(sizeof(ListFourmi));
     if (newList == NULL) {
@@ -75,10 +69,28 @@ ListFourmi* ajout_fourmi(ListFourmi** liste, Fourmi* fourmi){
 
 void afficher_Liste_fourmi(ListFourmi* liste){
     ListFourmi* newList = liste;
+    if(newList->fourmi == NULL){
+        printf("Liste vide\n");
+        return;
+    }
     while(newList != NULL){
         afficher_fourmi(newList->fourmi);
         newList = newList->next;
     }
+}
+
+void compter_Liste_fourmi(ListFourmi* liste){
+    ListFourmi* newList = liste;
+    if(newList->fourmi == NULL){
+        printf("Liste vide\n");
+        return;
+    }
+    int i = 0;
+    while(newList->next != NULL){
+        i++;
+        newList = newList->next;
+    }
+    printf("Il y a %d fourmis dans la fourmilières\n", i);
 }
 
 ListFourmi* retirer_fourmi(ListFourmi** liste, Fourmi* fourmi) {

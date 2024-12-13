@@ -21,8 +21,23 @@ typedef struct {
     int coord_y;
 } Fourmi;
 
+
+typedef struct ListFourmi{
+    Fourmi* fourmi; //je suppose une structure ant on pourra changer le nom en fonction de ce qu'emilien fait
+    struct ListFourmi *prev;
+    struct ListFourmi *next; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente
+}ListFourmi;
+
 Fourmi* creationFourmi(int id, const char* espece_fourmi, const char* role_fourmi);
 void afficher_fourmi(const Fourmi* fourmi);
+ListFourmi* Initialisation_List();
+void afficher_Liste_fourmi(ListFourmi* liste);
+ListFourmi* ajout_fourmi(ListFourmi** liste, Fourmi* fourmi);
+ListFourmi* retirer_fourmi(ListFourmi** liste, Fourmi* fourmi);
+void compter_Liste_fourmi(ListFourmi* liste);
+void liberer_liste(ListFourmi* liste);
+Fourmi* trouver_fourmi(ListFourmi* liste, int id);
+ListFourmi* fusionner_listes(ListFourmi* liste1, ListFourmi* liste2);
 void mise_a_jour_fourmi(Fourmi* fourmi);
 void nourrir_fourmi(Fourmi* fourmi);
 void deplacer_fourmi(Fourmi* fourmi, int x, int y);
