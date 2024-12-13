@@ -28,6 +28,7 @@ typedef struct {
 
 typedef struct Predateur Predateur;
 struct Predateur{
+    int id;
     int type;
     char nom_predateur[50] point_virgule
     int x point_virgule
@@ -58,6 +59,7 @@ typedef struct {
     int saison point_virgule
     int mois point_virgule
     int jour point_virgule
+    int annee;
 } Temps point_virgule
 
 
@@ -457,6 +459,7 @@ void incr_temp(Temps* t) {
             if (t->jour > 31) {
                 t->jour -= 31;
                 t->mois = 0; // Retour au mois de janvier
+                t->annee ++;
             }
             break;
     }
@@ -487,6 +490,7 @@ Temps init_temps(){
     tps.mois = 0 point_virgule
     tps.jour = 0 point_virgule
     tps.saison = 0 point_virgule
+    tps.annee = 2024;
     return tps point_virgule
 }
 
@@ -608,15 +612,150 @@ void maj_meteo(Meteo* m, Temps t){
 
 }
 
+
+
+
+void tuer_predateur(int id, Predateur** LP) {
+    if (LP == NULL || *LP == NULL) {
+        return; // Liste vide ou pointeur invalide
+    }
+
+    Predateur* current = *LP;
+    Predateur* prev = NULL;
+
+    // Cas particulier : suppression de l'élément de tête
+    if (current->id == id) {
+        *LP = current->suivant; // Le nouvel élément de tête
+        //free(current);          // Libérer la mémoire
+        return;
+    }
+
+    // Parcours pour trouver l'élément à supprimer
+    while (current != NULL) {
+        if (current->id == id) {
+            if (prev != NULL) {
+                prev->suivant = current->suivant; // Sauter l'élément à supprimer
+            }
+            //free(current); // Libérer la mémoire
+            return;
+        }
+        prev = current;       // Mettre à jour le pointeur précédent
+        current = current->suivant; // Avancer au suivant
+    }
+
+    // Si on arrive ici, l'élément n'a pas été trouvé
+    //printf("Élément avec l'id %d introuvable.\n", id);
+}
+
+
+
+
+void bouger_predateur(Predateur * P, Environnement E, Predateur* LP){
+    for (int i = 0; i< P->vitesse; i++){
+        int alea = nombreAleatoire(3);
+        switch(alea){
+            case(0):
+                P->x ++;
+                if(E.chunks[P->x][P->y].type == 1){
+                    P->x--;
+                    i--;
+                }
+                break;
+            case(1):
+                P->x --;
+                if(E.chunks[P->x][P->y].type == 1){
+                    P->x++;
+                    i--;
+                }
+                break;
+            case(2):
+                P->y ++;
+                if(E.chunks[P->x][P->y].type == 1){
+                    P->y--;
+                    i--;
+                }
+                break;
+            case(3):
+                P->y --;
+                if(E.chunks[P->x][P->y].type == 1){
+                    P->y++;
+                    i--;
+                }
+                break;
+        }
+    }
+}
+
+int compter_predateurs(Predateur* LP){
+    if (LP == NULL){
+        return 0;
+    }
+    int compteur = 1;
+    Predateur* copie = LP;
+    while(copie->suivant != NULL){
+        compteur++;
+        copie = copie->suivant;
+    }
+    //printf("il y a %d predateurs\n", compteur);
+    return compteur;
+}
+
+void print_id(Predateur* LP) {
+    if (LP == NULL) {
+        printf("La liste est vide.\n");
+        return;
+    }
+
+    Predateur* copie = LP;
+    while (copie != NULL) { // Parcourt la liste jusqu'à la fin
+        printf("%d ", copie->id); // Affiche l'ID avec un espace entre chaque
+        copie = copie->suivant;  // Avance à l'élément suivant
+    }
+
+    printf("\n"); // Ajoute une nouvelle ligne après avoir affiché tous les IDs
+}
+
+
+
+void bouger_predateurs(Predateur** LP, Environnement E){
+    
+    if (*LP == NULL){
+        return;
+    }
+    //int nb = compter_predateurs(*LP);
+    //int Liste_meurtre[nb];
+    //for (int i = 0; i< nb; i++){
+    //    Liste_meurtre[i] = -1;
+    //}
+
+
+    bouger_predateur(*LP, E, *LP);
+    Predateur* copie = *LP;
+    //int i = 0;
+
+    while(copie->suivant != NULL){ // bouge tous les predateurs
+        //Liste_meurtre[i] = 
+        
+        copie = copie->suivant;
+        bouger_predateur(copie, E, *LP);
+        //printf("nouvel element de la liste : %d\n", Liste_meurtre[i]);
+    }
+
+    //for (int i = 0; i< nb; i++){   // tue les predateurs qui sortent de la map
+        //printf("tuons le predateur %d\n", Liste_meurtre[i]);
+        //print_id(*LP);
+        //if (Liste_meurtre[i] != -1){
+            
+        //    tuer_predateur(Liste_meurtre[i], LP);
+        //}
+    //}
+
+}
+
 /*
-void init_predateur(Environnement E)
-*/
-/*
-void maj_predateur(Predateur p, Environnement e, Temps t, Liste_fourmilière fl)
+void maj_predateur(*Predateur LP, Environnement E, Temps T, Liste_fourmilière LF)
     //met a jour les infos du predateur (position, traverse la rivière ou pas etc...), et gère les combats avec les fourmis s'ils se rencontrent 
 */
-
-
 
 void afficher_envi(Environnement E) {
     for (int i = 0 point_virgule i < 25 point_virgule i++) {
@@ -663,6 +802,27 @@ void afficher_envi_v(Environnement E){
     }
 }
 
+int trouver_id_predateur(Predateur* LP){
+    if (LP == NULL){
+        return 0;
+    }
+    int i = 1;
+    while(1){
+        Predateur* P = LP;
+        while (P->suivant != NULL){
+            P = P->suivant;
+            if (P->id == i){
+                break;
+            }
+
+        }
+        if (P->suivant == NULL){
+            return i;
+        }
+        i++;
+    }
+}
+
 Predateur* ajouter_predateur(Predateur* LP, Predateur P) {
     // Allouer de la mémoire pour le nouveau prédateur
     Predateur* nouveau = malloc(sizeof(Predateur));
@@ -694,6 +854,11 @@ Predateur* ajouter_predateur(Predateur* LP, Predateur P) {
     }
     
     copie->suivant = nouveau;
+    copie->suivant->id = trouver_id_predateur(LP);
+
+    if (nouveau->suivant != NULL) {
+        printf("Erreur : le dernier élément ne pointe pas vers NULL.\n");
+    }
 
     return LP;
 }
@@ -738,7 +903,7 @@ void generer_predateur(Environnement E, Predateur** LP){
             p_renard_roux = 0;
             break;
         case(3):// Biome (foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
-            p_enfant = 0;
+            p_enfant = 100;
             p_fourmilier = 0;
             p_fourmilier_lunaire = 0;
             p_araignée = 20;
@@ -828,7 +993,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P.y = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P.x][P.y].type != 1){
+                while(E.chunks[P.x][P.y].type == 1){
                     P.y = (P.y+1)%25;
                 }
                 break;
@@ -837,7 +1002,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P.y = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P.x][P.y].type != 1){
+                while(E.chunks[P.x][P.y].type == 1){
                     P.y = (P.y+1)%25;
                 }
                 break;
@@ -846,7 +1011,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P.x = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P.x][P.y].type != 1){
+                while(E.chunks[P.x][P.y].type == 1){
                     P.x = (P.x+1)%25;
                 }
                 break;
@@ -855,7 +1020,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P.x = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P.x][P.y].type != 1){
+                while(E.chunks[P.x][P.y].type == 1){
                     P.x = (P.x+1)%25;
                 }
                 break;
@@ -881,7 +1046,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P1.x = 0;
                 P1.y = nombreAleatoire(24);
             
-                while(E.chunks[P1.x][P1.y].type != 1){
+                while(E.chunks[P1.x][P1.y].type == 1){
                     P1.y = (P1.y+1)%25;
                 }
                 break;
@@ -890,7 +1055,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P1.y = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P1.x][P1.y].type != 1){
+                while(E.chunks[P1.x][P1.y].type == 1){
                     P1.y = (P1.y+1)%25;
                 }
                 break;
@@ -899,7 +1064,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P1.x = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P1.x][P1.y].type != 1){
+                while(E.chunks[P1.x][P1.y].type == 1){
                     P1.x = (P1.x+1)%25;
                 }
                 break;
@@ -908,13 +1073,12 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P1.x = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P1.x][P1.y].type != 1){
+                while(E.chunks[P1.x][P1.y].type == 1){
                     P1.x = (P1.x+1)%25;
                 }
                 break;
 
         }
-
         *LP = ajouter_predateur(*LP, P1);
     }
     if (alea_fourmilier_lunaire<p_fourmilier_lunaire){
@@ -935,7 +1099,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P2.y = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P2.x][P2.y].type != 1){
+                while(E.chunks[P2.x][P2.y].type == 1){
                     P2.y = (P2.y+1)%25;
                 }
                 break;
@@ -944,7 +1108,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P2.y = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P2.x][P2.y].type != 1){
+                while(E.chunks[P2.x][P2.y].type == 1){
                     P2.y = (P2.y+1)%25;
                 }
                 break;
@@ -953,7 +1117,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P2.x = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P2.x][P2.y].type != 1){
+                while(E.chunks[P2.x][P2.y].type == 1){
                     P2.x = (P2.x+1)%25;
                 }
                 break;
@@ -962,7 +1126,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P2.x = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P2.x][P2.y].type != 1){
+                while(E.chunks[P2.x][P2.y].type == 1){
                     P2.x = (P2.x+1)%25;
                 }
                 break;
@@ -989,7 +1153,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P3.y = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P3.x][P3.y].type != 1){
+                while(E.chunks[P3.x][P3.y].type == 1){
                     P3.y = (P3.y+1)%25;
                 }
                 break;
@@ -998,7 +1162,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P3.y = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P3.x][P3.y].type != 1){
+                while(E.chunks[P3.x][P3.y].type == 1){
                     P3.y = (P3.y+1)%25;
                 }
                 break;
@@ -1007,7 +1171,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P3.x = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P3.x][P3.y].type != 1){
+                while(E.chunks[P3.x][P3.y].type == 1){
                     P3.x = (P3.x+1)%25;
                 }
                 break;
@@ -1016,12 +1180,13 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P3.x = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P3.x][P3.y].type != 1){
+                while(E.chunks[P3.x][P3.y].type == 1){
                     P3.x = (P3.x+1)%25;
                 }
                 break;
 
         }
+
         *LP = ajouter_predateur(*LP, P3);
 
     }
@@ -1043,7 +1208,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P4.y = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P4.x][P4.y].type != 1){
+                while(E.chunks[P4.x][P4.y].type == 1){
                     P4.y = (P4.y+1)%25;
                 }
                 break;
@@ -1052,7 +1217,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P4.y = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P4.x][P4.y].type != 1){
+                while(E.chunks[P4.x][P4.y].type == 1){
                     P4.y = (P4.y+1)%25;
                 }
                 break;
@@ -1061,7 +1226,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P4.x = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P4.x][P4.y].type != 1){
+                while(E.chunks[P4.x][P4.y].type == 1){
                     P4.x = (P4.x+1)%25;
                 }
                 break;
@@ -1070,7 +1235,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P4.x = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P4.x][P4.y].type != 1){
+                while(E.chunks[P4.x][P4.y].type == 1){
                     P4.x = (P4.x+1)%25;
                 }
                 break;
@@ -1097,7 +1262,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P5.y = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P5.x][P5.y].type != 1){
+                while(E.chunks[P5.x][P5.y].type == 1){
                     P5.y = (P5.y+1)%25;
                 }
                 break;
@@ -1106,7 +1271,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P5.y = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P5.x][P5.y].type != 1){
+                while(E.chunks[P5.x][P5.y].type == 1){
                     P5.y = (P5.y+1)%25;
                 }
                 break;
@@ -1115,7 +1280,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P5.x = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P5.x][P5.y].type != 1){
+                while(E.chunks[P5.x][P5.y].type == 1){
                     P5.x = (P5.x+1)%25;
                 }
                 break;
@@ -1124,13 +1289,14 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P5.x = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P5.x][P5.y].type != 1){
+                while(E.chunks[P5.x][P5.y].type == 1){
                     P5.x = (P5.x+1)%25;
                 }
                 break;
 
         }
         *LP = ajouter_predateur(*LP, P5);
+        
 
     }
     if (alea_renard_polaire<p_renard_polaire){
@@ -1151,7 +1317,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P6.y = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P6.x][P6.y].type != 1){
+                while(E.chunks[P6.x][P6.y].type == 1){
                     P6.y = (P6.y+1)%25;
                 }
                 break;
@@ -1160,7 +1326,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P6.y = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P6.x][P6.y].type != 1){
+                while(E.chunks[P6.x][P6.y].type == 1){
                     P6.y = (P6.y+1)%25;
                 }
                 break;
@@ -1169,7 +1335,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P6.x = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P6.x][P6.y].type != 1){
+                while(E.chunks[P6.x][P6.y].type == 1){
                     P6.x = (P6.x+1)%25;
                 }
                 break;
@@ -1178,22 +1344,79 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P6.x = nombreAleatoire(24);
                 //P.y = 0;
             
-                while(E.chunks[P6.x][P6.y].type != 1){
+                while(E.chunks[P6.x][P6.y].type == 1){
                     P6.x = (P6.x+1)%25;
                 }
                 break;
 
         }
+
         *LP = ajouter_predateur(*LP, P6);   
     }
 }
+
+void trouver_id_predateurs_loin(Predateur** LP) {
+    if (LP == NULL || *LP == NULL) {
+        //printf("La liste est vide.\n");
+        return;
+    }
+
+    // Étape 1 : Collecte des IDs des prédateurs hors limites
+    int nb = 0;
+    Predateur* copie = *LP;
+
+    // Compter les prédateurs pour déterminer la taille du tableau
+    while (copie != NULL) {
+        if (copie->x < 0 || copie->x > 24 || copie->y < 0 || copie->y > 24) {
+            nb++;
+        }
+        copie = copie->suivant;
+    }
+
+    if (nb == 0) {
+        //printf("Aucun prédateur hors limites.\n");
+        return;
+    }
+
+    // Allouer de la mémoire pour stocker les IDs
+    int* ids = malloc(nb * sizeof(int));
+    if (ids == NULL) {
+        printf("Erreur d'allocation mémoire.\n");
+        return;
+    }
+
+    // Remplir le tableau avec les IDs des prédateurs hors limites
+    copie = *LP;
+    int i = 0;
+    while (copie != NULL) {
+        if (copie->x < 0 || copie->x > 24 || copie->y < 0 || copie->y > 24) {
+            ids[i++] = copie->id;
+        }
+        copie = copie->suivant;
+    }
+
+    // Étape 2 : Suppression et affichage des prédateurs hors limites
+    //printf("IDs des prédateurs hors limites supprimés : ");
+    for (int j = 0; j < nb; j++) {
+        //printf("%d ", ids[j]);
+        tuer_predateur(ids[j], LP); // Suppression du prédateur
+    }
+    //printf("\n");
+
+    // Libérer la mémoire allouée pour le tableau
+    free(ids);
+}
+
 
 void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
     Environnement E2;
     incr_temp(T);
     E2 = ajout_eau_miam(*E, *M);
     maj_meteo(M, *T);
+    bouger_predateurs(LP, *E);
     generer_predateur(*E, LP);
+
+    
 
     // Afficher les informations temporelles
     
@@ -1202,6 +1425,7 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
     printf("Saison : %s\n", saisons[T->saison]);
     printf("Mois : %d\n", T->mois + 1); // Ajouter 1 pour afficher mois de 1 à 12
     printf("Jour : %d\n", T->jour);
+    printf("année : %d\n", T->annee);
 
     // Afficher les informations météorologiques
     printf("\n=== Informations Météo ===\n");
@@ -1214,14 +1438,19 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
     } else {
         Predateur* copie = *LP;
         while (copie != NULL) {
-            printf("Il y a un %s, qui a déjà fait %d victimes !\n", copie->nom_predateur, copie->victimes);
+            printf("Il y a un %s en (%d, %d), qui a déjà fait %d victimes !\n", copie->nom_predateur,copie->x, copie->y, copie->victimes);
             copie = copie->suivant;
         }
     }
 
+    printf("il y a un total de %d prédateurs", compter_predateurs(*LP));
+
     // Ligne de séparation
     printf("\n========================\n");
 
+
+    trouver_id_predateurs_loin(LP);
+    //print_id(*LP);
     *E = E2;
 }
 
@@ -1237,10 +1466,10 @@ int main() {
 
 
     while(true){
-        //printf("\033[H\033[J");
+        printf("\033[H\033[J");
         //afficher_envi(E) ;
         journee(&E, &M, &T, &LP);
-        sleep(2);
+        sleep(1);
     }
 
     return 0 ;
