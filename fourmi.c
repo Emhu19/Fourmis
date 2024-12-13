@@ -13,10 +13,13 @@ Fourmi* creationFourmi(int id, const char* espece_fourmi, const char* role_fourm
     nouvelle_fourmi->id_fourmi = id;
     strcpy(nouvelle_fourmi->role, role_fourmi);
     nouvelle_fourmi->age = 1;
+    nouvelle_fourmi->salle = 2;
     nouvelle_fourmi->sexe = true;
     nouvelle_fourmi->cgt = 0.0f;
-    nouvelle_fourmi->faim = 0;
+    nouvelle_fourmi->faim = 100;
     nouvelle_fourmi->eau = 100;
+    nouvelle_fourmi->besoin_faim = 1;
+    nouvelle_fourmi->besoin_eau = 1;
     nouvelle_fourmi->sante = true;
     strcpy(nouvelle_fourmi->maladie, "Rien");
     nouvelle_fourmi->coord_x = 0;
@@ -93,6 +96,24 @@ void compter_Liste_fourmi(ListFourmi* liste){
     printf("Il y a %d fourmis dans la fourmilières\n", i);
 }
 
+int compter_fourmi_salle(ListFourmi* liste, int salle){
+
+    ListFourmi* newList = liste;
+
+    if(newList->fourmi == NULL){
+        printf("Liste vide\n");
+        return;
+    }
+    int i = 0;
+    while(newList->next != NULL){
+        if(salle == newList->fourmi->salle){
+            i++;
+        }
+        newList = newList->next;
+    }
+    return i;
+}
+
 ListFourmi* retirer_fourmi(ListFourmi** liste, Fourmi* fourmi) {
 
     if (liste == NULL || *liste == NULL) {
@@ -164,6 +185,28 @@ ListFourmi* fusionner_listes(ListFourmi* liste1, ListFourmi* liste2) { //utitile
     return liste1;
 }
 
+void update_day_fourmi(Fourmi* fourmi){
+     if (fourmi == NULL) return;
+    fourmi->faim -= fourmi->besoin_faim;
+    fourmi->eau -= fourmi->besoin_eau;
+    if(1 <= 1){ //si ressource disponible // la fonction fonctionne bien!!
+        fourmi->faim += 1;
+        fourmi->eau += 1;
+//         ressource--;
+    }
+}
+
+void update_day_liste_fourmi(ListFourmi* liste){
+    ListFourmi* newList = liste;
+    if(newList->fourmi == NULL){
+        printf("Liste vide\n");
+        return;
+    }
+    while(newList != NULL){
+        update_day_fourmi(newList->fourmi);
+        newList = newList->next;
+    }
+}
 
 // void mise_a_jour_fourmi(Fourmi* fourmi) {
 //     if (fourmi == NULL) return;

@@ -9,11 +9,14 @@
 typedef struct {
     char espece[MAX_CHAR];
     int id_fourmi;
+    int salle;
     bool sexe;
     char role[MAX_CHAR];
     int age;
     int faim;
     int eau;
+    int besoin_faim;
+    int besoin_eau;
     bool sante;
     char maladie[MAX_CHAR];
     float cgt;
@@ -41,5 +44,8 @@ ListFourmi* fusionner_listes(ListFourmi* liste1, ListFourmi* liste2);
 void mise_a_jour_fourmi(Fourmi* fourmi);
 void nourrir_fourmi(Fourmi* fourmi);
 void deplacer_fourmi(Fourmi* fourmi, int x, int y);
+void update_day_fourmi(Fourmi* fourmi);
+void update_day_liste_fourmi(ListFourmi* liste);
+int compter_fourmi_salle(ListFourmi* liste, int salle);
 
 #endif

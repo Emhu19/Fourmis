@@ -15,6 +15,6 @@ void afficher_salles_alignees(const char *nom1, const char *nom2);
 void afficher_salles_alignees_3(const char *nom1, const char *nom2, const char *nom3);
 void afficher_fourmiliere_niveau(int niveau);
 void afficher_legende();
-void afficher_fourmiliere(int niveau, ListFourmi* liste);
+void afficher_fourmiliere(int niveau, ListFourmi* liste, Reine* reine);
 
 #endif
