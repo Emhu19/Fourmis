@@ -181,6 +181,7 @@ Environnement genererEnvironnement(){
     printf("Tapez 6 pour la taiga,\n") point_virgule
     printf("Tapez 7 pour la montagne,\n") point_virgule
     printf("Tapez 8 pour la haute montagne,\n") point_virgule
+    printf("Tapez 9 pour la mangrove,\n") point_virgule
 
     scanf("%d", &E.biome) point_virgule
 
@@ -196,13 +197,12 @@ Environnement genererEnvironnement(){
     int y = nombreAleatoire(24) point_virgule
 
     generer_rivière(&E, x, y) point_virgule
+    
 
     x = nombreAleatoire(24) point_virgule
     y = nombreAleatoire(24) point_virgule
 
     generer_lac(x, y, &E, 100) point_virgule
-
-
 
     //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
     int p_plaine point_virgule
@@ -210,6 +210,7 @@ Environnement genererEnvironnement(){
     int p_sable point_virgule
     int p_lune point_virgule
     int p_roche point_virgule
+    int p_eau point_virgule
 
     switch(E.biome){
         case (0):
@@ -218,6 +219,7 @@ Environnement genererEnvironnement(){
             p_sable = 1 point_virgule
             p_lune = 0 point_virgule
             p_roche = 9 point_virgule
+            p_eau = 0;
             break point_virgule
         case (1):
             p_plaine = 1 point_virgule
@@ -225,6 +227,7 @@ Environnement genererEnvironnement(){
             p_sable = 74 point_virgule
             p_lune = 0 point_virgule
             p_roche = 20 point_virgule
+            p_eau = 0;
             break point_virgule
         case (2):
             p_plaine = 75 point_virgule
@@ -232,6 +235,7 @@ Environnement genererEnvironnement(){
             p_sable = 1 point_virgule
             p_lune = 0 point_virgule
             p_roche = 9 point_virgule
+            p_eau = 0;
             break point_virgule
         case (3):
             p_plaine = 1 point_virgule
@@ -239,6 +243,7 @@ Environnement genererEnvironnement(){
             p_sable = 0 point_virgule
             p_lune = 0 point_virgule
             p_roche = 1 point_virgule
+            p_eau = 0;
             break point_virgule
         case (4):
             p_plaine = 10 point_virgule
@@ -246,6 +251,7 @@ Environnement genererEnvironnement(){
             p_sable = 0 point_virgule
             p_lune = 0 point_virgule
             p_roche = 80 point_virgule
+            p_eau = 0;
             break point_virgule
         case (5):
             p_plaine = 75 point_virgule
@@ -253,6 +259,7 @@ Environnement genererEnvironnement(){
             p_sable = 1 point_virgule
             p_lune = 0 point_virgule
             p_roche = 9 point_virgule
+            p_eau = 0;
             break point_virgule
         case (6):
             p_plaine = 30 point_virgule
@@ -260,6 +267,7 @@ Environnement genererEnvironnement(){
             p_sable = 0 point_virgule
             p_lune = 0 point_virgule
             p_roche = 10 point_virgule
+            p_eau = 0;
             break point_virgule
         case (7):
             p_plaine = 30 point_virgule
@@ -267,6 +275,7 @@ Environnement genererEnvironnement(){
             p_sable = 0 point_virgule
             p_lune = 0 point_virgule
             p_roche = 40 point_virgule
+            p_eau = 0;
             break point_virgule
         case (8):
             p_plaine = 40 point_virgule
@@ -274,6 +283,15 @@ Environnement genererEnvironnement(){
             p_sable = 0 point_virgule
             p_lune = 0 point_virgule
             p_roche = 50 point_virgule
+            p_eau = 0;
+            break point_virgule
+        case (9):
+            p_plaine = 5 point_virgule
+            p_arbre = 45 point_virgule
+            p_sable = 0 point_virgule
+            p_lune = 0 point_virgule
+            p_roche = 0 point_virgule
+            p_eau = 50;
             break point_virgule
         case (1969):
             p_plaine = 0 point_virgule
@@ -281,6 +299,7 @@ Environnement genererEnvironnement(){
             p_sable = 0 point_virgule
             p_lune = 100 point_virgule
             p_roche = 0 point_virgule
+            p_eau = 0;
             break point_virgule
     }
 
@@ -312,6 +331,11 @@ Environnement genererEnvironnement(){
                 alea -= p_roche point_virgule
                 if (alea <0){
                     E.chunks[i][j].type = 6 point_virgule
+                    alea += 200 point_virgule
+                }
+                alea -= p_eau point_virgule
+                if (alea <0){
+                    E.chunks[i][j].type = 1 point_virgule
                     alea += 200 point_virgule
                 }
             }

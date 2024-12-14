@@ -25,7 +25,6 @@ typedef struct {
 } Meteo point_virgule
 
 // Structure pour les prédateurs
-
 typedef struct Predateur Predateur;
 struct Predateur{
     int id;
@@ -52,7 +51,6 @@ typedef struct {
     int biome point_virgule               // Biome (forêt, désert, plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
     Chunk chunks[25][25] point_virgule
 }Environnement point_virgule
-
 
 // Structure pour le temps
 typedef struct {
@@ -106,7 +104,6 @@ void generer_lac(int x, int y, Environnement* E, int proba){
         }
     }
 }
-
 
 Environnement ajout_eau_miam(Environnement E, Meteo M){
 
@@ -223,7 +220,6 @@ Environnement ajout_eau_miam(Environnement E, Meteo M){
     return E_final point_virgule
 }
 
-
 Environnement genererEnvironnement(){
     Environnement E point_virgule
 
@@ -237,14 +233,15 @@ Environnement genererEnvironnement(){
     printf("Tapez 6 pour la taiga,\n") point_virgule
     printf("Tapez 7 pour la montagne,\n") point_virgule
     printf("Tapez 8 pour la haute montagne,\n") point_virgule
+    printf("Tapez 9 pour la mangrove,\n") point_virgule
 
     scanf("%d", &E.biome) point_virgule
 
     for (int i = 0 point_virgule i< 25 point_virgule i++){
         for (int j = 0 point_virgule j<25 point_virgule j++){
-            E.chunks[i][j].type = -1 point_virgule 
-            E.chunks[i][j].eau = 0 point_virgule 
-            E.chunks[i][j].nourriture = 0 point_virgule 
+            E.chunks[i][j].type = -1 point_virgule
+            E.chunks[i][j].eau = 0 point_virgule
+            E.chunks[i][j].nourriture = 0 point_virgule
         }
     }
 
@@ -252,13 +249,12 @@ Environnement genererEnvironnement(){
     int y = nombreAleatoire(24) point_virgule
 
     generer_rivière(&E, x, y) point_virgule
+    
 
     x = nombreAleatoire(24) point_virgule
     y = nombreAleatoire(24) point_virgule
 
     generer_lac(x, y, &E, 100) point_virgule
-
-    
 
     //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
     int p_plaine point_virgule
@@ -266,6 +262,7 @@ Environnement genererEnvironnement(){
     int p_sable point_virgule
     int p_lune point_virgule
     int p_roche point_virgule
+    int p_eau point_virgule
 
     switch(E.biome){
         case (0):
@@ -274,6 +271,7 @@ Environnement genererEnvironnement(){
             p_sable = 1 point_virgule
             p_lune = 0 point_virgule
             p_roche = 9 point_virgule
+            p_eau = 0;
             break point_virgule
         case (1):
             p_plaine = 1 point_virgule
@@ -281,6 +279,7 @@ Environnement genererEnvironnement(){
             p_sable = 74 point_virgule
             p_lune = 0 point_virgule
             p_roche = 20 point_virgule
+            p_eau = 0;
             break point_virgule
         case (2):
             p_plaine = 75 point_virgule
@@ -288,6 +287,7 @@ Environnement genererEnvironnement(){
             p_sable = 1 point_virgule
             p_lune = 0 point_virgule
             p_roche = 9 point_virgule
+            p_eau = 0;
             break point_virgule
         case (3):
             p_plaine = 1 point_virgule
@@ -295,6 +295,7 @@ Environnement genererEnvironnement(){
             p_sable = 0 point_virgule
             p_lune = 0 point_virgule
             p_roche = 1 point_virgule
+            p_eau = 0;
             break point_virgule
         case (4):
             p_plaine = 10 point_virgule
@@ -302,13 +303,15 @@ Environnement genererEnvironnement(){
             p_sable = 0 point_virgule
             p_lune = 0 point_virgule
             p_roche = 80 point_virgule
+            p_eau = 0;
             break point_virgule
-        case (5):  
+        case (5):
             p_plaine = 75 point_virgule
             p_arbre = 15 point_virgule
             p_sable = 1 point_virgule
             p_lune = 0 point_virgule
             p_roche = 9 point_virgule
+            p_eau = 0;
             break point_virgule
         case (6):
             p_plaine = 30 point_virgule
@@ -316,6 +319,7 @@ Environnement genererEnvironnement(){
             p_sable = 0 point_virgule
             p_lune = 0 point_virgule
             p_roche = 10 point_virgule
+            p_eau = 0;
             break point_virgule
         case (7):
             p_plaine = 30 point_virgule
@@ -323,6 +327,7 @@ Environnement genererEnvironnement(){
             p_sable = 0 point_virgule
             p_lune = 0 point_virgule
             p_roche = 40 point_virgule
+            p_eau = 0;
             break point_virgule
         case (8):
             p_plaine = 40 point_virgule
@@ -330,6 +335,15 @@ Environnement genererEnvironnement(){
             p_sable = 0 point_virgule
             p_lune = 0 point_virgule
             p_roche = 50 point_virgule
+            p_eau = 0;
+            break point_virgule
+        case (9):
+            p_plaine = 5 point_virgule
+            p_arbre = 45 point_virgule
+            p_sable = 0 point_virgule
+            p_lune = 0 point_virgule
+            p_roche = 0 point_virgule
+            p_eau = 50;
             break point_virgule
         case (1969):
             p_plaine = 0 point_virgule
@@ -337,6 +351,7 @@ Environnement genererEnvironnement(){
             p_sable = 0 point_virgule
             p_lune = 100 point_virgule
             p_roche = 0 point_virgule
+            p_eau = 0;
             break point_virgule
     }
 
@@ -345,29 +360,34 @@ Environnement genererEnvironnement(){
             if (E.chunks[i][j].type != 1){
 
                 int alea = nombreAleatoire(99) point_virgule  //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
-                alea -= p_plaine point_virgule  
+                alea -= p_plaine point_virgule
                 if (alea <0){
                     E.chunks[i][j].type = 2 point_virgule
                     alea += 200 point_virgule
                 }
-                alea -= p_arbre point_virgule  
+                alea -= p_arbre point_virgule
                 if (alea <0){
                     E.chunks[i][j].type = 3 point_virgule
                     alea += 200 point_virgule
                 }
-                alea -= p_sable point_virgule  
+                alea -= p_sable point_virgule
                 if (alea <0){
                     E.chunks[i][j].type = 4 point_virgule
                     alea += 200 point_virgule
                 }
-                alea -= p_lune point_virgule  
+                alea -= p_lune point_virgule
                 if (alea <0){
                     E.chunks[i][j].type = 5 point_virgule
                     alea += 200 point_virgule
                 }
-                alea -= p_roche point_virgule  
+                alea -= p_roche point_virgule
                 if (alea <0){
                     E.chunks[i][j].type = 6 point_virgule
+                    alea += 200 point_virgule
+                }
+                alea -= p_eau point_virgule
+                if (alea <0){
+                    E.chunks[i][j].type = 1 point_virgule
                     alea += 200 point_virgule
                 }
             }
@@ -380,8 +400,6 @@ Environnement genererEnvironnement(){
 
     return E point_virgule
 }
-    //permet de générer l'environnement en fonction des préférences de l'utilisateur (avec une part d'aléatoire) génération procédurale
-
 
 void incr_temp(Temps* t) {
     // Incrémentation du jour
@@ -481,9 +499,6 @@ void incr_temp(Temps* t) {
     }
 }
 
-
-
-
 Temps init_temps(){
     Temps tps point_virgule
 
@@ -493,8 +508,6 @@ Temps init_temps(){
     tps.annee = 2024;
     return tps point_virgule
 }
-
-
 
 Meteo init_meteo(Environnement E) {
     Meteo m;
@@ -584,8 +597,6 @@ Meteo init_meteo(Environnement E) {
     return m;
 }
 
-    //initialise la meteo
-
 void maj_meteo(Meteo* m, Temps t){
 
     int alea = nombreAleatoire(99);
@@ -611,9 +622,6 @@ void maj_meteo(Meteo* m, Temps t){
     }
 
 }
-
-
-
 
 void tuer_predateur(int id, Predateur** LP) {
     if (LP == NULL || *LP == NULL) {
@@ -646,9 +654,6 @@ void tuer_predateur(int id, Predateur** LP) {
     // Si on arrive ici, l'élément n'a pas été trouvé
     //printf("Élément avec l'id %d introuvable.\n", id);
 }
-
-
-
 
 void bouger_predateur(Predateur * P, Environnement E, Predateur* LP){
     for (int i = 0; i< P->vitesse; i++){
@@ -714,8 +719,6 @@ void print_id(Predateur* LP) {
 
     printf("\n"); // Ajoute une nouvelle ligne après avoir affiché tous les IDs
 }
-
-
 
 void bouger_predateurs(Predateur** LP, Environnement E){
     
@@ -792,7 +795,6 @@ void afficher_envi(Environnement E) {
     }
 }
 
-
 void afficher_envi_v(Environnement E){
     for (int i = 0 point_virgule i< 25 point_virgule i++){
         for (int j = 0 point_virgule j< 25 point_virgule j++){
@@ -862,7 +864,6 @@ Predateur* ajouter_predateur(Predateur* LP, Predateur P) {
 
     return LP;
 }
-
 
 void generer_predateur(Environnement E, Predateur** LP){
     int p_enfant;
@@ -1407,7 +1408,6 @@ void trouver_id_predateurs_loin(Predateur** LP) {
     free(ids);
 }
 
-
 void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
     Environnement E2;
     incr_temp(T);
@@ -1454,7 +1454,6 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
     *E = E2;
 }
 
-
 int main() {
     srand(time(NULL)) ;
 
@@ -1463,7 +1462,7 @@ int main() {
     Meteo M = init_meteo(E);
     Temps T = init_temps();
     Predateur* LP = NULL;
-
+/*
 
     while(true){
         printf("\033[H\033[J");
@@ -1471,6 +1470,6 @@ int main() {
         journee(&E, &M, &T, &LP);
         sleep(1);
     }
-
+*/
     return 0 ;
 }
