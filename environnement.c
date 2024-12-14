@@ -1420,4 +1420,5 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
     trouver_id_predateurs_loin(LP);
     //print_id(*LP);
     *E = E2;
+    getchar();
 }
