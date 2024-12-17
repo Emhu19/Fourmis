@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
 
 typedef struct ListFourmi ListFourmi;
 typedef struct ListReine ListReine;
@@ -22,13 +24,14 @@ typedef struct{
     char *typeRessource;
     int id;
     int quantiteRessource;
+    int quantiteMax;
 }Resource;
 
-struct ListRessource{
-    Resource *resource;
-    ListRessource *suivant;
-    ListRessource *precedent;
-};
+// struct ListRessource{
+    // Resource *resource;
+    // ListRessource *suivant;
+    // ListRessource *precedent;
+// };
 
 typedef struct{
     ListFourmi *fourmi; //liste chainée car on aura besoin d'augmenter et de baisser les nombre de fourmis
@@ -41,8 +44,10 @@ typedef struct{
     int id;
     char *typePiece;
     int capaciteMax;
-    Resource ressourceNecessaire;
+    Resource *ressourceNecessaire;
     int quantiteRessourceNecessaire;
+    int vie;
+    int etat;
 }Piece;
 
 struct ArbrePiece{
@@ -135,15 +140,33 @@ void afficheArbre(ArbrePiece *T){
         afficheArbre(T->filsG);
     }
     if(T != NULL){
-        printf("%d\n", T->salle.id);
+        if(T->salle.etat == 1){
+            printf("%d ", T->salle.id);
+        }
     }
     if(T->filsD != NULL){
         afficheArbre(T->filsD);
     }
 }
 
-Resource *detruitPiece(ArbrePiece *T, Piece *R);
+void *detruitPiece(ArbrePiece *T){
 // permet de détruire une salle renvoie les matériaux que la destrucion donne
+    if(T != NULL){
+        if(T->salle.etat != 0 && T->salle.id != 1){
+            T->salle.vie -= 5000;
+            if(T->salle.vie < 0){
+                printf("la salle est détruite frérot c'est dommage\n");
+                T->salle.etat = 0;
+                T->salle.ressourceNecessaire->quantiteMax -= 50000;
+                if(T->salle.ressourceNecessaire->quantiteRessource > T->salle.ressourceNecessaire->quantiteMax){
+                    T->salle.ressourceNecessaire->quantiteRessource -= T->salle.ressourceNecessaire->quantiteMax - T->salle.ressourceNecessaire->quantiteRessource;
+                }
+            }
+        }
+        detruitPiece(T->filsD);
+        detruitPiece(T->filsG);
+    }
+}
 
 Maladie genereMaladie();
 // permet de generer des maladie au sein de la fourmilière de manière aléatoire
@@ -159,77 +182,61 @@ Maladie genereMaladie();
 
 int main(){
     ArbrePiece *T;
-    Piece R;
-    Piece Q;
-    Piece S;
-    Piece U;
-    Piece V;
-    Piece W;
+    char test;
     Piece A;
-    Piece B;
-    Piece C;
-    Piece D;
-    Piece E;
-    Piece F;
-    Piece G;
-    Piece H;
-    Piece I;
-    // R = malloc(sizeof(Piece *));
-    Resource metal;
-    metal.quantiteRessource = 10;
+    Resource *metal;
+    metal = malloc(sizeof(Resource *));
+    metal->quantiteRessource = 0;
+    metal->id = 1;
+    metal->typeRessource = "bois";
+    metal->quantiteMax = 50000;
+    Resource *bois;
+    bois = malloc(sizeof(Resource *));
+    bois->quantiteRessource = 0;
+    bois->id = 1;
+    bois->typeRessource = "bois";
+    bois->quantiteMax = 50000;
+    Piece stockBois;
+    stockBois.id = 2;
+    stockBois.quantiteRessourceNecessaire = 10;
+    stockBois.ressourceNecessaire = bois;
+    stockBois.vie = 5000;
+    stockBois.etat = 1;
+    Piece stockMetal;
+    stockMetal.id = 3;
+    stockMetal.quantiteRessourceNecessaire = 25;
+    stockMetal.ressourceNecessaire = metal;
+    stockMetal.vie = 5000;
+    stockMetal.etat = 1;
     A.id = 1;
     A.capaciteMax = 10;
     A.quantiteRessourceNecessaire = 10;
     A.ressourceNecessaire = metal;
     A.taille = 10;
-    A.typePiece = "piece";
-    R.id = 2;
-    Q.id = 3;
-    S.id = 4;
-    U.id = 5;
-    V.id = 6;
-    W.id = 7;
-    B.id = 8;
-    C.id = 9;
-    D.id = 10;
-    E.id = 11;
-    F.id = 12;
-    G.id = 13;
-    H.id = 14;
-    I.id = 15;
+    A.typePiece = "principale";
+    A.etat = 1;
     T = init(A);
-    if(T == NULL){
-        printf("hein");
+    while(1){
+        detruitPiece(T);
+        if(metal->quantiteRessource < metal->quantiteMax){
+            metal->quantiteRessource++;
+        }
+        if(bois->quantiteRessource < bois->quantiteMax){
+            bois->quantiteRessource += 2;
+        }
+        if(metal->quantiteRessource <= metal->quantiteMax){
+            metal->quantiteMax += 50000;
+            metal->quantiteRessource -= stockMetal.quantiteRessourceNecessaire;
+            ajoutePiece(T, stockMetal);
+        }
+        if(bois->quantiteRessource <= bois->quantiteMax){
+            bois->quantiteMax += 50000;
+            bois->quantiteRessource -= stockBois.quantiteRessourceNecessaire;
+            ajoutePiece(T, stockBois);
+        }
+        afficheArbre(T);
+        printf("\n");
+        sleep(5);
     }
-    // printf("%d\n", A->id);
-    // Resource bois;
-    // Resource metal;
-    // bois.quantiteRessource = 5;
-    // metal.quantiteRessource = 10;
-    // bois.id = 1;
-    // metal.id = 2;
-    // R.ressourceNecessaire = metal;
-    // R.quantiteRessourceNecessaire = 5;
-    // R.id = 2;
-    // printf("%d\n", A->id);
-    ajoutePiece(T, R);
-    ajoutePiece(T, Q);
-    ajoutePiece(T, S);
-    ajoutePiece(T, U);
-    ajoutePiece(T, V);
-    ajoutePiece(T, W);
-    ajoutePiece(T, B);
-    ajoutePiece(T, C);
-    ajoutePiece(T, D);
-    ajoutePiece(T, E);
-    ajoutePiece(T, F);
-    ajoutePiece(T, G);
-    ajoutePiece(T, H);
-    ajoutePiece(T, I);
-    afficheArbre(T);
-    // if(T->filsG == NULL){
-        // printf("heiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiinMaisPouquoiJeVaisMefoutreEnLair");
-    // }
-    // free(bois);
     return 0;
 }
