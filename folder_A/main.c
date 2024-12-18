@@ -32,6 +32,22 @@ ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine){
      return liste;
 }
 
+
+// Fourmiliere init_fourmiliere(Environnement* E){
+//     Fourmiliere F;
+//     F.fourmi = NULL;
+//     F.reine = NULL;
+//     F.piece = NULL;
+//     F.x = 12;
+//     F.y = 12;
+//     F.suivant = NULL;
+
+//     E->chunks[F.x][F.y].type = 1;
+//     return F;
+// }
+
+
+
 void simulation(int type){
     ListFourmi* liste = Initialisation_List();
     Reine* reine = creationReine(1, type);
@@ -61,6 +77,7 @@ void simulation(int type){
     free(reine);
 }
 
+
 int main() {
     srand(time(NULL)) ;
     logo_1();
@@ -68,6 +85,8 @@ int main() {
     Environnement E = genererEnvironnement(biome) ;
     afficher_envi(E) ;
     int type = logo_2();
+
+    // Fourmiliere F = init_fourmiliere(&E);
 
     afficher_envi(E) ;
     sleep(2);
@@ -82,11 +101,6 @@ int main() {
         journee(&E, &M, &T, &LP);
         //sleep(1);
     }
-
-
-
-
-
 
 //     logo_1();
     

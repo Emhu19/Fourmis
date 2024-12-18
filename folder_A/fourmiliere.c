@@ -120,3 +120,99 @@ void afficher_fourmiliere(int niveau, ListFourmi* liste, Reine* reine) {
     usleep(500000);
 //     getchar();
 }
+
+
+
+// ArbrePiece *init(Piece e){
+//     ArbrePiece *result;
+//     result = malloc(sizeof(ArbrePiece));
+//     result->salle = e;
+//     result->filsD = NULL;
+//     result->filsG = NULL;
+//     result->taille = 1;
+//     result->profondeur = 0;
+//     return result;
+// }
+
+
+
+int puiss2(int n){
+    int result = 1;
+    for(int i = 0; i<n; i++){
+        result *= 2;
+    }
+    return result;
+}
+
+
+
+
+// ArbrePiece *ajoutePiece(ArbrePiece *T, Piece R){
+//     // permet d'ajouter une salle
+//     // printf("id : %d\n", R.id);
+//     if(T == NULL){
+//         T = init(R);
+//         return T;
+//     }
+//     if(T->filsG == NULL){
+//         T->taille++;
+//         T->profondeur++;
+//         T->filsG = ajoutePiece(T->filsG, R);
+//         return T;
+//     }
+//     if(T->filsD == NULL){
+//         T->taille++;
+//         T->filsD = ajoutePiece(T->filsD, R);
+//         return T;
+//     }
+//     int testFD = puiss2(T->filsD->profondeur);
+//     int testFG = puiss2(T->filsG->profondeur);
+//     if(testFD >= 2){
+//         testFD--;
+//     }
+//     if(testFG >= 2){
+//         testFG--;
+//     }
+//     // printf("%d %d\n", T->filsG->taille, testFG);
+//     if(T->filsG->taille == testFG){
+//         T->taille++;
+//         if(T->filsD->taille <= T->filsG->taille){
+//             T->filsD = ajoutePiece(T->filsD, R);
+//             return T;
+//         }
+//         else{
+//             T->profondeur++;
+//             T->filsG = ajoutePiece(T->filsG, R);
+//             return T;
+//         }
+//     }
+//     else{
+//         T->taille++;
+//         if(T->filsG->taille <= T->filsD->taille){
+//             T->filsG = ajoutePiece(T->filsG, R);
+//             return T;
+//         }
+//         else{
+//             T->profondeur++;
+//             T->filsD = ajoutePiece(T->filsD, R);
+//             return T;
+//         }
+//     }
+// }
+
+// void afficheArbre(ArbrePiece *T){
+//     if(T->filsG != NULL){
+//         afficheArbre(T->filsG);
+//     }
+//     if(T != NULL){
+//         printf("%d\n", T->salle.id);
+//     }
+//     if(T->filsD != NULL){
+//         afficheArbre(T->filsD);
+//     }
+// }
+
+// Resource *detruitPiece(ArbrePiece *T, Piece *R);
+// // permet de détruire une salle renvoie les matériaux que la destrucion donne
+
+// Maladie genereMaladie();

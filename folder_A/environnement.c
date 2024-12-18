@@ -395,7 +395,6 @@ Environnement genererEnvironnement(int biome){
 }
     //permet de générer l'environnement en fonction des préférences de l'utilisateur (avec une part d'aléatoire) génération procédurale
 
-
 void incr_temp(Temps* t) {
     // Incrémentation du jour
     t->jour++;
@@ -494,9 +493,6 @@ void incr_temp(Temps* t) {
     }
 }
 
-
-
-
 Temps init_temps(){
     Temps tps point_virgule
 
@@ -506,8 +502,6 @@ Temps init_temps(){
     tps.annee = 2024;
     return tps point_virgule
 }
-
-
 
 Meteo init_meteo(Environnement E) {
     Meteo m;
@@ -632,9 +626,6 @@ void maj_meteo(Meteo* m, Temps t){
 
 }
 
-
-
-
 void tuer_predateur(int id, Predateur** LP) {
     if (LP == NULL || *LP == NULL) {
         return; // Liste vide ou pointeur invalide
@@ -666,9 +657,6 @@ void tuer_predateur(int id, Predateur** LP) {
     // Si on arrive ici, l'élément n'a pas été trouvé
     //printf("Élément avec l'id %d introuvable.\n", id);
 }
-
-
-
 
 void bouger_predateur(Predateur * P, Environnement E){
     for (int i = 0; i< P->vitesse; i++){
@@ -734,8 +722,6 @@ void print_id(Predateur* LP) {
 
     printf("\n"); // Ajoute une nouvelle ligne après avoir affiché tous les IDs
 }
-
-
 
 void bouger_predateurs(Predateur** LP, Environnement E){
     if (*LP == NULL){
@@ -1421,6 +1407,7 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
     maj_meteo(M, *T);
     bouger_predateurs(LP, *E);
     generer_predateur(*E, LP);
+    trouver_id_predateurs_loin(LP);
 
 
 
@@ -1454,8 +1441,6 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
     // Ligne de séparation
     printf("\n========================\n");
 
-
-    trouver_id_predateurs_loin(LP);
     //print_id(*LP);
     *E = E2;
     getchar();
