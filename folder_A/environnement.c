@@ -211,6 +211,11 @@ Environnement ajout_eau_miam(Environnement E, Meteo M){
 
 
 Environnement genererEnvironnement(int biome){
+    printf("\033c");
+    printf("génération de l'environnement\n");
+    printf("chargement ...\n");
+    printf("#");
+    sleep(1);
     Environnement E point_virgule
 
     // printf("dans quel biome est votre fourmilière ?\n") point_virgule
@@ -241,6 +246,7 @@ Environnement genererEnvironnement(int biome){
             E.chunks[i][j].pheromone = 0 point_virgule
         }
     }
+    printf("#");
 
     int x = 0 point_virgule
     int y = nombreAleatoire(24) point_virgule
@@ -351,8 +357,9 @@ Environnement genererEnvironnement(int biome){
             p_eau = 0;
             break point_virgule
     }
-
+    printf("#");
     for (int i = 0 point_virgule i< 25 point_virgule i++){
+        printf("#");
         for (int j = 0 point_virgule j< 25 point_virgule j++){
             if (E.chunks[i][j].type != 1){
 
@@ -390,11 +397,13 @@ Environnement genererEnvironnement(int biome){
             }
         }
     }
+    printf("#");
     Meteo M point_virgule
     M.force_precipitation = 0 point_virgule
     M.precipitation = false point_virgule
     E = ajout_eau_miam(E, M) point_virgule
 
+    printf("#\n");
     return E point_virgule
 }
     //permet de générer l'environnement en fonction des préférences de l'utilisateur (avec une part d'aléatoire) génération procédurale
@@ -750,6 +759,9 @@ void afficher_envi(Environnement E) {
             switch (E.chunks[i][j].type) {
                 case -1:
                     printf("\033[47m  \033[0m") point_virgule // Blanc
+                    break point_virgule
+                case 0:
+                    printf("\033[41m  \033[0m");
                     break point_virgule
                 case 1:
                     printf("\033[44m  \033[0m") point_virgule // Bleu

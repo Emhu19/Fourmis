@@ -43,7 +43,7 @@ Fourmiliere init_fourmiliere(Environnement* E, int espece){
     F.y = 12;
     //F.suivant = NULL;
 
-    E->chunks[F.x][F.y].type = 1;
+    E->chunks[F.x][F.y].type = 0;
     return F;
 }
 
