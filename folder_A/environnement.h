@@ -45,6 +45,7 @@ typedef struct {
     int bois;
     int roche;
     int feuille;
+    int pheromone;
 }Chunk point_virgule
 
 // Structure pour l'environnement

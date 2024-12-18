@@ -33,18 +33,19 @@ ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine){
 }
 
 
-// Fourmiliere init_fourmiliere(Environnement* E){
-//     Fourmiliere F;
-//     F.fourmi = NULL;
-//     F.reine = NULL;
-//     F.piece = NULL;
-//     F.x = 12;
-//     F.y = 12;
-//     F.suivant = NULL;
+Fourmiliere init_fourmiliere(Environnement* E, int espece){
+    Fourmiliere F;
+    F.fourmi = NULL;
+    F.reine = NULL;
+    F.piece = NULL;
+    F.espece = espece;
+    F.x = 12;
+    F.y = 12;
+    //F.suivant = NULL;
 
-//     E->chunks[F.x][F.y].type = 1;
-//     return F;
-// }
+    E->chunks[F.x][F.y].type = 1;
+    return F;
+}
 
 
 
@@ -81,22 +82,27 @@ void simulation(int type){
 int main() {
     srand(time(NULL)) ;
     logo_1();
+    printf("\033c");
     int biome = logo_3();
+    printf("\033c");
     Environnement E = genererEnvironnement(biome) ;
     afficher_envi(E) ;
     int type = logo_2();
 
-    // Fourmiliere F = init_fourmiliere(&E);
+    Fourmiliere F = init_fourmiliere(&E, type);
+    printf("\033c");
 
     afficher_envi(E) ;
-    sleep(2);
+    getchar();
+    printf("\033c");
     
     Meteo M = init_meteo(E);
     Temps T = init_temps();
     Predateur* LP = NULL;
     
     while(true){
-        printf("\033[H\033[J");
+        //printf("\033[H\033[J");
+        printf("\033c");
         //afficher_envi(E) ;
         journee(&E, &M, &T, &LP);
         //sleep(1);

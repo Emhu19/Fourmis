@@ -62,8 +62,6 @@ Environnement ajout_eau_miam(Environnement E, Meteo M){
         }
     }
 
-
-
     for (int i = 0 point_virgule i< 25 point_virgule i++){   // ajoute des points d'eau sur la map
         for (int j = 0 point_virgule j< 25 point_virgule j++){
             int p_eau = 0 point_virgule
@@ -235,6 +233,12 @@ Environnement genererEnvironnement(int biome){
             E.chunks[i][j].type = -1 point_virgule
             E.chunks[i][j].eau = 0 point_virgule
             E.chunks[i][j].nourriture = 0 point_virgule
+            E.chunks[i][j].bois = 0 point_virgule
+            E.chunks[i][j].feuille = 0 point_virgule
+            E.chunks[i][j].roche = 0 point_virgule
+            E.chunks[i][j].champignon = 0 point_virgule
+            E.chunks[i][j].seve = 0 point_virgule
+            E.chunks[i][j].pheromone = 0 point_virgule
         }
     }
 
