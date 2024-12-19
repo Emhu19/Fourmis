@@ -3,15 +3,23 @@
 
 #include <stdbool.h>
 #include "reine.h"
+#include "environnement.h"
 
 #define MAX_CHAR 50
 
+typedef enum {
+    NOURRICE,
+    EXPLORATRICE,
+    SOLDAT,
+    COLLECTRICE_MIELLAT
+} Role;
+
 typedef struct {
+    Role role;
     char espece[MAX_CHAR];
     int id_fourmi;
     int salle;
     bool sexe;
-    char role[MAX_CHAR];
     int age;
     int faim;
     int eau;
@@ -30,7 +38,7 @@ typedef struct ListFourmi{
     struct ListFourmi *prev;
     struct ListFourmi *next; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente
 }ListFourmi;
-Fourmi* creationFourmi(int id, const char* role_fourmi, int type_fourmi);
+Fourmi* creationFourmi(int id, int type_fourmi);
 void afficher_fourmi(const Fourmi* fourmi);
 ListFourmi* Initialisation_List();
 void afficher_Liste_fourmi(ListFourmi* liste);
@@ -43,8 +51,9 @@ ListFourmi* fusionner_listes(ListFourmi* liste1, ListFourmi* liste2);
 void mise_a_jour_fourmi(Fourmi* fourmi);
 void nourrir_fourmi(Fourmi* fourmi);
 void deplacer_fourmi(Fourmi* fourmi, int x, int y);
-void update_day_fourmi(Fourmi* fourmi);
-void update_day_liste_fourmi(ListFourmi* liste);
+void update_day_fourmi(Fourmi* fourmi, Environnement* map);
+void update_day_liste_fourmi(ListFourmi* liste, Environnement* map);
 int compter_fourmi_salle(ListFourmi* liste, int salle);
+void ajuster_role_par_saison(Fourmi* fourmi);
 
 #endif

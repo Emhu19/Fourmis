@@ -7,4 +7,5 @@ main.o
 reine.o
 fourmi.o
 animation.o
+environnement.o
 fourmiliere_simulation
