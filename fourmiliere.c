@@ -56,49 +56,18 @@ void afficher_salles_alignees_3(const char *nom1, const char *nom2, const char *
 
 void afficher_fourmiliere_niveau(int niveau) {
     switch (niveau) {
-        case 1:
-            afficher_salles_alignees("R", "N");
-            break;
-        case 2:
-            afficher_salles_alignees("R", "N");
-            afficher_connexion_simple();
-            afficher_salle_simple("L");
-            break;
-        case 3:
-            afficher_salles_alignees("R", "N");
-            afficher_connexion_double();
-            afficher_salles_alignees("L", "R");
-            break;
-        case 4:
-            afficher_salle_simple("R");
-            afficher_connexion_simple();
-            afficher_salles_alignees("L", "R");
-            break;
-        case 5:
-            afficher_salle_simple("R");
-            afficher_connexion_simple();
-            afficher_salles_alignees_3("L", "R", "R");
-            break;
-        case 6:
-            afficher_salle_simple("R");
-            afficher_connexion_simple();
-            afficher_salles_alignees_3("L", "R", "R");
-            afficher_connexion_simple_milieu();
-            afficher_salle_simple_milieu("L");
-            break;
-        default:
-            printf("Niveau %d non pris en charge.\n", niveau);
-            break;
+        case 1: afficher_salles_alignees("R", "N"); break;
+        case 2: afficher_salles_alignees("R", "N"); afficher_connexion_simple(); afficher_salle_simple("L"); break;
+        case 3: afficher_salles_alignees("R", "N"); afficher_connexion_double(); afficher_salles_alignees("L", "R"); break;
+        case 4: afficher_salle_simple("R"); afficher_connexion_simple(); afficher_salles_alignees("L", "R"); break;
+        case 5: afficher_salle_simple("R"); afficher_connexion_simple(); afficher_salles_alignees_3("L", "R", "R"); break;
+        case 6: afficher_salle_simple("R"); afficher_connexion_simple(); afficher_salles_alignees_3("L", "R", "R"); afficher_connexion_simple_milieu(); afficher_salle_simple_milieu("L"); break;
+        default: printf("Niveau %d non pris en charge.\n", niveau); break;
     }
 }
 
-int salle_reine(Reine* reine){
-    if(reine->salle == 1){
-        return 1;
-    }
-    else{
-        return 0;
-    }
+int salle_reine(Reine* reine) {
+    return reine->salle == 1;
 }
 
 void afficher_legende(ListFourmi* liste, Reine* reine) {
@@ -116,7 +85,5 @@ void afficher_fourmiliere(int niveau, ListFourmi* liste, Reine* reine) {
     afficher_fourmiliere_niveau(niveau);
     afficher_legende(liste, reine);
     compter_Liste_fourmi(liste);
-//     printf("\n\033[1;32mAppuyez sur Entrée pour continuer...\033[0m\n");
     usleep(500000);
-//     getchar();
 }

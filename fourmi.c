@@ -2,47 +2,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-// Liste des types de fourmilles
-/* 1 Fourmi coupeuse de feuilles : Atta
-        1 Reine fondatrice de champignon
-        2 Ouvrière transporteur de feuilles
-        3 Soldat protecteur des colonnes
-        4 Ouvrière nettoyeuse des champignons
-        5 Ouvrière mineure pour le jardinage de champignons
-*/
-/* 2 Fourmis des dunes : Cataglyphis
-    Exploratrice de chaleur extrême
-    Messagère rapide
-    Chercheuse d’ombre
-    Ouvrière éclaireuse
-    Reine migratrice
-    Fourmi stérile pour fouille des sables
-*/
-// 3 Fourmis des rochers : Messor
-// 4 Fourmis amazoniennes : Eciton
-// 5 Fourmis forestières : Formica
-    // Ouvrière constructrice de nids en bois ou aiguilles
-        // Exploratrice forestière
-        // Soldat défensif avec acide formique
-        // Transporteur de petits insectes
-        //Reine des sous-bois
-        // Collectrice de miellat des pucerons
-// 6 Fourmis du désert : Pogonomyrmex
-// 7 Fourmis cultivatrices de champignons : Acromyrmex
-// 8 Fourmis nageuses : Polyrhachis
+#include <stdbool.h>
 
 #define BASE_COOR_X 12
 #define BASE_COOR_Y 12
 
 Fourmi* creationFourmi(int id, int type_fourmi, bool sexe) {
     Fourmi* nouvelle_fourmi = (Fourmi*)malloc(sizeof(Fourmi));
-    if (nouvelle_fourmi == NULL) {
+    if (!nouvelle_fourmi) {
         perror("Erreur d'allocation mémoire pour la fourmi");
         return NULL;
     }
     nouvelle_fourmi->id_fourmi = id;
-    // strcpy(nouvelle_fourmi->role, role_fourmi);
     nouvelle_fourmi->age = 1;
     nouvelle_fourmi->salle = 2;
     nouvelle_fourmi->sexe = sexe;
@@ -53,13 +24,13 @@ Fourmi* creationFourmi(int id, int type_fourmi, bool sexe) {
     nouvelle_fourmi->besoin_eau = 1;
     nouvelle_fourmi->sante = true;
     strcpy(nouvelle_fourmi->maladie, "Rien");
-    nouvelle_fourmi->coord_x = 12;
-    nouvelle_fourmi->coord_y = 12;
+    nouvelle_fourmi->coord_x = BASE_COOR_X;
+    nouvelle_fourmi->coord_y = BASE_COOR_Y;
     return nouvelle_fourmi;
 }
 
 void afficher_fourmi(const Fourmi* fourmi) {
-    if (fourmi == NULL) return;
+    if (!fourmi) return;
     printf("\n--- Fourmi %d ---\n", fourmi->id_fourmi);
     printf("Espèce : %s\n", fourmi->espece);
     printf("Âge : %d\n", fourmi->age);
@@ -72,7 +43,7 @@ void afficher_fourmi(const Fourmi* fourmi) {
 
 ListFourmi* Initialisation_List() {
     ListFourmi* newList = (ListFourmi*)malloc(sizeof(ListFourmi));
-    if (newList == NULL) {
+    if (!newList) {
         fprintf(stderr, "Erreur : allocation mémoire échouée.\n");
         exit(EXIT_FAILURE);
     }
@@ -82,9 +53,11 @@ ListFourmi* Initialisation_List() {
     return newList;
 }
 
-ListFourmi* ajout_fourmi(ListFourmi** liste, Fourmi* fourmi){
+ListFourmi* ajout_fourmi(ListFourmi** liste, Fourmi* fourmi) {
+    if (!liste || !fourmi) return NULL;
+
     ListFourmi* newList = (ListFourmi*)malloc(sizeof(ListFourmi));
-    if (newList == NULL) {
+    if (!newList) {
         fprintf(stderr, "Erreur : allocation mémoire échouée.\n");
         exit(EXIT_FAILURE);
     }
@@ -93,83 +66,75 @@ ListFourmi* ajout_fourmi(ListFourmi** liste, Fourmi* fourmi){
     newList->prev = NULL;
     newList->next = *liste;
 
-    if (*liste != NULL) {
+    if (*liste) {
         (*liste)->prev = newList;
     }
     *liste = newList;
     return newList;
-
 }
 
-void afficher_Liste_fourmi(ListFourmi* liste){
-    ListFourmi* newList = liste;
-    if(newList->fourmi == NULL){
+void afficher_Liste_fourmi(ListFourmi* liste) {
+    if (!liste) {
         printf("Liste vide\n");
         return;
     }
-    while(newList != NULL){
-        afficher_fourmi(newList->fourmi);
-        newList = newList->next;
+    ListFourmi* current = liste;
+    while (current) {
+        afficher_fourmi(current->fourmi);
+        current = current->next;
     }
 }
 
-void compter_Liste_fourmi(ListFourmi* liste){
-    ListFourmi* newList = liste;
-    if(newList->fourmi == NULL){
+void compter_Liste_fourmi(ListFourmi* liste) {
+    if (!liste) {
         printf("Liste vide\n");
         return;
     }
-    int i = 0;
-    while(newList->next != NULL){
-        i++;
-        newList = newList->next;
+    int count = 0;
+    ListFourmi* current = liste;
+    while (current) {
+        count++;
+        current = current->next;
     }
-    printf("Il y a %d fourmis dans la fourmilières\n", i);
+    printf("Il y a %d fourmis dans la fourmilière\n", count);
 }
 
-int compter_fourmi_salle(ListFourmi* liste, int salle){
-
-    ListFourmi* newList = liste;
-
-    if(newList->fourmi == NULL){
+int compter_fourmi_salle(ListFourmi* liste, int salle) {
+    if (!liste) {
         printf("Liste vide\n");
         return 0;
     }
-    int i = 0;
-    while(newList->next != NULL){
-        if(salle == newList->fourmi->salle){
-            i++;
+    int count = 0;
+    ListFourmi* current = liste;
+    while (current) {
+        if (current->fourmi->salle == salle) {
+            count++;
         }
-        newList = newList->next;
+        current = current->next;
     }
-    return i;
+    return count;
 }
 
 ListFourmi* retirer_fourmi(ListFourmi** liste, Fourmi* fourmi) {
-
-    if (liste == NULL || *liste == NULL) {
-        fprintf(stderr, "Erreur : liste vide ou non initialisée.\n");
-        return NULL;
-    }
+    if (!liste || !*liste || !fourmi) return *liste;
 
     ListFourmi* current = *liste;
-
-    while (current != NULL && current->fourmi != fourmi) {
+    while (current && current->fourmi != fourmi) {
         current = current->next;
     }
 
-    if (current == NULL) {
+    if (!current) {
         fprintf(stderr, "Erreur : fourmi non trouvée.\n");
         return *liste;
     }
 
-    if (current->prev != NULL) {
+    if (current->prev) {
         current->prev->next = current->next;
     } else {
         *liste = current->next;
     }
 
-    if (current->next != NULL) {
+    if (current->next) {
         current->next->prev = current->prev;
     }
 
@@ -178,42 +143,43 @@ ListFourmi* retirer_fourmi(ListFourmi** liste, Fourmi* fourmi) {
 }
 
 void liberer_liste(ListFourmi* liste) {
-    ListFourmi* courant = liste;
-    while (courant != NULL) {
-        ListFourmi* suivant = courant->next;
-        free(courant->fourmi);
-        free(courant);
-        courant = suivant;
+    ListFourmi* current = liste;
+    while (current) {
+        ListFourmi* next = current->next;
+        free(current->fourmi);
+        free(current);
+        current = next;
     }
 }
 
 Fourmi* trouver_fourmi(ListFourmi* liste, int id) {
-    ListFourmi* courant = liste;
-    while (courant != NULL) {
-        if (courant->fourmi->id_fourmi == id) {
-            return courant->fourmi;
+    ListFourmi* current = liste;
+    while (current) {
+        if (current->fourmi->id_fourmi == id) {
+            return current->fourmi;
         }
-        courant = courant->next;
+        current = current->next;
     }
     return NULL;
 }
 
-ListFourmi* fusionner_listes(ListFourmi* liste1, ListFourmi* liste2) { //utitile en cas de fusion de 2 fourmilières
-    if (liste1 == NULL) return liste2;
-    if (liste2 == NULL) return liste1;
+ListFourmi* fusionner_listes(ListFourmi* liste1, ListFourmi* liste2) {
+    if (!liste1) return liste2;
+    if (!liste2) return liste1;
 
-    ListFourmi* courant = liste1;
-    while (courant->next != NULL) {
-        courant = courant->next;
+    ListFourmi* current = liste1;
+    while (current->next) {
+        current = current->next;
     }
 
-    courant->next = liste2;
-    if (liste2 != NULL) {
-        liste2->prev = courant;
+    current->next = liste2;
+    if (liste2) {
+        liste2->prev = current;
     }
 
     return liste1;
 }
+
 
 void ajuster_role_par_saison(Fourmi* fourmi) {
     // switch (saison) {
