@@ -27,5 +27,6 @@ Reine* creationReine(int id, int type_reine);
 void afficher_Reine(const Reine* reine);
 void update_day_Reine(Reine* reine);
 void update_year_Reine(Reine* reine);
+int calculer_ponte(Reine* reine);
 
 #endif

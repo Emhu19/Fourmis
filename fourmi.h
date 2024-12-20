@@ -62,7 +62,8 @@ void update_day_fourmi(ListFourmi* liste ,Fourmi* fourmi, Environnement* map);
 void update_day_liste_fourmi(ListFourmi* liste, Environnement* map);
 int compter_fourmi_salle(ListFourmi* liste, int salle);
 void ajuster_role_par_saison(Fourmi* fourmi);
-
+void gerer_creation_fourmis_males(ListFourmi** fourmis, Reine* reine);
+void supprimer_fourmis_males(ListFourmi* fourmis);
 
 #endif
 

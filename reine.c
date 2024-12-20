@@ -87,3 +87,7 @@ void update_year_Reine(Reine* reine) {
     if (!reine) return;
     reine->age++;
 }
+
+int calculer_ponte(Reine* reine) {
+    return (reine->age < 730) ? rand() % 100 + reine->capacite_ponte : rand() % 50 + reine->capacite_ponte;
+}

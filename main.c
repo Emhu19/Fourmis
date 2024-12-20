@@ -23,27 +23,22 @@ typedef struct {
     Reine* reine;
 } Population;
 
+
 ListFourmi* cycle_jour(int niveau, Population* population, Contexte* contexte) {
     if (!population->fourmis) return NULL;
 
     Reine* reine = population->reine;
 
-    int ponte = (reine->age < 730) ? rand() % 100 + reine->capacite_ponte : rand() % 50 + reine->capacite_ponte;
+    int ponte = calculer_ponte(reine);
 
-    if (contexte->temps->saison == 2) {
-        if (reine->royale) {
-            for (int j = 0; j < 10; j++) {
-                Fourmi* fourmi_male = creationFourmi(2000, reine->type, false);
-                population->fourmis = ajout_fourmi(&population->fourmis, fourmi_male);
-            }
-        } else if (rand() % 100 == 19) {
-            reine->royale = true;
-        }
-        if (contexte->meteo->precipitation && reine->royale) {
-            reine->royale = false;
-            Fourmi* fourmi_male_supp = trouver_fourmi(population->fourmis, 2000);
-            if (fourmi_male_supp) retirer_fourmi(&population->fourmis, fourmi_male_supp);
-        }
+    if (contexte->temps->saison == 2 && reine->royale) {
+        gerer_creation_fourmis_males(&population->fourmis, reine);
+        reine->royale = false;
+    }
+
+    if (contexte->meteo->precipitation) {
+        supprimer_fourmis_males(population->fourmis);
+
     }
 
     for (int i = 1; i <= ponte; i++) {
@@ -64,7 +59,6 @@ ListFourmi* cycle_jour(int niveau, Population* population, Contexte* contexte) {
 
     return population->fourmis;
 }
-
 
 void simulation() {
 

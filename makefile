@@ -8,6 +8,7 @@ SRC = main.c \
       fourmi_list.c \
       fourmi_role.c \
       fourmi_update.c \
+      fourmi_male.c \
       reine.c \
       animation.c \
       environnement.c \
