@@ -26,8 +26,8 @@ Fourmi* creationFourmi(int id, int type_fourmi, bool sexe) {
     nouvelle_fourmi->besoin_eau = 1;
     nouvelle_fourmi->sante = true;
     strcpy(nouvelle_fourmi->maladie, "Rien");
-    nouvelle_fourmi->coord_x = 0;
-    nouvelle_fourmi->coord_y = 0;
+    nouvelle_fourmi->coord_x = 12;
+    nouvelle_fourmi->coord_y = 12;
     return nouvelle_fourmi;
 }
 

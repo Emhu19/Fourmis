@@ -78,16 +78,16 @@ ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine, Environnemen
                 //envol nultiale
             }
         }
-        int nbNymphe = 0;
+        // int nbNymphe = 0;
         for (int i = 1; i <= ponte; i++) {
             Stade* stade = creationLarve(i, reine->type, true);
             if (stade != NULL) {
-                update_day_larve(liste_larve, stade);
-                if (stade->age > 25) {
-                    nbNymphe++;
-                }
+                liste_larve = ajout_larve(&liste_larve, stade);
             }
         }
+        update_day_liste_larve(liste_larve);
+        int nbNymphe = compter_Liste_Nymphe(liste_larve);
+
         for (int b = 0; b < nbNymphe; b++) {
             Fourmi* fourmi1 = creationFourmi(b, reine->type, true);
             if (fourmi1 != NULL) {
@@ -119,11 +119,10 @@ void simulation(){
     Meteo M = init_meteo(E);
     Temps T = init_temps();
     Predateur* LP = NULL;
-    int b = 0;
-    while(b < 5){
+
+    while(1){
          liste = cycle_jour(5, liste, reine, &E, &T, &M, liste_larve);
          journee(&E, &M, &T, &LP);
-         b++;
 //         sleep(5);
     }
     afficher_Reine(reine);

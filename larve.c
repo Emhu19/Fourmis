@@ -93,7 +93,18 @@ void update_day_larve(ListLarve* liste, Stade* stade) {
     if (stade->age > 20) {
         stade->cycle == NYMPHE;
     }
+}
 
+int compter_Liste_Nymphe(ListLarve* liste){
+    int count = 0;
+    ListLarve* current = liste;
+    while (current != NULL) {
+        if (current->stade->cycle == NYMPHE) {
+            count++;
+        }
+        current = current->next;
+    }
+    return count;
 }
 
 void update_day_liste_larve(ListLarve* liste) {
