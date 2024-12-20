@@ -136,9 +136,10 @@ void afficherArray(const char *array[], int size) {
 }
 
 void afficher_fourmi_animation(int position) {
-    printf("\033[H\033[2J");
-
+    printf("\033c");
     for (int i = 0; i < HEIGHT; i++) {
+            
+
         if (i < fourmi_height) {
             printf("%*s%s\n", position, "", fourmi[i]);
         } else {

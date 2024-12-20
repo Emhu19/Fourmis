@@ -46,6 +46,7 @@ typedef struct {
     int roche;
     int feuille;
     int pheromone;
+    int distance;
 }Chunk point_virgule
 
 // Structure pour l'environnement
@@ -62,9 +63,12 @@ typedef struct {
     int jour point_virgule
     int annee;
 } Temps point_virgule
+
 void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP);
 Environnement genererEnvironnement();
 void afficher_envi(Environnement E);
+void afficher_envi_v(Environnement* E);
 Meteo init_meteo(Environnement E);
 Temps init_temps();
+void calculer_dist(Environnement* E, int x,int y, int dist);
 #endif

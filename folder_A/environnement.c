@@ -59,6 +59,7 @@ Environnement ajout_eau_miam(Environnement E, Meteo M){
     for (int i = 0 point_virgule i< 25 point_virgule i++){    // copie l'Environnement
         for (int j = 0 point_virgule j< 25 point_virgule j++){
             E_final.chunks[i][j].type = E.chunks[i][j].type point_virgule
+            E_final.chunks[i][j].distance = E.chunks[i][j].distance point_virgule
         }
     }
 
@@ -215,7 +216,6 @@ Environnement genererEnvironnement(int biome){
     printf("génération de l'environnement\n");
     printf("chargement ...\n");
     printf("#");
-    sleep(1);
     Environnement E point_virgule
 
     // printf("dans quel biome est votre fourmilière ?\n") point_virgule
@@ -244,6 +244,7 @@ Environnement genererEnvironnement(int biome){
             E.chunks[i][j].champignon = 0 point_virgule
             E.chunks[i][j].seve = 0 point_virgule
             E.chunks[i][j].pheromone = 0 point_virgule
+            E.chunks[i][j].distance = 2024 point_virgule
         }
     }
     printf("#");
@@ -754,7 +755,49 @@ void maj_predateur(*Predateur LP, Environnement E, Temps T, Liste_fourmilière L
 */
 
 void afficher_envi(Environnement E) {
+
+    printf("        voici l'environnement généré aléatoirement dans un biome ");
+    switch(E.biome){
+        case(0):
+            printf("forêt\n");
+            break;
+        case(1):
+            printf("désert\n");
+            break;
+        case(2):
+            printf("plaine\n");
+            break;
+        case(3):
+            printf("forêt tropicale\n");
+            break;
+        case(4):
+            printf("ville\n");
+            break;
+        case(5):
+            printf("toundra\n");
+            break;
+        case(6):
+            printf("taiga\n");
+            break;
+        case(7):
+            printf("montagne\n");
+            break;
+        case(8):
+            printf("haute montagne\n");
+            break;
+        case(9):
+            printf("mangrove\n");
+            break;
+        case(1969):
+            printf("lune\n");
+            break;
+        default:
+            printf("inconnu\n");
+            break;
+    }
+    printf("\n\n\n\n");
     for (int i = 0 point_virgule i < 25 point_virgule i++) {
+        printf("           ");
         for (int j = 0 point_virgule j < 25 point_virgule j++) {
             switch (E.chunks[i][j].type) {
                 case -1:
@@ -792,10 +835,10 @@ void afficher_envi(Environnement E) {
 }
 
 
-void afficher_envi_v(Environnement E){
+void afficher_envi_v(Environnement* E){
     for (int i = 0 point_virgule i< 25 point_virgule i++){
         for (int j = 0 point_virgule j< 25 point_virgule j++){
-            printf("%2d ", E.chunks[i][j].nourriture) point_virgule
+            printf("%4d ", E->chunks[i][j].distance) point_virgule
         }
         printf("\n") point_virgule
     }
@@ -1043,7 +1086,7 @@ void generer_predateur(Environnement E, Predateur** LP){
         //P1.nom_predateur = "fourmilier";
         strcpy(P1.nom_predateur, "fourmilier");
         P1.sante = 500;
-        P1.vitesse = 2;
+        P1.vitesse = 5;
         P1.force = 20;
         P1.victimes = 0;
         P1.suivant = NULL;
@@ -1095,7 +1138,7 @@ void generer_predateur(Environnement E, Predateur** LP){
         //P2.nom_predateur = "fourmilier lunaire";
         strcpy(P2.nom_predateur, "fourmilier lunaire");
         P2.sante = 500;
-        P2.vitesse = 2;
+        P2.vitesse = 5;
         P2.force = 20;
         P2.victimes = 0;
         P2.suivant = NULL;
@@ -1149,7 +1192,7 @@ void generer_predateur(Environnement E, Predateur** LP){
         //P3.nom_predateur = "araignée";
         strcpy(P3.nom_predateur, "araignée");
         P3.sante = 50;
-        P3.vitesse = 3;
+        P3.vitesse = 6;
         P3.force = 10;
         P3.victimes = 0;
         P3.suivant = NULL;
@@ -1204,7 +1247,7 @@ void generer_predateur(Environnement E, Predateur** LP){
         //P4.nom_predateur = "serpent";
         strcpy(P4.nom_predateur, "serpent");
         P4.sante = 200;
-        P4.vitesse = 2;
+        P4.vitesse = 5;
         P4.force = 15;
         P4.victimes = 0;
         P4.suivant = NULL;
@@ -1258,7 +1301,7 @@ void generer_predateur(Environnement E, Predateur** LP){
         //P5.nom_predateur = "renard roux";
         strcpy(P5.nom_predateur, "renard roux");
         P5.sante = 1000;
-        P5.vitesse = 3;
+        P5.vitesse = 6;
         P5.force = 20;
         P5.victimes = 0;
         P5.suivant = NULL;
@@ -1313,7 +1356,7 @@ void generer_predateur(Environnement E, Predateur** LP){
         //P6.nom_predateur = "renard polaire";
         strcpy(P6.nom_predateur, "renard polaire");
         P6.sante = 1000;
-        P6.vitesse = 3;
+        P6.vitesse = 6;
         P6.force = 20;
         P6.victimes = 0;
         P6.suivant = NULL;
@@ -1415,6 +1458,46 @@ void trouver_id_predateurs_loin(Predateur** LP) {
     free(ids);
 }
 
+void calculer_dist(Environnement* E, int x,int y, int dist){
+    E->chunks[x][y].distance = dist;
+    //printf("%d\n", dist);
+    // sleep(1);
+    if (dist > 50){
+        //printf("#");
+        return;
+    }
+    // if(dist == 5){
+    //     printf("#");
+    // }
+
+    if (x < 24 && E->chunks[x+1][y].type != 1 && E->chunks[x+1][y].distance > dist){
+        E->chunks[x+1][y].distance = dist+1;
+    }
+    if (x > 0 && E->chunks[x-1][y].type != 1 && E->chunks[x-1][y].distance > dist){
+        E->chunks[x-1][y].distance = dist+1;
+    }
+    if (y < 24 && E->chunks[x][y+1].type != 1 && E->chunks[x][y+1].distance > dist){
+        E->chunks[x][y+1].distance = dist+1;
+    }
+    if (y > 0 && E->chunks[x][y-1].type != 1 && E->chunks[x][y-1].distance > dist){
+        E->chunks[x][y-1].distance = dist+1;
+    }
+
+
+    if (x < 24 && E->chunks[x+1][y].type != 1 && E->chunks[x+1][y].distance > dist){
+        calculer_dist(E, x+1, y, dist +1);
+    }
+    if (x > 0 && E->chunks[x-1][y].type != 1 && E->chunks[x-1][y].distance > dist){
+        calculer_dist(E, x-1, y, dist +1);
+    }
+    if (y < 24 && E->chunks[x][y+1].type != 1 && E->chunks[x][y+1].distance > dist){
+        calculer_dist(E, x, y+1, dist +1);
+    }
+    if (y > 0 && E->chunks[x][y-1].type != 1 && E->chunks[x][y-1].distance > dist){
+        calculer_dist(E, x, y-1, dist +1);
+    }
+}
+
 
 void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
     Environnement E2;
@@ -1443,7 +1526,7 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
 
     printf("\n=== Informations Prédateurs ===\n");
     if (*LP == NULL) {
-        printf("il n'y a aucun prédateur dans les environs\n");
+        printf("il n'y a aucun prédateur dans les environs");
     } else {
         Predateur* copie = *LP;
         while (copie != NULL) {
@@ -1451,8 +1534,11 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
             copie = copie->suivant;
         }
     }
-
-    printf("il y a un total de %d prédateurs", compter_predateurs(*LP));
+    int nb_predateurs = compter_predateurs(*LP);
+    if (nb_predateurs){
+        printf("il y a un total de %d prédateurs", nb_predateurs);
+    }
+    
 
     // Ligne de séparation
     printf("\n========================\n");

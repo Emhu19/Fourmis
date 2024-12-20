@@ -86,13 +86,18 @@ int main() {
     int biome = logo_3();
     printf("\033c");
     Environnement E = genererEnvironnement(biome) ;
-    afficher_envi(E) ;
+    //afficher_envi_v(&E) ;
     int type = logo_2();
 
     Fourmiliere F = init_fourmiliere(&E, type);
     printf("\033c");
+    printf("chargement ...\n");
+    calculer_dist(&E, 12, 12, 0);
+    printf("\n");
+    printf("\033c");
 
     afficher_envi(E) ;
+    // afficher_envi_v(&E) ;
     getchar();
     printf("\033c");
     
@@ -103,7 +108,7 @@ int main() {
     while(true){
         //printf("\033[H\033[J");
         printf("\033c");
-        //afficher_envi(E) ;
+        // afficher_envi(E) ;
         journee(&E, &M, &T, &LP);
         //sleep(1);
     }
