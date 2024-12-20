@@ -1,10 +1,17 @@
 #ifndef FOURMI_H
 #define FOURMI_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 #include "reine.h"
 #include "environnement.h"
+#include "fourmi.h"
 
+
+#define BASE_COOR_X 12
+#define BASE_COOR_Y 12
 #define MAX_CHAR 50
 
 typedef enum {
@@ -50,7 +57,7 @@ Fourmi* trouver_fourmi(ListFourmi* liste, int id);
 ListFourmi* fusionner_listes(ListFourmi* liste1, ListFourmi* liste2);
 void mise_a_jour_fourmi(Fourmi* fourmi);
 void nourrir_fourmi(Fourmi* fourmi);
-void deplacer_fourmi(Fourmi* fourmi, int x, int y);
+void deplacement_fourmi(Fourmi* fourmi, Environnement* map);
 void update_day_fourmi(ListFourmi* liste ,Fourmi* fourmi, Environnement* map);
 void update_day_liste_fourmi(ListFourmi* liste, Environnement* map);
 int compter_fourmi_salle(ListFourmi* liste, int salle);

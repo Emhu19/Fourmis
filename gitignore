@@ -3,3 +3,8 @@ fourmi
 fourmiliere_simulation
 environnement.o
 larve.o
+fourmi_creation.o
+fourmi_deplacement.o
+fourmi_list.o
+fourmi_role.o
+fourmi_update.o

@@ -3,11 +3,14 @@ CFLAGS = -Wall -Wextra -pedantic -g
 TARGET = fourmiliere_simulation
 
 SRC = main.c \
-      fourmi.c \
+      fourmi_creation.c \
+      fourmi_deplacement.c \
+      fourmi_list.c \
+      fourmi_role.c \
+      fourmi_update.c \
       reine.c \
       animation.c \
       environnement.c \
-      liste_fourmis.c \
       larve.c
 
 
