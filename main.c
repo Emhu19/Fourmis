@@ -5,6 +5,7 @@
 #include "reine.h"
 #include "animation.h"
 #include "environnement.h"
+#include "larve.h"
 
 #define JOUR_SIMULATION 6
 #define BASE_COOR_X 12
@@ -41,7 +42,7 @@
 
 
 
-ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine, Environnement* map, Temps* T, Meteo* M){
+ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine, Environnement* map, Temps* T, Meteo* M, ListLarve* liste_larve){
     if (liste == NULL)
         return NULL;
 
@@ -77,12 +78,23 @@ ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine, Environnemen
                 //envol nultiale
             }
         }
-
-        for(int i = 1; i <= ponte ; i++){
-
-            Fourmi* fourmi1 = creationFourmi(i, reine->type, true);
-            liste = ajout_fourmi(&liste, fourmi1);
+        int nbNymphe = 0;
+        for (int i = 1; i <= ponte; i++) {
+            Stade* stade = creationLarve(i, reine->type, true);
+            if (stade != NULL) {
+                update_day_larve(liste_larve, stade);
+                if (stade->age > 25) {
+                    nbNymphe++;
+                }
+            }
         }
+        for (int b = 0; b < nbNymphe; b++) {
+            Fourmi* fourmi1 = creationFourmi(b, reine->type, true);
+            if (fourmi1 != NULL) {
+                liste = ajout_fourmi(&liste, fourmi1);
+            }
+        }
+        nbNymphe = 0;
     }
      update_day_Reine(reine);
      update_day_liste_fourmi(liste, map);
@@ -90,9 +102,10 @@ ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine, Environnemen
      return liste;
 }
 
-void simulation(int type){
+void simulation(){
     ListFourmi* liste = Initialisation_List();
-    Reine* reine = creationReine(1, type);
+    ListLarve* liste_larve = Initialisation_List_Larve();
+    Reine* reine = creationReine(1, 1);
 //     getchar();
 //     afficher_Reine(reine);
 //     getchar();
@@ -106,15 +119,17 @@ void simulation(int type){
     Meteo M = init_meteo(E);
     Temps T = init_temps();
     Predateur* LP = NULL;
-
-    while(1){
-         liste = cycle_jour(5, liste, reine, &E, &T, &M);
+    int b = 0;
+    while(b < 5){
+         liste = cycle_jour(5, liste, reine, &E, &T, &M, liste_larve);
          journee(&E, &M, &T, &LP);
+         b++;
 //         sleep(5);
     }
     afficher_Reine(reine);
     getchar();
-//     afficher_Liste_fourmi(liste);
+    afficher_Liste_fourmi(liste);
+    getchar();
     liberer_liste(liste);
     free(reine);
 }
@@ -122,6 +137,7 @@ void simulation(int type){
 int main() {
     srand(time(NULL)) ;
     // logo_1();
+    simulation();
     int biome = logo_3();
     Environnement E = genererEnvironnement(biome) ;
     afficher_envi(E) ;

@@ -79,3 +79,34 @@ void liberer_liste_larve(ListLarve* liste){
         courant = suivant;
     }
 }
+
+void update_day_larve(ListLarve* liste, Stade* stade) {
+    if (liste == NULL || stade == NULL) {
+        printf("Erreur : Liste ou stade non initialisé.\n");
+        return;
+    }
+
+    stade->age++;
+    if (stade->age > 10) {
+        stade->cycle == LARVE;
+    }
+    if (stade->age > 20) {
+        stade->cycle == NYMPHE;
+    }
+
+}
+
+void update_day_liste_larve(ListLarve* liste) {
+    if (liste == NULL) {
+        printf("Erreur : liste vide ou non initialisée.\n");
+        return;
+    }
+
+    ListLarve* newList = liste;
+
+    while (newList != NULL) {
+        update_day_larve(newList, newList->stade);
+        newList = newList->next;
+    }
+}
+

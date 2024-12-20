@@ -1,8 +1,9 @@
-#ifndef FOURMI_H
-#define FOURMI_H
+#ifndef LARVE_H
+#define LARVE_H
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 typedef enum {
     OEUF,
@@ -27,5 +28,7 @@ ListLarve* Initialisation_List_Larve();
 ListLarve* ajout_larve(ListLarve** liste, Stade* stade);
 ListLarve* retirer_larve(ListLarve** liste, Stade* stade);
 void liberer_liste_larve(ListLarve* liste);
+void update_day_liste_larve(ListLarve* liste);
+void update_day_larve(ListLarve* liste, Stade* stade);
 
-#endif // FOURMI_H
+#endif
