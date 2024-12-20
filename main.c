@@ -79,6 +79,7 @@ ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine, Environnemen
         }
 
         for(int i = 1; i <= ponte ; i++){
+
             Fourmi* fourmi1 = creationFourmi(i, reine->type, true);
             liste = ajout_fourmi(&liste, fourmi1);
         }

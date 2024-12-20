@@ -14,19 +14,6 @@ typedef enum {
     COLLECTRICE_MIELLAT
 } Role;
 
-typedef enum {
-    OEUF,
-    LARVE,
-    NYMPHE
-} Cycle;
-
-typedef struct {
-    Cycle cycle;
-    int salle;
-    int age;
-    bool sante;
-} Stade;
-
 typedef struct {
     Role role;
     char espece[MAX_CHAR];

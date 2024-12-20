@@ -7,7 +7,8 @@ SRC = main.c \
       reine.c \
       animation.c \
       environnement.c \
-      liste_fourmis.c
+      liste_fourmis.c \
+      larve.c
 
 
 OBJ = $(SRC:.c=.o)
