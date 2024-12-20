@@ -85,7 +85,7 @@ ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine, Environnemen
     }
      update_day_Reine(reine);
      update_day_liste_fourmi(liste, map);
-     afficher_fourmiliere(3, liste, reine);
+     // afficher_fourmiliere(3, liste, reine);
      return liste;
 }
 

@@ -380,7 +380,7 @@ void update_day_fourmi(ListFourmi* liste ,Fourmi* fourmi, Environnement* map){
     }
     else {
         //la fourmis doit mourir de veilleisse
-        retirer_fourmi(liste, fourmi);
+        retirer_fourmi(&liste, fourmi);
         return;
     }
     deplacement_fourmi(fourmi, map);
