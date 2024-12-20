@@ -70,7 +70,7 @@ ListLarve* retirer_larve(ListLarve** liste, Stade* stade) {
     return *liste;
 }
 
-void liberer_liste_larve(ListLarve* liste){
+void liberer_liste_larves(ListLarve* liste){
     ListLarve* courant = liste;
     while (courant != NULL) {
         ListLarve* suivant = courant->next;

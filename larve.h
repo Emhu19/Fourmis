@@ -27,7 +27,7 @@ Stade* creationLarve(int id, int type_fourmi, bool sexe);
 ListLarve* Initialisation_List_Larve();
 ListLarve* ajout_larve(ListLarve** liste, Stade* stade);
 ListLarve* retirer_larve(ListLarve** liste, Stade* stade);
-void liberer_liste_larve(ListLarve* liste);
+void liberer_liste_larves(ListLarve* liste);
 void update_day_liste_larve(ListLarve* liste);
 void update_day_larve(ListLarve* liste, Stade* stade);
 int compter_Liste_Nymphe(ListLarve* liste);
