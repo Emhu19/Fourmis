@@ -1,55 +1,30 @@
 #ifndef FOURMI_H
 #define FOURMI_H
 
-#include <stdbool.h>
-#include "reine.h"
-#include "environnement.h"
-
-#define MAX_CHAR 50
-
-typedef enum {
-    NOURRICE,
-    EXPLORATRICE,
-    SOLDAT,
-    COLLECTRICE_MIELLAT
-} Role;
-
-typedef enum {
-    OEUF,
-    LARVE,
-    NYMPHE
-    int salle;
-} Cycle;
-typedef struct {
-    Cycle cycle;
-
-} Stade;
-
 typedef struct {
     Role role;
     char espece[MAX_CHAR];
     int id_fourmi;
     int salle;
     bool sexe;
-    int age;
-    int faim;
-    int eau;
-    int besoin_faim;
-    int besoin_eau;
-    bool sante;
-    char maladie[MAX_CHAR];
-    float cgt;
+    // int age;
+    // int faim;
+    // int eau;
+    // int besoin_faim;
+    // int besoin_eau;
+    // bool sante;
     int coord_x;
     int coord_y;
-} Fourmi;
+} Fourmi_male;
 
 
-typedef struct ListFourmi{
-    Fourmi* fourmi; //je suppose une structure ant on pourra changer le nom en fonction de ce qu'emilien fait
+typedef struct ListFourmi_Fourmi_male{
+    Fourmi* fourmi;
     struct ListFourmi *prev;
-    struct ListFourmi *next; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente
+    struct ListFourmi *next;
 }ListFourmi;
-Fourmi* creationFourmi(int id, int type_fourmi, bool sexe);
+
+Fourmi* creationFourmi_male(int id, int type_fourmi);
 void afficher_fourmi(const Fourmi* fourmi);
 ListFourmi* Initialisation_List();
 void afficher_Liste_fourmi(ListFourmi* liste);
@@ -66,6 +41,5 @@ void update_day_fourmi(ListFourmi* liste ,Fourmi* fourmi, Environnement* map);
 void update_day_liste_fourmi(ListFourmi* liste, Environnement* map);
 int compter_fourmi_salle(ListFourmi* liste, int salle);
 void ajuster_role_par_saison(Fourmi* fourmi);
-
 
 #endif

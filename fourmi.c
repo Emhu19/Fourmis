@@ -2,11 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
-#define BASE_COOR_X 25
-#define BASE_COOR_Y 25
 
-Fourmi* creationFourmi(int id, int type_fourmi) {
+#define BASE_COOR_X 12
+#define BASE_COOR_Y 12
+
+Fourmi* creationFourmi(int id, int type_fourmi, bool sexe) {
     Fourmi* nouvelle_fourmi = (Fourmi*)malloc(sizeof(Fourmi));
     if (nouvelle_fourmi == NULL) {
         perror("Erreur d'allocation mémoire pour la fourmi");
@@ -16,7 +18,7 @@ Fourmi* creationFourmi(int id, int type_fourmi) {
     // strcpy(nouvelle_fourmi->role, role_fourmi);
     nouvelle_fourmi->age = 1;
     nouvelle_fourmi->salle = 2;
-    nouvelle_fourmi->sexe = true;
+    nouvelle_fourmi->sexe = sexe;
     nouvelle_fourmi->cgt = 0.0f;
     nouvelle_fourmi->faim = 100;
     nouvelle_fourmi->eau = 100;
@@ -169,7 +171,6 @@ Fourmi* trouver_fourmi(ListFourmi* liste, int id) {
     return NULL;
 }
 
-
 ListFourmi* fusionner_listes(ListFourmi* liste1, ListFourmi* liste2) { //utitile en cas de fusion de 2 fourmilières
     if (liste1 == NULL) return liste2;
     if (liste2 == NULL) return liste1;
@@ -187,7 +188,170 @@ ListFourmi* fusionner_listes(ListFourmi* liste1, ListFourmi* liste2) { //utitile
     return liste1;
 }
 
-void update_day_fourmi(Fourmi* fourmi, Environnement* map){
+void ajuster_role_par_saison(Fourmi* fourmi) {
+    // switch (saison) {
+    //     case HIVER:
+    //         if (fourmi->role == COLLECTRICE_MIELLAT) {
+    //             fourmi->role = NOURRICE;
+    //         }
+    //         break;
+    //     case PRINTEMPS:
+    //         if (fourmi->role == NOURRICE) {
+    //             fourmi->role = EXPLORATRICE;
+    //         }
+    //         break;
+    //     case ETE:
+    //         if (fourmi->role == NOURRICE) {
+    //             fourmi->role = COLLECTRICE_MIELLAT;
+    //         }
+    //         break;
+    //     case AUTOMNE:
+    //         if (fourmi->role == COLLECTRICE_MIELLAT) {
+    //             fourmi->role = SOLDAT;
+    //         }
+    //         break;
+    // }
+}
+void fourmi_go_base(Fourmi* fourmi, Environnement* map){
+    int nombre_deplacement_jour = 5;
+    // maps.chunks[i][j].type == 1
+    for(int i = 0; i < nombre_deplacement_jour; i++){
+        map->chunks[fourmi->coord_x][fourmi->coord_y].pheromones++;
+        if (fourmi->coord_x != BASE_COOR_X) {
+            fourmi->coord_x += (fourmi->coord_x > BASE_COOR_X) ? -1 : 1;
+        }
+        if (fourmi->coord_y != BASE_COOR_Y) {
+            fourmi->coord_y += (fourmi->coord_y > BASE_COOR_Y) ? -1 : 1;
+        }
+    }
+}
+
+void fourmi_go_aléatoire(Fourmi* fourmi, Environnement* map) {
+    map->chunks[fourmi->coord_x][fourmi->coord_y].pheromones++;
+    if (fourmi->coord_x == 1 && fourmi->coord_y == 1) {
+        srand(time(NULL));
+        int random_number = rand() % 2;
+        if (random_number == 0) {
+            fourmi->coord_x++;
+        } else {
+            fourmi->coord_y++;
+        }
+        return;
+    }
+    if (fourmi->coord_x == 1 && fourmi->coord_y == 25) {
+        srand(time(NULL));
+        int random_number = rand() % 2;
+        if (random_number == 0) {
+            fourmi->coord_x++;
+        } else {
+            fourmi->coord_y--;
+        }
+        return;
+    }
+    if (fourmi->coord_x == 25 && fourmi->coord_y == 1) {
+        srand(time(NULL));
+        int random_number = rand() % 2;
+        if (random_number == 0) {
+            fourmi->coord_x--;
+        } else {
+            fourmi->coord_y++;
+        }
+        return;
+    }
+    if (fourmi->coord_x == 25 && fourmi->coord_y == 25) {
+        srand(time(NULL));
+        int random_number = rand() % 2;
+        if (random_number == 0) {
+            fourmi->coord_x--;
+        } else {
+            fourmi->coord_y--;
+        }
+        return;
+    }
+    if (fourmi->coord_x == 1) {
+        srand(time(NULL));
+        int random_number = rand() % 3;
+        if (random_number == 0) {
+            fourmi->coord_x++;
+        } else if (random_number == 1) {
+            fourmi->coord_y--;
+        } else {
+            fourmi->coord_y++;
+        }
+        return;
+    }
+    if (fourmi->coord_x == 25) {
+        srand(time(NULL));
+        int random_number = rand() % 3;
+        if (random_number == 0) {
+            fourmi->coord_x--;
+        } else if (random_number == 1) {
+            fourmi->coord_y--;
+        } else {
+            fourmi->coord_y++;
+        }
+        return;
+    }
+    if (fourmi->coord_y == 1) {
+        srand(time(NULL));
+        int random_number = rand() % 3;
+        if (random_number == 0) {
+            fourmi->coord_y++;
+        } else if (random_number == 1) {
+            fourmi->coord_x--;
+        } else {
+            fourmi->coord_x++;
+        }
+        return;
+    }
+    if (fourmi->coord_y == 25) {
+        srand(time(NULL));
+        int random_number = rand() % 3;
+        if (random_number == 0) {
+            fourmi->coord_y--;
+        } else if (random_number == 1) {
+            fourmi->coord_x--;
+        } else {
+            fourmi->coord_x++;
+        }
+        return;
+    }
+    srand(time(NULL));
+    int random_number = rand() % 4;
+    switch (random_number) {
+        case 0:
+            fourmi->coord_y--;
+            break;
+        case 1:
+            fourmi->coord_y++;
+            break;
+        case 2:
+            fourmi->coord_x--;
+            break;
+        case 3:
+            fourmi->coord_x++;
+            break;
+    }
+}
+
+void deplacement_fourmi(Fourmi* fourmi, Environnement* map){
+
+    if(fourmi->coord_x != BASE_COOR_X || fourmi->coord_y != BASE_COOR_Y){
+        if(fourmi->role != EXPLORATRICE){
+            //doit rentrer à la base
+            fourmi_go_base(fourmi, map);
+        }
+        else{
+            for(int i = 0; i < 5; i++){
+            fourmi_go_aléatoire(fourmi, map);
+            //se déplace de manière aléatoire
+            }
+        }
+    }
+    return;
+}
+
+void update_day_fourmi(ListFourmi* liste ,Fourmi* fourmi, Environnement* map){
      if (fourmi == NULL) return;
     fourmi->faim -= fourmi->besoin_faim;
     fourmi->eau -= fourmi->besoin_eau;
@@ -216,33 +380,10 @@ void update_day_fourmi(Fourmi* fourmi, Environnement* map){
     }
     else {
         //la fourmis doit mourir de veilleisse
+        retirer_fourmi(liste, fourmi);
         return;
     }
-}
-
-void ajuster_role_par_saison(Fourmi* fourmi) {
-    // switch (saison) {
-    //     case HIVER:
-    //         if (fourmi->role == COLLECTRICE_MIELLAT) {
-    //             fourmi->role = NOURRICE;
-    //         }
-    //         break;
-    //     case PRINTEMPS:
-    //         if (fourmi->role == NOURRICE) {
-    //             fourmi->role = EXPLORATRICE;
-    //         }
-    //         break;
-    //     case ETE:
-    //         if (fourmi->role == NOURRICE) {
-    //             fourmi->role = COLLECTRICE_MIELLAT;
-    //         }
-    //         break;
-    //     case AUTOMNE:
-    //         if (fourmi->role == COLLECTRICE_MIELLAT) {
-    //             fourmi->role = SOLDAT;
-    //         }
-    //         break;
-    // }
+    deplacement_fourmi(fourmi, map);
 }
 
 void update_day_liste_fourmi(ListFourmi* liste, Environnement* maps){
@@ -252,7 +393,7 @@ void update_day_liste_fourmi(ListFourmi* liste, Environnement* maps){
         return;
     }
     while(newList != NULL){
-        update_day_fourmi(newList->fourmi, maps);
+        update_day_fourmi(newList, newList->fourmi, maps);
         newList = newList->next;
     }
 }

@@ -6,6 +6,7 @@
 
 void creationReine_Atta(Reine* nouvelle_reine){
     nouvelle_reine->salle = 1;
+    nouvelle_reine->royale = false;
     strcpy(nouvelle_reine->role, "Reine");
     nouvelle_reine->spermatec = 40000000;
     nouvelle_reine->capacite_ponte = 20;
@@ -21,6 +22,7 @@ void creationReine_Atta(Reine* nouvelle_reine){
 }
 void creationReine_Cataglyphis(Reine* nouvelle_reine){
     nouvelle_reine->salle = 1;
+    nouvelle_reine->royale = false;
     strcpy(nouvelle_reine->role, "Reine");
     nouvelle_reine->spermatec = 1500000;
     nouvelle_reine->capacite_ponte = 10;
@@ -36,6 +38,7 @@ void creationReine_Cataglyphis(Reine* nouvelle_reine){
 }
 void creationReine_Messor(Reine* nouvelle_reine){
     nouvelle_reine->salle = 1;
+    nouvelle_reine->royale = false;
     strcpy(nouvelle_reine->role, "Reine");
     nouvelle_reine->spermatec = 2000000;
     nouvelle_reine->capacite_ponte = 8;
@@ -51,6 +54,7 @@ void creationReine_Messor(Reine* nouvelle_reine){
 }
 void creationReine_Eciton(Reine* nouvelle_reine){
     nouvelle_reine->salle = 1;
+    nouvelle_reine->royale = false;
     strcpy(nouvelle_reine->role, "Reine");
     nouvelle_reine->spermatec = 50000000;
     nouvelle_reine->capacite_ponte = 30;
@@ -66,6 +70,7 @@ void creationReine_Eciton(Reine* nouvelle_reine){
 }
 void creationReine_Formica(Reine* nouvelle_reine){
     nouvelle_reine->salle = 1;
+    nouvelle_reine->royale = false;
     strcpy(nouvelle_reine->role, "Reine");
     nouvelle_reine->spermatec = 3000000;
     nouvelle_reine->capacite_ponte = 12;
@@ -81,6 +86,7 @@ void creationReine_Formica(Reine* nouvelle_reine){
 }
 void creationReine_Pogonomyrmex(Reine* nouvelle_reine){
     nouvelle_reine->salle = 1;
+    nouvelle_reine->royale = false;
     strcpy(nouvelle_reine->role, "Reine");
     nouvelle_reine->spermatec = 1500000;
     nouvelle_reine->capacite_ponte = 10;
@@ -95,6 +101,7 @@ void creationReine_Pogonomyrmex(Reine* nouvelle_reine){
 }
 void creationReine_Acromyrmex(Reine* nouvelle_reine){
     nouvelle_reine->salle = 1;
+    nouvelle_reine->royale = false;
     strcpy(nouvelle_reine->role, "Reine");
     nouvelle_reine->spermatec = 6000000;
     nouvelle_reine->capacite_ponte = 25;
@@ -108,8 +115,8 @@ void creationReine_Acromyrmex(Reine* nouvelle_reine){
     strcpy(nouvelle_reine->maladie, "Rien");
 }
 void creationReine_Polyrhachis(Reine* nouvelle_reine){
-
     nouvelle_reine->salle = 1;
+    nouvelle_reine->royale = false;
     strcpy(nouvelle_reine->role, "Reine");
     nouvelle_reine->spermatec = 25000000;
     nouvelle_reine->capacite_ponte = 15;

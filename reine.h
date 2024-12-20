@@ -8,6 +8,7 @@
 
 typedef struct {
     int type;
+    bool royale;
     int id_reine;
     char role[MAX_CHAR];
     int salle;

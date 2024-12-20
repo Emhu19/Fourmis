@@ -7,8 +7,8 @@
 #include "environnement.h"
 
 #define JOUR_SIMULATION 6
-#define BASE_COOR_X 25
-#define BASE_COOR_Y 25
+#define BASE_COOR_X 12
+#define BASE_COOR_Y 12
 
 // Liste des types de fourmilles
 /* 1 Fourmi coupeuse de feuilles : Atta
@@ -40,19 +40,46 @@
 // 8 Fourmis nageuses : Polyrhachis
 
 
-ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine, Environnement* map){
 
-    // if (saison == PRINTEMPS || saison == ETE) { à relier avec le système de saison
+ListFourmi* cycle_jour(int niveau, ListFourmi* liste, Reine* reine, Environnement* map, Temps* T, Meteo* M){
+    if (liste == NULL)
+        return NULL;
+
     int ponte = 0;
-    if(1==1){
+    if(T->saison == 1 || T->saison == 2){
         if (reine->age < 730) {
             ponte = rand() % 100 + reine->capacite_ponte;
         } else {
             ponte = rand() % 50 + reine->capacite_ponte;
         }
+        if(T->saison == 2){ //SAISON ETE
+            if(reine->royale == true){
+                int i = 2000;
+                for(int j = 0; j < 10; j++){
+                    Fourmi* fourmi_male = creationFourmi(i, reine->type, false);
+                    liste = ajout_fourmi(&liste, fourmi_male);
+                }
+
+            }
+            else{
+                // srand(time(NULL));
+                int random_number = rand() % 100;
+                if(random_number == 19){
+                    reine->royale = true;
+                }
+            }
+            if(M->precipitation && reine->royale){ //pdt l'orage c'est le vol nuptial
+                reine->royale = false;
+                Fourmi* fourmi_male_supp = trouver_fourmi(liste, 2000);
+                if (fourmi_male_supp != NULL) {
+                    retirer_fourmi(&liste, fourmi_male_supp);
+                }
+                //envol nultiale
+            }
+        }
 
         for(int i = 1; i <= ponte ; i++){
-            Fourmi* fourmi1 = creationFourmi(i, reine->type);
+            Fourmi* fourmi1 = creationFourmi(i, reine->type, true);
             liste = ajout_fourmi(&liste, fourmi1);
         }
     }
@@ -80,8 +107,8 @@ void simulation(int type){
     Predateur* LP = NULL;
 
     while(1){
-         liste = cycle_jour(5, liste, reine, &E);
-        journee(&E, &M, &T, &LP);
+         liste = cycle_jour(5, liste, reine, &E, &T, &M);
+         journee(&E, &M, &T, &LP);
 //         sleep(5);
     }
     afficher_Reine(reine);
