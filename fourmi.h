@@ -18,11 +18,13 @@ typedef enum {
     OEUF,
     LARVE,
     NYMPHE
-    int salle;
 } Cycle;
+
 typedef struct {
     Cycle cycle;
-
+    int salle;
+    int age;
+    bool sante;
 } Stade;
 
 typedef struct {
