@@ -29,7 +29,7 @@ ListLarve* ajout_larve(ListLarve** liste, Stade* stade);
 ListLarve* retirer_larve(ListLarve** liste, Stade* stade);
 void liberer_liste_larves(ListLarve* liste);
 void update_day_liste_larve(ListLarve* liste);
-void update_day_larve(ListLarve* liste, Stade* stade);
+void update_day_larve(Stade* stade);
 int compter_Liste_Nymphe(ListLarve* liste);
 
 #endif
