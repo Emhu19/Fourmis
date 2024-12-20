@@ -3,7 +3,34 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
+// Liste des types de fourmilles
+/* 1 Fourmi coupeuse de feuilles : Atta
+        1 Reine fondatrice de champignon
+        2 Ouvrière transporteur de feuilles
+        3 Soldat protecteur des colonnes
+        4 Ouvrière nettoyeuse des champignons
+        5 Ouvrière mineure pour le jardinage de champignons
+*/
+/* 2 Fourmis des dunes : Cataglyphis
+    Exploratrice de chaleur extrême
+    Messagère rapide
+    Chercheuse d’ombre
+    Ouvrière éclaireuse
+    Reine migratrice
+    Fourmi stérile pour fouille des sables
+*/
+// 3 Fourmis des rochers : Messor
+// 4 Fourmis amazoniennes : Eciton
+// 5 Fourmis forestières : Formica
+    // Ouvrière constructrice de nids en bois ou aiguilles
+        // Exploratrice forestière
+        // Soldat défensif avec acide formique
+        // Transporteur de petits insectes
+        //Reine des sous-bois
+        // Collectrice de miellat des pucerons
+// 6 Fourmis du désert : Pogonomyrmex
+// 7 Fourmis cultivatrices de champignons : Acromyrmex
+// 8 Fourmis nageuses : Polyrhachis
 
 #define BASE_COOR_X 12
 #define BASE_COOR_Y 12
