@@ -5,10 +5,9 @@ TARGET = fourmiliere_simulation
 SRC = main.c \
       fourmi.c \
       reine.c \
-      fourmiliere.c \
-      liste_fourmis.c \
       animation.c \
-      environnement.c
+      environnement.c \
+      liste_fourmis.c
 
 
 OBJ = $(SRC:.c=.o)
