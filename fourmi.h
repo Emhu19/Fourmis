@@ -41,12 +41,17 @@ typedef struct {
 
 
 typedef struct ListFourmi{
-    Fourmi* fourmi; //je suppose une structure ant on pourra changer le nom en fonction de ce qu'emilien fait
+    Fourmi* fourmi;
     struct ListFourmi *prev;
-    struct ListFourmi *next; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente
+    struct ListFourmi *next; //liste doublement chainée car on pourrait avoir besoin de revenir a la fourmis précedente
 }ListFourmi;
+
+/****************************************************************************/
 Fourmi* creationFourmi(int id, int type_fourmi, bool sexe);
 void afficher_fourmi(const Fourmi* fourmi);
+/****************************************************************************/
+
+/****************************************************************************/
 ListFourmi* Initialisation_List();
 void afficher_Liste_fourmi(ListFourmi* liste);
 ListFourmi* ajout_fourmi(ListFourmi** liste, Fourmi* fourmi);
@@ -55,15 +60,34 @@ void compter_Liste_fourmi(ListFourmi* liste);
 void liberer_liste(ListFourmi* liste);
 Fourmi* trouver_fourmi(ListFourmi* liste, int id);
 ListFourmi* fusionner_listes(ListFourmi* liste1, ListFourmi* liste2);
+/****************************************************************************/
+
+/****************************************************************************/
 void mise_a_jour_fourmi(Fourmi* fourmi);
 void nourrir_fourmi(Fourmi* fourmi);
+/****************************************************************************/
+
+/****************************************************************************/
 void deplacement_fourmi(Fourmi* fourmi, Environnement* map);
+/****************************************************************************/
+
+/****************************************************************************/
 void update_day_fourmi(ListFourmi* liste ,Fourmi* fourmi, Environnement* map);
 void update_day_liste_fourmi(ListFourmi* liste, Environnement* map);
+/****************************************************************************/
+
+/****************************************************************************/
 int compter_fourmi_salle(ListFourmi* liste, int salle);
-void ajuster_role_par_saison(Fourmi* fourmi);
+/****************************************************************************/
+
+/****************************************************************************/
+void ajuster_role_par_saison(Fourmi* fourmi, Temps* saison);
+/****************************************************************************/
+
+/****************************************************************************/
 void gerer_creation_fourmis_males(ListFourmi** fourmis, Reine* reine);
 void supprimer_fourmis_males(ListFourmi* fourmis);
+/****************************************************************************/
 
 #endif
 
