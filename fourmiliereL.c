@@ -202,7 +202,7 @@ void clear_terminal() {
 }
 
 void afficher_titre(const char *titre) {
-    printf("\n\033[1;34m===== %s =====\033[0m\n\n", titre);
+    printf("\n\033[0;33m========================================================================= %s =========================================================================\033[0m\n\n", titre);
 }
 
 void afficher_salle_simple(const char *nom) {
@@ -321,15 +321,16 @@ void affiche_auto(ArbrePiece *piece){
     if(piece != NULL){
         if(piece->taille == 1){
             if(piece->salle.etat != 0){
-                afficher_salle_simple(piece->salle.typePiece);
                 afficher_connexion_simple();
+                afficher_salle_simple(piece->salle.typePiece);
             }
         }
         else if(piece->taille== 2){
             if(piece->filsD != NULL){
                 if(piece->salle.etat != 0){
-                    afficher_salles_alignees(piece->salle.typePiece, piece->filsD->salle.typePiece);
                     afficher_connexion_double();
+                    afficher_salles_alignees(piece->salle.typePiece, piece->filsD->salle.typePiece);
+
                 }
                 else if(piece->filsD->salle.etat != 0){
                     afficher_connexion_simple();
@@ -338,19 +339,22 @@ void affiche_auto(ArbrePiece *piece){
             }
             else if(piece->filsG != NULL){
                 if(piece->salle.etat != 0){
-                    afficher_salles_alignees(piece->salle.typePiece, piece->filsG->salle.typePiece);
                     afficher_connexion_double();
+                    afficher_salles_alignees(piece->salle.typePiece, piece->filsG->salle.typePiece);
+
                 }
                 else if(piece->filsG->salle.etat != 0){
-                    afficher_salle_simple(piece->filsG->salle.typePiece);
                     afficher_connexion_simple();
+                    afficher_salle_simple(piece->filsG->salle.typePiece);
+
                 }
             }
         }
         else if(piece->taille == 3){
             if(piece->salle.etat != 0){
-                afficher_salles_alignees_3(piece->salle.typePiece, piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
                 afficher_connexion_triple();
+                afficher_salles_alignees_3(piece->salle.typePiece, piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
+
             }
             else if(piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
                 afficher_connexion_simple();
@@ -363,22 +367,26 @@ void affiche_auto(ArbrePiece *piece){
 
             }
             else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat != 0){
-                afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
                 afficher_connexion_double();
+                afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
+
             }
         }
         else{
             if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0 && piece->filsD->salle.etat != 0){
-                afficher_salles_alignees_3(piece->salle.typePiece, piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
                 afficher_connexion_triple();
+                afficher_salles_alignees_3(piece->salle.typePiece, piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
+
             }
             else if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
-                afficher_salles_alignees(piece->salle.typePiece, piece->filsG->salle.typePiece);
                 afficher_connexion_double();
+                afficher_salles_alignees(piece->salle.typePiece, piece->filsG->salle.typePiece);
+
             }
             else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat != 0){
-                afficher_salles_alignees(piece->salle.typePiece, piece->filsD->salle.typePiece);
                 afficher_connexion_double();
+                afficher_salles_alignees(piece->salle.typePiece, piece->filsD->salle.typePiece);
+
             }
             else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat == 0){
                 afficher_connexion_simple();
@@ -393,8 +401,9 @@ void affiche_auto(ArbrePiece *piece){
                 afficher_salle_simple(piece->filsD->salle.typePiece);
             }
             else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat != 0){
-                afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
                 afficher_connexion_double();
+                afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
+
             }
             affiche_auto(piece->filsG->filsG);
             affiche_auto(piece->filsG->filsD);
@@ -524,6 +533,7 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
         tempP = pieces;
         temp = temp->suivant;
     }
+    afficher_titre("Terre");
     affiche_auto(T);
 }
 
