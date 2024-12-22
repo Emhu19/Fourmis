@@ -3,12 +3,16 @@ CFLAGS = -Wall -Wextra -pedantic -g
 TARGET = fourmiliere_simulation
 
 SRC = main.c \
-      fourmi.c \
+      fourmi_creation.c \
+      fourmi_deplacement.c \
+      fourmi_list.c \
+      fourmi_role.c \
+      fourmi_update.c \
+      fourmi_male.c \
       reine.c \
-      fourmiliere.c \
-      liste_fourmis.c \
       animation.c \
-      environnement.c
+      environnement.c \
+      larve.c
 
 
 OBJ = $(SRC:.c=.o)

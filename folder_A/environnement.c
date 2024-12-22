@@ -1,4 +1,5 @@
 #include "environnement.h"
+#include "fourmi.h"
 //#define entier int
 
 
@@ -52,16 +53,8 @@ void generer_lac(int x, int y, Environnement* E, int proba){
 }
 
 
-Environnement ajout_eau_miam(Environnement E, Meteo M){
-
-    Environnement E_final point_virgule
-    E_final.biome = E.biome point_virgule
-    for (int i = 0 point_virgule i< 25 point_virgule i++){    // copie l'Environnement
-        for (int j = 0 point_virgule j< 25 point_virgule j++){
-            E_final.chunks[i][j].type = E.chunks[i][j].type point_virgule
-            E_final.chunks[i][j].distance = E.chunks[i][j].distance point_virgule
-        }
-    }
+void ajout_eau_miam(Environnement* E, Meteo M){
+    int tab_eau[25][25] point_virgule
 
     for (int i = 0 point_virgule i< 25 point_virgule i++){   // ajoute des points d'eau sur la map
         for (int j = 0 point_virgule j< 25 point_virgule j++){
@@ -82,7 +75,7 @@ Environnement ajout_eau_miam(Environnement E, Meteo M){
             int alea7 = nombreAleatoire(99) point_virgule
 
 
-            switch(E.chunks[i][j].type){
+            switch(E->chunks[i][j].type){
                 case(0):
                     p_eau = 50 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
                     p_miam = 0 point_virgule
@@ -133,81 +126,85 @@ Environnement ajout_eau_miam(Environnement E, Meteo M){
                     break point_virgule
 
             }
-            if(alea <= p_eau && E.chunks[i][j].eau< alea){
-                E.chunks[i][j].eau = alea point_virgule
+            if(alea <= p_eau && E->chunks[i][j].eau< alea){
+                E->chunks[i][j].eau = alea point_virgule
             }
-            if(E.chunks[i][j].type == 1){   //met a 100 le niveau d'eau si on est dans une rivière
-                E.chunks[i][j].eau = 49 point_virgule
+            if(E->chunks[i][j].type == 1){   //met a 100 le niveau d'eau si on est dans une rivière
+                E->chunks[i][j].eau = 49 point_virgule
             }
 
 
-            if(alea2 <= p_miam && E.chunks[i][j].nourriture< alea2){  // la nourriture aussi peut etre au dessus de 1
-                E_final.chunks[i][j].nourriture = alea2 point_virgule
+            if(alea2 <= p_miam && E->chunks[i][j].nourriture< alea2){  // la nourriture aussi peut etre au dessus de 1
+                E->chunks[i][j].nourriture = alea2 point_virgule
             }
 
             if(alea3 <= p_bois){   // les materiaux ne peuvent pas etre a plus que 1 par case
-                E_final.chunks[i][j].bois = 1 point_virgule
+                E->chunks[i][j].bois = 1 point_virgule
             }
 
             if(alea4 <= p_feuille){
-                E_final.chunks[i][j].feuille = 1 point_virgule
+                E->chunks[i][j].feuille = 1 point_virgule
             }
 
             if(alea5 <= p_roche){
-                E_final.chunks[i][j].roche = 1 point_virgule
+                E->chunks[i][j].roche = 1 point_virgule
             }
 
             if(alea6 <= p_seve){
-                E_final.chunks[i][j].seve = 1 point_virgule
+                E->chunks[i][j].seve = 1 point_virgule
             }
 
             if(alea7 <= p_champignon){
-                E_final.chunks[i][j].champignon = 1 point_virgule
+                E->chunks[i][j].champignon = 1 point_virgule
             }
         }
     }
 
 
-
-    for (int i = 1 point_virgule i< 24 point_virgule i++){
-        for (int j = 1 point_virgule j< 24 point_virgule j++){
-            E_final.chunks[i][j].eau = (E.chunks[i-1][j].eau+E.chunks[i-1][j-1].eau+E.chunks[i-1][j+1].eau+E.chunks[i][j-1].eau+E.chunks[i][j+1].eau+E.chunks[i+1][j-1].eau+E.chunks[i+1][j].eau+E.chunks[i+1][j+1].eau+(8*E.chunks[i][j].eau))/16 point_virgule
+    for (int i = 1; i < 24; i++) {
+        for (int j = 1; j < 24; j++) {
+            tab_eau[i][j] = (E->chunks[i-1][j].eau + E->chunks[i-1][j-1].eau + E->chunks[i-1][j+1].eau +E->chunks[i][j-1].eau + E->chunks[i][j+1].eau +E->chunks[i+1][j-1].eau + E->chunks[i+1][j].eau + E->chunks[i+1][j+1].eau +(8 * E->chunks[i][j].eau)) / 16;
         }
     }
-    for (int i = 1 point_virgule i< 24 point_virgule i++){
-        E_final.chunks[i][0].eau = (E.chunks[i-1][0].eau+E.chunks[i-1][1].eau+E.chunks[i][1].eau+E.chunks[i+1][0].eau+E.chunks[i+1][1].eau+(8*E.chunks[i][0].eau))/13 point_virgule
-        E_final.chunks[0][i].eau = (E.chunks[0][i-1].eau+E.chunks[0][i+1].eau+E.chunks[1][i-1].eau+E.chunks[1][i].eau+E.chunks[1][i+1].eau+(8*E.chunks[0][i].eau))/13 point_virgule
-        E_final.chunks[i][24].eau = (E.chunks[i-1][24].eau+E.chunks[i-1][23].eau+E.chunks[i][23].eau+E.chunks[i+1][23].eau+E.chunks[i+1][24].eau+(8*E.chunks[i][24].eau))/13 point_virgule
-        E_final.chunks[24][i].eau = (E.chunks[23][i].eau+E.chunks[23][i-1].eau+E.chunks[23][i+1].eau+E.chunks[24][i-1].eau+E.chunks[24][i+1].eau+(8*E.chunks[24][i].eau))/13 point_virgule
-
+    for (int i = 1; i < 24; i++) {
+        tab_eau[i][0] = (E->chunks[i-1][0].eau + E->chunks[i-1][1].eau + E->chunks[i][1].eau +E->chunks[i+1][0].eau + E->chunks[i+1][1].eau +(8 * E->chunks[i][0].eau)) / 13;
+        tab_eau[0][i] = (E->chunks[0][i-1].eau + E->chunks[0][i+1].eau + E->chunks[1][i-1].eau +E->chunks[1][i].eau + E->chunks[1][i+1].eau +(8 * E->chunks[0][i].eau)) / 13;
+        tab_eau[i][24] = (E->chunks[i-1][24].eau + E->chunks[i-1][23].eau + E->chunks[i][23].eau +E->chunks[i+1][23].eau + E->chunks[i+1][24].eau +(8 * E->chunks[i][24].eau)) / 13;
+        tab_eau[24][i] = (E->chunks[23][i].eau + E->chunks[23][i-1].eau + E->chunks[23][i+1].eau +E->chunks[24][i-1].eau + E->chunks[24][i+1].eau +(8 * E->chunks[24][i].eau)) / 13;
     }
-    E_final.chunks[0][0].eau = (E.chunks[0][1].eau+E.chunks[1][0].eau+E.chunks[1][1].eau+(8*E.chunks[0][0].eau))/11 point_virgule
-
-    E_final.chunks[0][24].eau = (E.chunks[0][23].eau+E.chunks[1][23].eau+E.chunks[1][24].eau+(8*E.chunks[0][24].eau))/11 point_virgule
-
-    E_final.chunks[24][0].eau = (E.chunks[23][0].eau+E.chunks[23][1].eau+E.chunks[24][1].eau+(8*E.chunks[24][0].eau))/11 point_virgule
-
-    E_final.chunks[24][24].eau = (E.chunks[23][24].eau+E.chunks[23][23].eau+E.chunks[24][23].eau+(8*E.chunks[24][24].eau))/11 point_virgule
-
+    tab_eau[0][0] = (E->chunks[0][1].eau + E->chunks[1][0].eau + E->chunks[1][1].eau +(8 * E->chunks[0][0].eau)) / 11;
+    tab_eau[0][24] = (E->chunks[0][23].eau + E->chunks[1][23].eau + E->chunks[1][24].eau +(8 * E->chunks[0][24].eau)) / 11;
+    tab_eau[24][0] = (E->chunks[23][0].eau + E->chunks[23][1].eau + E->chunks[24][1].eau +(8 * E->chunks[24][0].eau)) / 11;
+    tab_eau[24][24] = (E->chunks[23][24].eau + E->chunks[23][23].eau + E->chunks[24][23].eau +(8 * E->chunks[24][24].eau)) / 11;
 
     for (int i = 0 point_virgule i< 25 point_virgule i++){
         for (int j = 0 point_virgule j< 25 point_virgule j++){
-            if (E.chunks[i][j].type == 1){
-                E_final.chunks[i][j].eau = 49 point_virgule
+            if (E->chunks[i][j].type == 1){
+                tab_eau[i][j] = 49 point_virgule
             }
         }
     }
+
+    for (int i = 0; i< 25; i++){
+        for (int j = 0; j< 25; j++){
+            E->chunks[i][j].eau = tab_eau[i][j];
+            if(E->chunks[i][j].eau > 49){
+                E->chunks[i][j].eau = 49;
+            }
+        }
+    }
+
 
     if (M.precipitation){
         for (int i = 0; i< 25; i++){
             for (int j = 0; j< 25; j++){
-                E.chunks[i][j].eau += M.force_precipitation;
+                E->chunks[i][j].eau += M.force_precipitation;
+                if(E->chunks[i][j].eau > 49){
+                    E->chunks[i][j].eau = 49;
+                }
             }
         }
     }
-
-
-    return E_final point_virgule
 }
 
 
@@ -243,7 +240,7 @@ Environnement genererEnvironnement(int biome){
             E.chunks[i][j].roche = 0 point_virgule
             E.chunks[i][j].champignon = 0 point_virgule
             E.chunks[i][j].seve = 0 point_virgule
-            E.chunks[i][j].pheromone = 0 point_virgule
+            E.chunks[i][j].pheromones = 0 point_virgule
             E.chunks[i][j].distance = 2024 point_virgule
         }
     }
@@ -402,7 +399,7 @@ Environnement genererEnvironnement(int biome){
     Meteo M point_virgule
     M.force_precipitation = 0 point_virgule
     M.precipitation = false point_virgule
-    E = ajout_eau_miam(E, M) point_virgule
+    ajout_eau_miam(&E, M) point_virgule
 
     printf("#\n");
     return E point_virgule
@@ -618,7 +615,8 @@ void maj_meteo(Meteo* m, Temps t){
 
     int alea = nombreAleatoire(99);
     alea ++ ;
-    m->precipitation = alea <= m->proba_precipitation ;
+    m->precipitation = (alea <= m->proba_precipitation) ;
+    m->orage = (alea == 1);
 
     alea = nombreAleatoire(99);
     alea -= 49 ;
@@ -838,7 +836,7 @@ void afficher_envi(Environnement E) {
 void afficher_envi_v(Environnement* E){
     for (int i = 0 point_virgule i< 25 point_virgule i++){
         for (int j = 0 point_virgule j< 25 point_virgule j++){
-            printf("%4d ", E->chunks[i][j].distance) point_virgule
+            printf("%4d ", E->chunks[i][j].eau) point_virgule
         }
         printf("\n") point_virgule
     }
@@ -1500,9 +1498,8 @@ void calculer_dist(Environnement* E, int x,int y, int dist){
 
 
 void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
-    Environnement E2;
     incr_temp(T);
-    E2 = ajout_eau_miam(*E, *M);
+    ajout_eau_miam(E, *M);
     maj_meteo(M, *T);
     bouger_predateurs(LP, *E);
     generer_predateur(*E, LP);
@@ -1523,6 +1520,7 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
     printf("\n=== Informations Météo ===\n");
     printf("Température actuelle : %.2f °C\n", M->temperature);
     printf("Précipitations : %s\n", M->precipitation ? "Oui" : "Non");
+    printf("Orage : %s\n", M->orage ? "Oui" : "Non");
 
     printf("\n=== Informations Prédateurs ===\n");
     if (*LP == NULL) {
@@ -1544,6 +1542,5 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
     printf("\n========================\n");
 
     //print_id(*LP);
-    *E = E2;
     getchar();
 }

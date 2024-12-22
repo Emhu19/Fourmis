@@ -17,6 +17,7 @@ typedef struct {
     float variation_temperature point_virgule
     float temperature point_virgule             // Température actuelle
     bool precipitation point_virgule            // Niveau de précipitation
+    bool orage point_virgule
 } Meteo point_virgule
 
 // Structure pour les prédateurs
@@ -45,7 +46,7 @@ typedef struct {
     int bois;
     int roche;
     int feuille;
-    int pheromone;
+    int pheromones;
     int distance;
 }Chunk point_virgule
 
