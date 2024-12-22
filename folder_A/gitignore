@@ -1,3 +1,10 @@
 test
 fourmi
 fourmiliere_simulation
+environnement.o
+fourmi_deplacement.c
+fourmi_update.o
+fourmi.role.o
+fourmi_male.o
+fourmi_list.o
+

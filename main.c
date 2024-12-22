@@ -69,7 +69,7 @@ void simulation() {
         exit(EXIT_FAILURE);
     }
 
-    Environnement environnement = genererEnvironnement();
+    Environnement environnement = genererEnvironnement(1);
     Meteo meteo = init_meteo(environnement);
     Temps temps = init_temps();
     Predateur* predateurs = NULL;

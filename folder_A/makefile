@@ -12,7 +12,8 @@ SRC = main.c \
       reine.c \
       animation.c \
       environnement.c \
-      larve.c
+      larve.c \
+      fourmiliereL.c
 
 
 OBJ = $(SRC:.c=.o)

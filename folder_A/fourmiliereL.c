@@ -3,61 +3,57 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+#include "fourmiliereL.h"
 
-typedef struct ListFourmi ListFourmi;
-typedef struct ListReine ListReine;
-typedef struct ArbrePiece ArbrePiece;
-typedef struct ListRessource ListRessource;
-
-struct ListFourmi{
+// typedef struct ListFourmi ListFourmi;
+// typedef struct ListReine ListReine;
+// typedef struct ArbrePiece ArbrePiece;
+// 
+// struct ListFourmi{
     // Fourmis *fourmi; //je suppose une structure ant on pourra changer le nom en fonction de ce qu'emilien fait
-    ListFourmi *suivant;
-    ListFourmi *precedent; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente 
-};
-
-struct ListReine{
-    // Reine *reine;
-    ListReine *suivant;
-    ListReine *precedent; //même raison que pour ListFourmi
-};
-
-typedef struct{
-    char *typeRessource;
-    int id;
-    int quantiteRessource;
-    int quantiteMax;
-}Resource;
-
-// struct ListRessource{
-    // Resource *resource;
-    // ListRessource *suivant;
-    // ListRessource *precedent;
+    // ListFourmi *suivant;
+    // ListFourmi *precedent; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente 
 // };
-
-typedef struct{
-    ListFourmi *fourmi; //liste chainée car on aura besoin d'augmenter et de baisser les nombre de fourmis
-    ListReine *reine; //liste chainée car on aura besoin d'augmenter et de baisser les nombre de reine (il est possible qu'il y ait plusieur reine dans la fourmilière)
-    ArbrePiece *piece; //plus simple a parcourir pour savoir quelle salle mêne a ou
-}Fourmilière;
-
-typedef struct{
-    int taille;
-    int id;
-    char *typePiece;
-    int capaciteMax;
-    Resource *ressourceNecessaire;
-    int quantiteRessourceNecessaire;
-    int vie;
-    int etat;
-}Piece;
-
-struct ArbrePiece{
-    Piece salle;
-    int taille;
-    int profondeur;
-    ArbrePiece *filsG;
-    ArbrePiece *filsD;
-};
+// 
+// struct ListReine{
+    // Reine *reine;
+    // ListReine *suivant;
+    // ListReine *precedent; //même raison que pour ListFourmi
+// };
+// 
+// typedef struct{
+    // char *typeRessource;
+    // int id;
+    // int quantiteRessource;
+    // int quantiteMax;
+// }Ressource;
+// 
+// typedef struct{
+    // ListFourmi *fourmi; //liste chainée car on aura besoin d'augmenter et de baisser les nombre de fourmis
+    // ListReine *reine; //liste chainée car on aura besoin d'augmenter et de baisser les nombre de reine (il est possible qu'il y ait plusieur reine dans la fourmilière)
+    // ArbrePiece *piece; //plus simple a parcourir pour savoir quelle salle mêne a ou
+// }Fourmilière;
+// 
+// typedef struct{
+    // int taille;
+    // int id;
+    // char *typePiece;
+    // int capaciteMax;
+    // Ressource *ressourceNecessaire;
+    // int quantiteRessourceNecessaire;
+    // Ressource *ressourceStock;
+    // int vie;
+    // int etat;
+    // int stock;
+// }Piece;
+// 
+// struct ArbrePiece{
+    // Piece salle;
+    // int taille;
+    // int profondeur;
+    // ArbrePiece *filsG;
+    // ArbrePiece *filsD;
+// };
 
 ArbrePiece *init(Piece e){
     ArbrePiece *result;
@@ -141,21 +137,7 @@ ArbrePiece *ajoutePiece(ArbrePiece *T, Piece R){
     }
 }
 
-void afficheArbre(ArbrePiece *T){
-    if(T->filsG != NULL){
-        afficheArbre(T->filsG);
-    }
-    if(T != NULL){
-        if(T->salle.etat == 1){
-            printf("%d ", T->salle.id);
-        }
-    }
-    if(T->filsD != NULL){
-        afficheArbre(T->filsD);
-    }
-}
-
-void detruitPiece(ArbrePiece *T, int *niveau){
+void detruitPiece(ArbrePiece *T){
 // permet de détruire une salle renvoie les matériaux que la destrucion donne
     if(T != NULL){
         if(T->salle.etat != 0 && T->salle.id != 1){
@@ -169,8 +151,37 @@ void detruitPiece(ArbrePiece *T, int *niveau){
                 }
             }
         }
-        detruitPiece(T->filsD, niveau);
-        detruitPiece(T->filsG, niveau);
+        detruitPiece(T->filsD);
+        detruitPiece(T->filsG);
+    }
+}
+
+ArbrePiece *ajouteStock(ArbrePiece *T, int quantiteAjout, Ressource *ressource){
+    if(T == NULL){
+        return NULL;
+    }
+    if(T->salle.ressourceStock->id == ressource->id && T->salle.stock + quantiteAjout < T->salle.capaciteMax){
+        T->salle.stock += quantiteAjout;
+        return T;
+    }
+    else if(T->filsG->salle.ressourceStock->id == ressource->id){
+        T->filsG = ajouteStock(T->filsG, quantiteAjout, ressource);
+        return T;
+    }
+    else if(T->filsD->salle.ressourceStock->id == ressource->id){
+        T->filsD = ajouteStock(T->filsD, quantiteAjout, ressource);
+        return T;
+    }
+    else if(ajouteStock(T->filsG, quantiteAjout, ressource) != NULL){
+        T->filsG = ajouteStock(T->filsG, quantiteAjout, ressource);
+        return T;
+    }
+    else if(ajouteStock(T->filsD, quantiteAjout, ressource) != NULL){
+        T->filsD = ajouteStock(T->filsD, quantiteAjout, ressource);
+        return T;        
+    }
+    else{
+        return T;
     }
 }
 
@@ -283,7 +294,7 @@ void afficher_fourmiliere_niveau(int niveau) {
     }
 }
 
-void affiche_auto(int niveau, ArbrePiece *piece){
+void affiche_auto(ArbrePiece *piece){
     if(piece != NULL){
         if(piece->taille == 1){
             if(piece->salle.etat != 0){
@@ -360,10 +371,10 @@ void affiche_auto(int niveau, ArbrePiece *piece){
                 afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
                 afficher_connexion_double();
             }
-            affiche_auto(niveau/3, piece->filsG->filsG);
-            affiche_auto(niveau/3, piece->filsG->filsD);
-            affiche_auto(niveau/3, piece->filsD->filsD);
-            affiche_auto(niveau/3, piece->filsD->filsG);
+            affiche_auto(piece->filsG->filsG);
+            affiche_auto(piece->filsG->filsD);
+            affiche_auto(piece->filsD->filsD);
+            affiche_auto(piece->filsD->filsG);
         }
     }
 }
@@ -386,86 +397,157 @@ void affiche_auto(int niveau, ArbrePiece *piece){
     // printf("Exterieur : (%d)\n", compter_fourmi_salle(liste, 0));
 // }
 
-void afficher_fourmiliere(int niveau/*, ListFourmi* liste, Reine* reine */) {
-    clear_terminal();
-    afficher_titre("Fourmilière");
-    afficher_fourmiliere_niveau(niveau);
+// void afficher_fourmiliere(int niveau/*, ListFourmi* liste, Reine* reine */) {
+    // clear_terminal();
+    // afficher_titre("Fourmilière");
+    // afficher_fourmiliere_niveau(niveau);
     // afficher_legende(liste, reine);
     // compter_Liste_fourmi(liste);
-//     printf("\n\033[1;32mAppuyez sur Entrée pour continuer...\033[0m\n");
-    usleep(500000);
-//     getchar();
+    // printf("\n\033[1;32mAppuyez sur Entrée pour continuer...\033[0m\n");
+    // usleep(500000);
+    // getchar();
+// }
+
+Ressource *initRessource(int id, int quantiteMax, char *typeRessource){
+    Ressource *ressource;
+    ressource = malloc(sizeof(Ressource *));
+    ressource->quantiteRessource = 0;
+    ressource->quantiteMax = quantiteMax;
+    ressource->id = id;
+    ressource->typeRessource = typeRessource;
+    return ressource;
 }
 
+Piece initPiece(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Ressource *ressourceStock){
+    Piece piece;
+    piece.id = id;
+    piece.ressourceNecessaire = ressourceNecessaire;
+    piece.ressourceStock = ressourceStock;
+    piece.stock = 0;
+    piece.vie = 500;
+    piece.typePiece = typePiece;
+    piece.capaciteMax = 10;
+    piece.quantiteRessourceNecessaire = quantiteRNecessaire;
+    piece.etat = 1;
+    piece.capaciteMax = 10;
+    return piece;
+}
 
-int main(){
-    ArbrePiece *T;
-    // ListFourmi *YaR;
-    // Reine *ToujourR;
-    int niveau;
-    niveau = 0;
-    Piece A;
-    Resource *metal;
-    metal = malloc(sizeof(Resource *));
-    metal->quantiteRessource = 0;
-    metal->id = 1;
-    metal->typeRessource = "bois";
-    metal->quantiteMax = 10;
-    Resource *bois;
-    bois = malloc(sizeof(Resource *));
-    bois->quantiteRessource = 0;
-    bois->id = 1;
-    bois->typeRessource = "bois";
-    bois->quantiteMax = 10;
-    Piece stockBois;
-    stockBois.id = 2;
-    stockBois.quantiteRessourceNecessaire = 10;
-    stockBois.ressourceNecessaire = bois;
-    stockBois.vie = 500;
-    stockBois.etat = 1;
-    stockBois.typePiece = "stockBois";
-    Piece stockMetal;
-    stockMetal.id = 3;
-    stockMetal.quantiteRessourceNecessaire = 25;
-    stockMetal.ressourceNecessaire = metal;
-    stockMetal.vie = 500;
-    stockMetal.etat = 1;
-    stockMetal.typePiece = "stockMetal";
-    A.id = 1;
-    A.capaciteMax = 10;
-    A.quantiteRessourceNecessaire = 10;
-    A.ressourceNecessaire = metal;
-    A.taille = 10;
-    A.typePiece = "principale";
-    A.etat = 1;
-    T = init(A);
-    niveau++;
-    while(1){
-       printf("\n\nnouveau jour !\n\n"); 
-       detruitPiece(T, &niveau);
-       if(metal->quantiteRessource < metal->quantiteMax){
-           metal->quantiteRessource++;
-       }
-       if(bois->quantiteRessource < bois->quantiteMax){
-           bois->quantiteRessource += 2;
-       }
-       if(metal->quantiteRessource >= metal->quantiteMax){
-           metal->quantiteMax += 50;
-           metal->quantiteRessource -= stockMetal.quantiteRessourceNecessaire;
-           printf("\n\nnouveau stockMetal !\n\n"); 
-           ajoutePiece(T, stockMetal);
-           niveau ++;
-       }
-       if(bois->quantiteRessource >= bois->quantiteMax){
-           bois->quantiteMax += 50;
-           bois->quantiteRessource -= stockBois.quantiteRessourceNecessaire;
-           printf("\n\nnouveau stockBois !\n\n"); 
-           ajoutePiece(T, stockBois);
-           niveau ++;
-       }
-       affiche_auto(niveau, T);
-       sleep(1);
+ListRessource *initListR(Ressource *ressource){
+    ListRessource *temp;
+    temp = malloc(sizeof(ListRessource *));
+    temp->ressource = ressource;
+    temp->suivant = NULL;
+    return temp;
+}
+
+ListRessource *ajouteRessource(ListRessource *ressources, Ressource *ressource){
+    ListRessource *temp;
+    temp = malloc(sizeof(ListRessource *));
+    temp->ressource = ressource;
+    temp->suivant = ressources;
+    return temp;
+}
+
+ListPiece *initListP(Piece piece){
+    ListPiece *pieces;
+    pieces = malloc(sizeof(ListPiece));
+    pieces->piece = piece;
+    pieces->suivant = NULL;
+    return pieces;
+}
+
+ListPiece *ajoutePieceList(ListPiece *pieces, Piece piece){
+    ListPiece *temp;
+    temp = malloc(sizeof(ListPiece));
+    temp->piece = piece;
+    temp->suivant = pieces;
+    return temp;
+}
+
+void afficheList(ListRessource *T){
+    ListRessource *temp;
+    temp = T;
+    while(temp != NULL){
+        printf("%d ", temp->ressource->id);
+        temp = temp->suivant;
     }
-    affiche_auto(niveau, T);
-    return 0;
 }
+
+void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *pieces){
+    detruitPiece(T);
+    ListRessource *temp;
+    ListPiece *tempP;
+    temp = ressources;
+    tempP = pieces;
+    while(temp != NULL){
+        if(temp->ressource->quantiteRessource < temp->ressource->quantiteMax){
+            temp->ressource->quantiteRessource++;
+        }
+        temp = temp->suivant;
+    }
+    temp = ressources;
+    while(temp != NULL){
+        if(temp->ressource->quantiteRessource >= temp->ressource->quantiteMax){
+            while(temp->ressource->id != tempP->piece.ressourceStock->id){
+                tempP = tempP->suivant;
+            }
+            temp->ressource->quantiteMax += 10;
+            temp->ressource->quantiteRessource -= tempP->piece.quantiteRessourceNecessaire;
+            ajoutePiece(T, tempP->piece);
+        }
+        tempP = pieces;
+        temp = temp->suivant;
+    }
+    affiche_auto(T);
+}
+
+// int main(){
+    // ArbrePiece *T;
+    // Piece A;
+    // ListRessource *ressources;
+    // ListPiece *pieces;
+    // Ressource *metal;
+    // Ressource *bois;
+    // Piece stockBois;
+    // Piece stockMetal;
+    // metal = initRessource(1, 10, "metal");
+    // ressources = initListR(metal);
+    // bois = initRessource(2, 10, "bois");
+    // ressources = ajouteRessource(ressources, bois);
+    // stockBois = initPiece(2, bois, 5,  "stockBois", bois);
+    // pieces = initListP(stockBois);
+    // stockMetal = initPiece(3, metal, 5,  "stockMetal", metal);
+    // pieces = ajoutePieceList(pieces, stockMetal);
+    // A = initPiece(1, bois, 0, "Principale", bois);
+    // T = init(A);
+    // while(1){
+    //    printf("\n\nnouveau jour !\n\n"); 
+    //    detruitPiece(T);
+    //    if(metal->quantiteRessource < metal->quantiteMax){
+        //    metal->quantiteRessource++;
+        //    ajouteStock(T, 1, metal);
+    //    }
+    //    if(bois->quantiteRessource < bois->quantiteMax){
+        //    bois->quantiteRessource += 2;
+    //    }
+    //    if(metal->quantiteRessource >= metal->quantiteMax){
+        //    metal->quantiteMax += 10;
+        //    metal->quantiteRessource -= stockMetal.quantiteRessourceNecessaire;
+        //    printf("\n\nnouveau stockMetal !\n\n"); 
+        //    ajoutePiece(T, stockMetal);
+        //    niveau ++;
+    //    }
+    //    if(bois->quantiteRessource >= bois->quantiteMax){
+        //    bois->quantiteMax += 10;
+        //    bois->quantiteRessource -= stockBois.quantiteRessourceNecessaire;
+        //    printf("\n\nnouveau stockBois !\n\n"); 
+        //    ajoutePiece(T, stockBois);
+        //    niveau ++;
+    //    }
+    //    affiche_auto(T);
+        // cycleFourmiliere(ressources, T, pieces);
+        // sleep(1);
+    // }
+    // return 0;
+// }

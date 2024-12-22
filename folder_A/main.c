@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "fourmiliere.h"
+#include "fourmiliereL.h"
 #include "fourmi.h"
 #include "reine.h"
 #include "animation.h"
@@ -22,19 +23,6 @@ typedef struct {
     ListLarve* larves;
     Reine* reine;
 } Population;
-
-// Liste des types de fourmilles
-// 1 Fourmi coupeuse de feuilles : Atta
-// 2 Fourmis des dunes : Cataglyphis
-// 3 Fourmis des rochers : Messor
-// 4 Fourmis amazoniennes : Eciton
-// 5 Fourmis forestières : Formica
-// 6 Fourmis du désert : Pogonomyrmex
-// 7 Fourmis cultivatrices de champignons : Acromyrmex
-// 8 Fourmis nageuses : Polyrhachis
-
-
-
 
 
 ListFourmi* cycle_jour(int niveau, Population* population, Contexte* contexte) {
@@ -74,23 +62,55 @@ ListFourmi* cycle_jour(int niveau, Population* population, Contexte* contexte) {
 }
 
 
-// Fourmiliere init_fourmiliere(Environnement* E, int espece){
-//     Fourmiliere F;
-//     F.fourmi = NULL;
-//     F.reine = NULL;
-//     F.piece = NULL;
-//     F.espece = espece;
-//     F.x = 12;
-//     F.y = 12;
-//     //F.suivant = NULL;
+void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
 
-//     E->chunks[F.coord_x][F.coord_y].type = 0;
-//     return F;
-// }
 
+    incr_temp(T);
+    ajout_eau_miam(E, *M);
+    maj_meteo(M, *T);
+    bouger_predateurs(LP, *E);
+    generer_predateur(*E, LP);
+
+
+
+    // Afficher les informations temporelles
+
+    printf("\n=== Informations Temps ===\n");
+    const char* saisons[] = {"Hiver", "Printemps", "Été", "Automne"};
+    printf("Saison : %s\n", saisons[T->saison]);
+    printf("Mois : %d\n", T->mois + 1); // Ajouter 1 pour afficher mois de 1 à 12
+    printf("Jour : %d\n", T->jour);
+    printf("année : %d\n", T->annee);
+
+    // Afficher les informations météorologiques
+    printf("\n=== Informations Météo ===\n");
+    printf("Température actuelle : %.2f °C\n", M->temperature);
+    printf("Précipitations : %s\n", M->precipitation ? "Oui" : "Non");
+    printf("Orages : %s\n", M->orage ? "Oui" : "Non");
+
+    printf("\n=== Informations Prédateurs ===\n");
+    if (*LP == NULL) {
+        printf("il n'y a aucun prédateur dans les environs\n");
+    } else {
+        Predateur* copie = *LP;
+        while (copie != NULL) {
+            printf("Il y a un %s en (%d, %d), qui a déjà fait %d victimes !\n", copie->nom_predateur,copie->x, copie->y, copie->victimes);
+            copie = copie->suivant;
+        }
+    }
+
+    printf("il y a un total de %d prédateurs", compter_predateurs(*LP));
+
+    // Ligne de séparation
+    printf("\n========================\n");
+
+
+    trouver_id_predateurs_loin(LP);
+    //print_id(*LP);
+    // getchar();
+}
 
 void simulation() {
-    srand(time(NULL));
 
     Population population = { Initialisation_List(), Initialisation_List_Larve(), creationReine(1, 1) };
     if (!population.reine) {
@@ -98,40 +118,48 @@ void simulation() {
         exit(EXIT_FAILURE);
     }
 
-
-    logo_1();
-    printf("\033c");
     Environnement environnement = genererEnvironnement(logo_3());
-    printf("\033c");
-
-    int type = logo_2();
-    //Fourmiliere F = init_fourmiliere(&environnement, type);
-
-    printf("\033c");
-    printf("chargement ...\n Cette opération peut prendre quelques secondes\n");
-    calculer_dist(&environnement, 12, 12, 0);
-    printf("\n");
-    printf("\033c");
-
-
-    afficher_envi(environnement) ;
+    afficher_envi(environnement);
     getchar();
-    printf("\033c");
-
-    
     Meteo meteo = init_meteo(environnement);
+    
     Temps temps = init_temps();
     Predateur* predateurs = NULL;
 
-    Contexte contexte = { &environnement, &temps, &meteo };
+    printf("=== Informations initiales ===\n");
+    calculer_dist(&environnement, 12,12,0);
+    afficher_envi_v(environnement);
 
-    
+    Contexte contexte = {&environnement, &temps, &meteo };
+
+
+    ArbrePiece *T;
+    Piece A;
+    ListRessource *ressources;
+    ListPiece *pieces;
+    Ressource *metal;
+    Ressource *bois;
+    Piece stockBois;
+    Piece stockMetal;
+    metal = initRessource(1, 10, "metal");
+    ressources = initListR(metal);
+    bois = initRessource(2, 10, "bois");
+    ressources = ajouteRessource(ressources, bois);
+    stockBois = initPiece(2, bois, 5,  "stockBois", bois);
+    pieces = initListP(stockBois);
+    stockMetal = initPiece(3, metal, 5,  "stockMetal", metal);
+    pieces = ajoutePieceList(pieces, stockMetal);
+    A = initPiece(1, bois, 0, "Principale", bois);
+    T = init(A);
+
+    srand(time(NULL));
 
     while (1) {
-        printf("\033c");
         population.fourmis = cycle_jour(5, &population, &contexte);
-        journee(&environnement, &meteo, &temps, &predateurs);
-        // getchar();
+        journee(contexte.map, contexte.meteo, contexte.temps, &predateurs);
+        // afficher_envi(environnement);
+        cycleFourmiliere(ressources, T, pieces);
+        getchar();
     }
 
     liberer_liste(population.fourmis);
@@ -141,98 +169,7 @@ void simulation() {
 }
 
 
-
-// void simulation(){
-
-//     srand(time(NULL)) ;
-//     logo_1();
-//     printf("\033c");
-//     int biome = logo_3();
-//     printf("\033c");
-//     Environnement E = genererEnvironnement(biome) ;
-//     //afficher_envi_v(&E) ;
-//     int type = logo_2();
-
-//     ListLarve* liste_larve = Initialisation_List_Larve();
-//     ListFourmi* liste = Initialisation_List();
-//     Reine* reine = creationReine(1, type);
-
-
-//     Fourmiliere F = init_fourmiliere(&E, type);
-
-//     printf("\033c");
-//     printf("chargement ...\n Cette opération peut prendre quelques secondes\n");
-//     calculer_dist(&E, 12, 12, 0);
-//     printf("\n");
-//     printf("\033c");
-
-
-//     afficher_envi(E) ;
-//     // afficher_envi_v(&E) ;
-//     getchar();
-//     printf("\033c");
-    
-//     Meteo M = init_meteo(E);
-//     Temps T = init_temps();
-//     Predateur* LP = NULL;
-
-//     while(1){
-//         printf("\033c");
-//         liste = cycle_jour(5, liste, reine, &E, &T, &M, liste_larve);
-//         journee(&E, &M, &T, &LP);
-//         //afficher_envi_v(&E);
-//         getchar();
-//     //         sleep(5);
-//     }
-//     afficher_Reine(reine);
-//     getchar();
-// //     afficher_Liste_fourmi(liste);
-//     liberer_liste(liste);
-//     free(reine);
-// }
-
-
 int main() {
     simulation();
-    // srand(time(NULL)) ;
-    // logo_1();
-    // printf("\033c");
-    // int biome = logo_3();
-    // printf("\033c");
-    // Environnement E = genererEnvironnement(biome) ;
-    // //afficher_envi_v(&E) ;
-    // int type = logo_2();
-
-    // Fourmiliere F = init_fourmiliere(&E, type);
-    // printf("\033c");
-    // printf("chargement ...\n Cette opération peut prendre quelques secondes\n");
-    // calculer_dist(&E, 12, 12, 0);
-    // printf("\n");
-    // printf("\033c");
-
-    // afficher_envi(E) ;
-    // // afficher_envi_v(&E) ;
-    // getchar();
-    // printf("\033c");
-    
-    // Meteo M = init_meteo(E);
-    // Temps T = init_temps();
-    // Predateur* LP = NULL;
-    
-    // while(true){
-    //     //printf("\033[H\033[J");
-    //     printf("\033c");
-    //     // afficher_envi(E) ;
-    //     journee(&E, &M, &sT, &LP);
-    //     //sleep(1);
-    // }
-
-//     logo_1();
-    
-    //Environnement E = genererEnvironnement();
-
-    //simulation(type);
-
-
     return 0;
 }

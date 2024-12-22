@@ -65,7 +65,7 @@ typedef struct {
 
 int nombreAleatoire(int n);
 void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP);
-Environnement genererEnvironnement();
+Environnement genererEnvironnement(int biome);
 void afficher_envi(Environnement E);
 Meteo init_meteo(Environnement E);
 Temps init_temps();
