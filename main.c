@@ -62,7 +62,9 @@ ListFourmi* cycle_jour(int niveau, Population* population, Contexte* contexte) {
 }
 
 void simulation() {
-
+    logo_1();
+    int carte = logo_3();
+    int espece = logo_2();
     Population population = { Initialisation_List(), Initialisation_List_Larve(), creationReine(1, 1) };
     if (!population.reine) {
         fprintf(stderr, "Erreur : Impossible de créer la reine.\n");
@@ -88,9 +90,9 @@ void simulation() {
     ressources = initListR(metal);
     bois = initRessource(2, 10, "bois");
     ressources = ajouteRessource(ressources, bois);
-    stockBois = initPiece(2, bois, 5,  "stockBois", bois);
+    stockBois = initPiece(2, bois, 5,  "  Bois", bois);
     pieces = initListP(stockBois);
-    stockMetal = initPiece(3, metal, 5,  "stockMetal", metal);
+    stockMetal = initPiece(3, metal, 5,  " Metal", metal);
     pieces = ajoutePieceList(pieces, stockMetal);
     A = initPiece(1, bois, 0, "Principale", bois);
     T = init(A);
