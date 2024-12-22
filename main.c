@@ -25,6 +25,80 @@ typedef struct {
 } Population;
 
 
+
+void supp_predateurs_mort(Predateur** LP, Environnement* E){
+    if (*LP == NULL){
+        return;
+    }
+    Predateur* copie = *LP;
+    Predateur* prev = NULL;
+    while(copie != NULL){
+        if(copie->sante <= 0){
+            if (prev != NULL) {
+                prev->suivant = copie->suivant; // Sauter l'élément à supprimer
+            }
+            switch(copie->type){
+                case 0:
+                    E->chunks[copie->x][copie->y].nourriture = 100;
+                    break;
+                case 1:
+                    E->chunks[copie->x][copie->y].nourriture = 50;
+                    break;
+                case 2:
+                    E->chunks[copie->x][copie->y].nourriture = 50;
+                    break;
+                case 3:
+                    E->chunks[copie->x][copie->y].nourriture = 10;
+                    break;
+                case 4:
+                    E->chunks[copie->x][copie->y].nourriture = 25;
+                    break;
+                case 5:
+                    E->chunks[copie->x][copie->y].nourriture = 50;
+                    break;
+                case 6:
+                    E->chunks[copie->x][copie->y].nourriture = 50;
+            }
+            free(copie); // Libérer la mémoire
+        }
+        prev = copie;       // Mettre à jour le pointeur précédent
+        copie = copie->suivant; // Avancer au suivant
+    }
+}
+
+
+void combat(Predateur** LP, Environnement* E, ListFourmi* LF){
+    if (LP == NULL || LF == NULL){
+        return;
+    }
+    Predateur* copieLP = *LP;
+    ListFourmi* copieLF = LF;
+    while(copieLP != NULL){
+        while(copieLF != NULL){
+            if (copieLF->fourmi == NULL){
+                copieLF = copieLF->next;
+                continue;
+            }
+            if( (copieLF->fourmi != NULL) && copieLP->x == copieLF->fourmi->coord_x && copieLP->y == copieLF->fourmi->coord_y && (copieLP->x!= 12 || copieLP->y != 12)){
+                while(copieLF->fourmi->sante > 0 && copieLP->sante > 0){
+                    copieLP->sante -= 10;
+                    copieLF->fourmi->sante -= copieLP->force;
+                }
+                if(copieLP->sante <= 0){
+                    break;
+                }
+                else{
+                    copieLP->victimes++;
+                }
+            }
+            copieLF = copieLF->next;
+        }
+        copieLP = copieLP->suivant;
+    }
+    supp_predateurs_mort(LP, E);
+    // supp_fourmis_mort(LF, E);
+}
+
 ListFourmi* cycle_jour(int niveau, Population* population, Contexte* contexte) {
     if (!population->fourmis) return NULL;
 
@@ -62,7 +136,7 @@ ListFourmi* cycle_jour(int niveau, Population* population, Contexte* contexte) {
 }
 
 
-void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
+void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP, ListFourmi* LF) {
 
 
     incr_temp(T);
@@ -70,6 +144,7 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
     maj_meteo(M, *T);
     bouger_predateurs(LP, *E);
     generer_predateur(*E, LP);
+    combat(LP, E, LF);
 
 
 
@@ -163,7 +238,7 @@ void simulation() {
     while (1) {
         printf("\033c");
         population.fourmis = cycle_jour(5, &population, &contexte);
-        journee(contexte.map, contexte.meteo, contexte.temps, &predateurs);
+        journee(contexte.map, contexte.meteo, contexte.temps, &predateurs, population.fourmis);
         // afficher_envi(environnement);
         cycleFourmiliere(ressources, T, pieces);
         getchar();

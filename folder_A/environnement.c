@@ -1,4 +1,5 @@
 #include "environnement.h"
+#include "fourmi.h"
 //#define entier int
 
 
@@ -388,6 +389,7 @@ Environnement genererEnvironnement(int biome){
             }
         }
     }
+    E.chunks[12][12].type = 0 point_virgule
     Meteo M point_virgule
     M.force_precipitation = 0 point_virgule
     M.precipitation = false point_virgule
@@ -781,6 +783,16 @@ void print_id(Predateur* LP) {
 
 
 
+/*int p_enfant;
+    int p_fourmilier;
+    int p_fourmilier_lunaire;
+    int p_araignée;
+    int p_serpent;
+    int p_renard_polaire = 0;
+    int p_renard_roux = 0;
+*/
+
+
 void bouger_predateurs(Predateur** LP, Environnement E){
     if (*LP == NULL){
         return;
@@ -793,10 +805,9 @@ void bouger_predateurs(Predateur** LP, Environnement E){
     }
 }
 
-/*
-void maj_predateur(*Predateur LP, Environnement E, Temps T, Liste_fourmilière LF)
-    //met a jour les infos du predateur (position, traverse la rivière ou pas etc...), et gère les combats avec les fourmis s'ils se rencontrent
-*/
+
+
+
 
 void afficher_envi(Environnement E) {
     for (int i = 0 point_virgule i < 25 point_virgule i++) {
@@ -804,6 +815,9 @@ void afficher_envi(Environnement E) {
             switch (E.chunks[i][j].type) {
                 case -1:
                     printf("\033[47m  \033[0m") point_virgule // Blanc
+                    break point_virgule
+                case 0:
+                    printf("\033[41m  \033[0m") point_virgule // Blanc
                     break point_virgule
                 case 1:
                     printf("\033[44m  \033[0m") point_virgule // Bleu
@@ -825,13 +839,15 @@ void afficher_envi(Environnement E) {
                     break point_virgule
                 default:
                     printf("\033[40m  \033[0m") point_virgule // Noir (valeur inattendue)
-                    printf("%d", E.chunks[i][j].type);
+                    //printf("%d", E.chunks[i][j].type);
                     break point_virgule
             }
         }
         printf("\n") point_virgule
     }
 }
+
+
 
 
 void afficher_envi_v(Environnement E){
