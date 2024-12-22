@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "fourmiliere.h"
+#include "fourmiliereL.h"
 #include "fourmi.h"
 #include "reine.h"
 #include "animation.h"
@@ -75,11 +76,31 @@ void simulation() {
 
     Contexte contexte = { &environnement, &temps, &meteo };
 
+    ArbrePiece *T;
+    Piece A;
+    ListRessource *ressources;
+    ListPiece *pieces;
+    Ressource *metal;
+    Ressource *bois;
+    Piece stockBois;
+    Piece stockMetal;
+    metal = initRessource(1, 10, "metal");
+    ressources = initListR(metal);
+    bois = initRessource(2, 10, "bois");
+    ressources = ajouteRessource(ressources, bois);
+    stockBois = initPiece(2, bois, 5,  "stockBois", bois);
+    pieces = initListP(stockBois);
+    stockMetal = initPiece(3, metal, 5,  "stockMetal", metal);
+    pieces = ajoutePieceList(pieces, stockMetal);
+    A = initPiece(1, bois, 0, "Principale", bois);
+    T = init(A);
+
     srand(time(NULL));
 
     while (1) {
         population.fourmis = cycle_jour(5, &population, &contexte);
         journee(&environnement, &meteo, &temps, &predateurs);
+        cycleFourmiliere(ressources, T, pieces);
     }
 
     liberer_liste(population.fourmis);
