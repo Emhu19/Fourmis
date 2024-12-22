@@ -113,7 +113,13 @@ void liberer_liste(ListFourmi* liste) {
 
 Fourmi* trouver_fourmi(ListFourmi* liste, int id) {
     ListFourmi* current = liste;
+    if (current == NULL) {
+    return NULL;
+}
     while (current) {
+        if (current->fourmi == NULL) {
+            return NULL;
+        }
         if (current->fourmi->id_fourmi == id) {
             return current->fourmi;
         }

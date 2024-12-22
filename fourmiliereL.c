@@ -256,6 +256,29 @@ void afficher_salles_alignees_3(const char *nom1, const char *nom2, const char *
     printf("+-----------------+         +-----------------+         +-----------------+\n");
 }
 
+void afficher_salles_alignees_4(const char *nom1, const char *nom2, const char *nom3, const char *nom4) {
+    printf("+-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
+    printf("|                 |         |                 |         |                 |         |                 |\n");
+    printf("|     %-10s  |----+----|     %-10s  |----+----|     %-10s  |----+----|     %-10s  |\n", nom1, nom2, nom3, nom4);
+    printf("|                 |         |                 |         |                 |         |                 |\n");
+    printf("+-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
+}
+
+void afficher_salles_alignees_5(const char *nom1, const char *nom2, const char *nom3, const char *nom4, const char *nom5) {
+    printf("+-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
+    printf("|                 |         |                 |         |                 |         |                 |         |                 |\n");
+    printf("|     %-10s  |----+----|     %-10s  |----+----|     %-10s  |----+----|     %-10s  |     %-10s  |\n", nom1, nom2, nom3, nom4, nom5);
+    printf("|                 |         |                 |         |                 |         |                 |         |                 |\n");
+    printf("+-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
+}
+
+void afficher_salles_alignees_6(const char *nom1, const char *nom2, const char *nom3, const char *nom4, const char *nom5, const char *nom6) {
+    printf("+-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
+    printf("|                 |         |                 |         |                 |         |                 |         |                 |         |                 |\n");
+    printf("|     %-10s  |----+----|     %-10s  |----+----|     %-10s  |----+----|     %-10s  |     %-10s  |     %-10s  |\n", nom1, nom2, nom3, nom4, nom5, nom6);
+    printf("|                 |         |                 |         |                 |         |                 |         |                 |         |                 |\n");
+    printf("+-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
+}
 void afficher_fourmiliere_niveau(int niveau) {
     switch (niveau) {
         case 1:
@@ -309,8 +332,8 @@ void affiche_auto(ArbrePiece *piece){
                     afficher_connexion_double();
                 }
                 else if(piece->filsD->salle.etat != 0){
-                    afficher_salle_simple(piece->filsD->salle.typePiece);
                     afficher_connexion_simple();
+                    afficher_salle_simple(piece->filsD->salle.typePiece);
                 }
             }
             else if(piece->filsG != NULL){
@@ -330,12 +353,14 @@ void affiche_auto(ArbrePiece *piece){
                 afficher_connexion_triple();
             }
             else if(piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
-                afficher_salle_simple(piece->filsG->salle.typePiece);
                 afficher_connexion_simple();
+                afficher_salle_simple(piece->filsG->salle.typePiece);
+
             }
             else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat == 0){
-                afficher_salle_simple(piece->filsD->salle.typePiece);
                 afficher_connexion_simple();
+                afficher_salle_simple(piece->filsD->salle.typePiece);
+
             }
             else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat != 0){
                 afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
@@ -356,16 +381,16 @@ void affiche_auto(ArbrePiece *piece){
                 afficher_connexion_double();
             }
             else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat == 0){
-                afficher_salle_simple(piece->salle.typePiece);
                 afficher_connexion_simple();
+                afficher_salle_simple(piece->salle.typePiece);
             }
             else if(piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
-                afficher_salle_simple(piece->filsG->salle.typePiece);
                 afficher_connexion_simple();
+                afficher_salle_simple(piece->filsG->salle.typePiece);
             }
             else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat == 0){
-                afficher_salle_simple(piece->filsD->salle.typePiece);
                 afficher_connexion_simple();
+                afficher_salle_simple(piece->filsD->salle.typePiece);
             }
             else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat != 0){
                 afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
