@@ -1,3 +1,4 @@
+// #include "fourmiliere.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -89,6 +90,11 @@ ArbrePiece *ajoutePiece(ArbrePiece *T, Piece R){
         T = init(R);
         return T;
     }
+    if(T->salle.id == R.id && T->salle.etat == 0){
+        T->salle.etat = 1;
+        T->salle.vie = R.vie;
+        return T;
+    }
     if(T->filsG == NULL){
         T->taille++;
         T->profondeur++;
@@ -149,22 +155,22 @@ void afficheArbre(ArbrePiece *T){
     }
 }
 
-void *detruitPiece(ArbrePiece *T){
+void detruitPiece(ArbrePiece *T, int *niveau){
 // permet de détruire une salle renvoie les matériaux que la destrucion donne
     if(T != NULL){
         if(T->salle.etat != 0 && T->salle.id != 1){
-            T->salle.vie -= 5000;
+            T->salle.vie -= 50;
             if(T->salle.vie < 0){
-                printf("la salle est détruite frérot c'est dommage\n");
+                printf("la salle %s est détruite c'est dommage\n", T->salle.typePiece);
                 T->salle.etat = 0;
-                T->salle.ressourceNecessaire->quantiteMax -= 50000;
+                T->salle.ressourceNecessaire->quantiteMax -= 50;
                 if(T->salle.ressourceNecessaire->quantiteRessource > T->salle.ressourceNecessaire->quantiteMax){
                     T->salle.ressourceNecessaire->quantiteRessource -= T->salle.ressourceNecessaire->quantiteMax - T->salle.ressourceNecessaire->quantiteRessource;
                 }
             }
         }
-        detruitPiece(T->filsD);
-        detruitPiece(T->filsG);
+        detruitPiece(T->filsD, niveau);
+        detruitPiece(T->filsG, niveau);
     }
 }
 
@@ -180,34 +186,251 @@ Maladie genereMaladie();
 // void stock(Fourmis *A, Piece *T);
 // permet a une fourmi de stocker les materiaux qu'elle a récupere si la salle le permet
 
+void clear_terminal() {
+    printf("\033[H\033[J");
+}
+
+void afficher_titre(const char *titre) {
+    printf("\n\033[1;34m===== %s =====\033[0m\n\n", titre);
+}
+
+void afficher_salle_simple(const char *nom) {
+    printf("+-----------------+\n");
+    printf("|                 |\n");
+    printf("|     %-10s  |\n", nom);
+    printf("|                 |\n");
+    printf("+-----------------+\n");
+}
+
+void afficher_salle_simple_milieu(const char *nom) {
+    printf("                            +-----------------+\n");
+    printf("                            |                 |\n");
+    printf("                            |     %-10s  |\n", nom);
+    printf("                            |                 |\n");
+    printf("                            +-----------------+\n");
+}
+
+void afficher_connexion_simple() {
+    printf("        |\n");
+}
+
+void afficher_connexion_simple_milieu() {
+    printf("                                  |\n");
+}
+
+void afficher_connexion_double() {
+    printf("        |                            |\n");
+}
+
+void afficher_connexion_triple() {
+    printf("        |                            |                            |\n");
+}
+void afficher_connexion_simple_fin() {
+    printf("                                                                  |\n");
+}
+
+void afficher_salles_alignees(const char *nom1, const char *nom2) {
+    printf("+-----------------+         +-----------------+\n");
+    printf("|                 |         |                 |\n");
+    printf("|     %-10s  |----+----|     %-10s  |\n", nom1, nom2);
+    printf("|                 |         |                 |\n");
+    printf("+-----------------+         +-----------------+\n");
+}
+
+void afficher_salles_alignees_3(const char *nom1, const char *nom2, const char *nom3) {
+    printf("+-----------------+         +-----------------+         +-----------------+\n");
+    printf("|                 |         |                 |         |                 |\n");
+    printf("|     %-10s  |----+----|     %-10s  |----+----|     %-10s  |\n", nom1, nom2, nom3);
+    printf("|                 |         |                 |         |                 |\n");
+    printf("+-----------------+         +-----------------+         +-----------------+\n");
+}
+
+void afficher_fourmiliere_niveau(int niveau) {
+    switch (niveau) {
+        case 1:
+            afficher_salles_alignees("R", "N");
+            break;
+        case 2:
+            afficher_salles_alignees("R", "N");
+            afficher_connexion_simple();
+            afficher_salle_simple("L");
+            break;
+        case 3:
+            afficher_salles_alignees("R", "N");
+            afficher_connexion_double();
+            afficher_salles_alignees("L", "R");
+            break;
+        case 4:
+            afficher_salle_simple("R");
+            afficher_connexion_simple();
+            afficher_salles_alignees("L", "R");
+            break;
+        case 5:
+            afficher_salle_simple("R");
+            afficher_connexion_simple();
+            afficher_salles_alignees_3("L", "R", "R");
+            break;
+        case 6:
+            afficher_salle_simple("R");
+            afficher_connexion_simple();
+            afficher_salles_alignees_3("L", "R", "R");
+            afficher_connexion_simple_milieu();
+            afficher_salle_simple_milieu("L");
+            break;
+        default:
+            printf("Niveau %d non pris en charge.\n", niveau);
+            break;
+    }
+}
+
+void affiche_auto(int niveau, ArbrePiece *piece){
+    if(piece != NULL){
+        if(piece->taille == 1){
+            if(piece->salle.etat != 0){
+                afficher_salle_simple(piece->salle.typePiece);
+                afficher_connexion_simple();
+            }
+        }
+        else if(piece->taille== 2){
+            if(piece->filsD != NULL){
+                if(piece->salle.etat != 0){
+                    afficher_salles_alignees(piece->salle.typePiece, piece->filsD->salle.typePiece);
+                    afficher_connexion_double();
+                }
+                else if(piece->filsD->salle.etat != 0){
+                    afficher_salle_simple(piece->filsD->salle.typePiece);
+                    afficher_connexion_simple();
+                }
+            }
+            else if(piece->filsG != NULL){
+                if(piece->salle.etat != 0){
+                    afficher_salles_alignees(piece->salle.typePiece, piece->filsG->salle.typePiece);
+                    afficher_connexion_double();
+                }
+                else if(piece->filsG->salle.etat != 0){
+                    afficher_salle_simple(piece->filsG->salle.typePiece);
+                    afficher_connexion_simple();
+                }
+            }
+        }
+        else if(piece->taille == 3){
+            if(piece->salle.etat != 0){
+                afficher_salles_alignees_3(piece->salle.typePiece, piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
+                afficher_connexion_triple();
+            }
+            else if(piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
+                afficher_salle_simple(piece->filsG->salle.typePiece);
+                afficher_connexion_simple();
+            }
+            else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat == 0){
+                afficher_salle_simple(piece->filsD->salle.typePiece);
+                afficher_connexion_simple();
+            }
+            else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat != 0){
+                afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
+                afficher_connexion_double();
+            }
+        }
+        else{
+            if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0 && piece->filsD->salle.etat != 0){
+                afficher_salles_alignees_3(piece->salle.typePiece, piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
+                afficher_connexion_triple();
+            }
+            else if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
+                afficher_salles_alignees(piece->salle.typePiece, piece->filsG->salle.typePiece);
+                afficher_connexion_double();
+            }
+            else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat != 0){
+                afficher_salles_alignees(piece->salle.typePiece, piece->filsD->salle.typePiece);
+                afficher_connexion_double();
+            }
+            else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat == 0){
+                afficher_salle_simple(piece->salle.typePiece);
+                afficher_connexion_simple();
+            }
+            else if(piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
+                afficher_salle_simple(piece->filsG->salle.typePiece);
+                afficher_connexion_simple();
+            }
+            else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat == 0){
+                afficher_salle_simple(piece->filsD->salle.typePiece);
+                afficher_connexion_simple();
+            }
+            else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat != 0){
+                afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
+                afficher_connexion_double();
+            }
+            affiche_auto(niveau/3, piece->filsG->filsG);
+            affiche_auto(niveau/3, piece->filsG->filsD);
+            affiche_auto(niveau/3, piece->filsD->filsD);
+            affiche_auto(niveau/3, piece->filsD->filsG);
+        }
+    }
+}
+
+// int salle_reine(Reine* reine){
+    // if(reine->salle == 1){
+        // return 1;
+    // }
+    // else{
+        // return 0;
+    // }
+// }
+
+// void afficher_legende(ListFourmi* liste, Reine* reine) {
+    // printf("\n\033[1;33mLégende :\033[0m\n");
+    // printf("Reine : Salle de la reine (%d/1)\n", salle_reine(reine));
+    // printf("Nourriture : Stockage de nourriture(0/120)\n");
+    // printf("Larves : Salle des larves(%d/125)\n", compter_fourmi_salle(liste, 2));
+    // printf("Ressources : Stockage de ressources(0/100)\n");
+    // printf("Exterieur : (%d)\n", compter_fourmi_salle(liste, 0));
+// }
+
+void afficher_fourmiliere(int niveau/*, ListFourmi* liste, Reine* reine */) {
+    clear_terminal();
+    afficher_titre("Fourmilière");
+    afficher_fourmiliere_niveau(niveau);
+    // afficher_legende(liste, reine);
+    // compter_Liste_fourmi(liste);
+//     printf("\n\033[1;32mAppuyez sur Entrée pour continuer...\033[0m\n");
+    usleep(500000);
+//     getchar();
+}
+
+
 int main(){
     ArbrePiece *T;
-    char test;
+    // ListFourmi *YaR;
+    // Reine *ToujourR;
+    int niveau;
+    niveau = 0;
     Piece A;
     Resource *metal;
     metal = malloc(sizeof(Resource *));
     metal->quantiteRessource = 0;
     metal->id = 1;
     metal->typeRessource = "bois";
-    metal->quantiteMax = 50000;
+    metal->quantiteMax = 10;
     Resource *bois;
     bois = malloc(sizeof(Resource *));
     bois->quantiteRessource = 0;
     bois->id = 1;
     bois->typeRessource = "bois";
-    bois->quantiteMax = 50000;
+    bois->quantiteMax = 10;
     Piece stockBois;
     stockBois.id = 2;
     stockBois.quantiteRessourceNecessaire = 10;
     stockBois.ressourceNecessaire = bois;
-    stockBois.vie = 5000;
+    stockBois.vie = 500;
     stockBois.etat = 1;
+    stockBois.typePiece = "stockBois";
     Piece stockMetal;
     stockMetal.id = 3;
     stockMetal.quantiteRessourceNecessaire = 25;
     stockMetal.ressourceNecessaire = metal;
-    stockMetal.vie = 5000;
+    stockMetal.vie = 500;
     stockMetal.etat = 1;
+    stockMetal.typePiece = "stockMetal";
     A.id = 1;
     A.capaciteMax = 10;
     A.quantiteRessourceNecessaire = 10;
@@ -216,27 +439,33 @@ int main(){
     A.typePiece = "principale";
     A.etat = 1;
     T = init(A);
+    niveau++;
     while(1){
-        detruitPiece(T);
-        if(metal->quantiteRessource < metal->quantiteMax){
-            metal->quantiteRessource++;
-        }
-        if(bois->quantiteRessource < bois->quantiteMax){
-            bois->quantiteRessource += 2;
-        }
-        if(metal->quantiteRessource <= metal->quantiteMax){
-            metal->quantiteMax += 50000;
-            metal->quantiteRessource -= stockMetal.quantiteRessourceNecessaire;
-            ajoutePiece(T, stockMetal);
-        }
-        if(bois->quantiteRessource <= bois->quantiteMax){
-            bois->quantiteMax += 50000;
-            bois->quantiteRessource -= stockBois.quantiteRessourceNecessaire;
-            ajoutePiece(T, stockBois);
-        }
-        afficheArbre(T);
-        printf("\n");
-        sleep(5);
+       printf("\n\nnouveau jour !\n\n"); 
+       detruitPiece(T, &niveau);
+       if(metal->quantiteRessource < metal->quantiteMax){
+           metal->quantiteRessource++;
+       }
+       if(bois->quantiteRessource < bois->quantiteMax){
+           bois->quantiteRessource += 2;
+       }
+       if(metal->quantiteRessource >= metal->quantiteMax){
+           metal->quantiteMax += 50;
+           metal->quantiteRessource -= stockMetal.quantiteRessourceNecessaire;
+           printf("\n\nnouveau stockMetal !\n\n"); 
+           ajoutePiece(T, stockMetal);
+           niveau ++;
+       }
+       if(bois->quantiteRessource >= bois->quantiteMax){
+           bois->quantiteMax += 50;
+           bois->quantiteRessource -= stockBois.quantiteRessourceNecessaire;
+           printf("\n\nnouveau stockBois !\n\n"); 
+           ajoutePiece(T, stockBois);
+           niveau ++;
+       }
+       affiche_auto(niveau, T);
+       sleep(1);
     }
+    affiche_auto(niveau, T);
     return 0;
 }
