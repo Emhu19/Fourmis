@@ -34,7 +34,7 @@ ListFourmi* ajout_fourmi(ListFourmi** liste, Fourmi* fourmi) {
 
 void afficher_Liste_fourmi(ListFourmi* liste) {
     if (!liste) {
-        printf("Liste vide !!!\n");
+        printf("Liste vide\n");
         return;
     }
     ListFourmi* current = liste;
@@ -46,7 +46,7 @@ void afficher_Liste_fourmi(ListFourmi* liste) {
 
 void compter_Liste_fourmi(ListFourmi* liste) {
     if (!liste) {
-        printf("Liste vide!\n");
+        printf("Liste vide\n");
         return;
     }
     int count = 0;

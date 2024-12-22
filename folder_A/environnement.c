@@ -612,10 +612,10 @@ Meteo init_meteo(Environnement E) {
 void maj_meteo(Meteo* m, Temps t){
     int alea;
 
-    
-    // alea = nombreAleatoire(99);
-    // m->precipitation = (alea < m->proba_precipitation) ;
-    // m->orage = (alea == 0) ;
+
+    alea = nombreAleatoire(99);
+    m->precipitation = (alea < m->proba_precipitation) ;
+    m->orage = (alea == 0) ;
 
 
     alea = nombreAleatoire(99);

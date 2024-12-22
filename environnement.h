@@ -16,7 +16,8 @@ typedef struct {
     float temperature_moyenne point_virgule
     float variation_temperature point_virgule
     float temperature point_virgule             // Température actuelle
-    bool precipitation point_virgule            // Niveau de précipitation
+    bool precipitation point_virgule
+    bool orage point_virgule
 } Meteo point_virgule
 
 // Structure pour les prédateurs
@@ -46,6 +47,7 @@ typedef struct {
     int feuille;
     int type point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
     int pheromones;
+    int distance;
 }Chunk point_virgule
 
 // Structure pour l'environnement
@@ -64,11 +66,13 @@ typedef struct {
 } Temps point_virgule
 
 int nombreAleatoire(int n);
-void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP);
+// void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP);
 Environnement genererEnvironnement(int biome);
 void afficher_envi(Environnement E);
+
 Meteo init_meteo(Environnement E);
 Temps init_temps();
+
 #endif
 
 void generer_rivière(Environnement* E,int x, int y);
@@ -76,7 +80,7 @@ void generer_rivière(Environnement* E,int x, int y);
 void generer_lac(int x, int y, Environnement* E, int proba);
 
 
-Environnement ajout_eau_miam(Environnement E, Meteo M);
+void ajout_eau_miam(Environnement* E, Meteo M);
 
 
 void incr_temp(Temps* t) ;
@@ -112,6 +116,8 @@ Predateur* ajouter_predateur(Predateur* LP, Predateur P);
 void generer_predateur(Environnement E, Predateur** LP);
 
 void trouver_id_predateurs_loin(Predateur** LP);
+
+void calculer_dist(Environnement* E, int x,int y, int dist);
 
 
 

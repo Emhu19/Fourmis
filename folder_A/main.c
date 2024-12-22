@@ -117,18 +117,24 @@ void simulation() {
         fprintf(stderr, "Erreur : Impossible de créer la reine.\n");
         exit(EXIT_FAILURE);
     }
-
+    logo_1();
+    printf("\033c");
     Environnement environnement = genererEnvironnement(logo_3());
+    printf("\033c");
+    printf("\033c");
+    printf("génération de l'environnement en cours\nCette opération peut prendre un certain temps\n");
+    calculer_dist(&environnement, 12,12,0);
+    printf("\033c");
+    printf("voici l'environnement généré aléatoirement :\n");
     afficher_envi(environnement);
     getchar();
+    printf("\033c");
     Meteo meteo = init_meteo(environnement);
     
     Temps temps = init_temps();
     Predateur* predateurs = NULL;
 
-    printf("=== Informations initiales ===\n");
-    calculer_dist(&environnement, 12,12,0);
-    afficher_envi_v(environnement);
+    
 
     Contexte contexte = {&environnement, &temps, &meteo };
 
@@ -155,11 +161,13 @@ void simulation() {
     srand(time(NULL));
 
     while (1) {
+        printf("\033c");
         population.fourmis = cycle_jour(5, &population, &contexte);
         journee(contexte.map, contexte.meteo, contexte.temps, &predateurs);
         // afficher_envi(environnement);
         cycleFourmiliere(ressources, T, pieces);
         getchar();
+        
     }
 
     liberer_liste(population.fourmis);

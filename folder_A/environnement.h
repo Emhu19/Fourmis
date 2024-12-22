@@ -16,7 +16,7 @@ typedef struct {
     float temperature_moyenne point_virgule
     float variation_temperature point_virgule
     float temperature point_virgule             // Température actuelle
-    bool precipitation point_virgule            // Niveau de précipitation
+    bool precipitation point_virgule
     bool orage point_virgule
 } Meteo point_virgule
 

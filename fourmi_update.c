@@ -38,7 +38,7 @@ void update_day_fourmi(ListFourmi* liste ,Fourmi* fourmi, Environnement* map){
 void update_day_liste_fourmi(ListFourmi* liste, Environnement* maps){
     ListFourmi* newList = liste;
     if(newList->fourmi == NULL){
-        // printf("Liste vide\n");
+        printf("Liste vide\n");
         return;
     }
     while(newList != NULL){
