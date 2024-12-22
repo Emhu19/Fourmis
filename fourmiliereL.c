@@ -535,6 +535,7 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
     }
     afficher_titre("Terre");
     affiche_auto(T);
+    afficher_titre("Centre de la Terre");
 }
 
 // int main(){
