@@ -98,9 +98,12 @@ void simulation() {
     srand(time(NULL));
 
     while (1) {
+
         population.fourmis = cycle_jour(5, &population, &contexte);
         journee(&environnement, &meteo, &temps, &predateurs);
+        printf("\33c");
         cycleFourmiliere(ressources, T, pieces);
+
     }
 
     liberer_liste(population.fourmis);
