@@ -3,13 +3,15 @@
 #include <stdbool.h>
 #include "larve.h"
 
-Stade* creationLarve(int id, int type_fourmi, bool sexe) {
+Stade* creationLarve(int id, int espece) {
     Stade* nouvelle_larve = (Stade*)malloc(sizeof(Stade));
     if (!nouvelle_larve) {
         perror("Erreur d'allocation mémoire pour la larve");
         return NULL;
     }
     nouvelle_larve->cycle = OEUF;
+    nouvelle_larve->id = id;
+    nouvelle_larve->espece = espece;
     nouvelle_larve->salle = 2;
     nouvelle_larve->age = 1;
     nouvelle_larve->sante = true;

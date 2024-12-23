@@ -99,7 +99,7 @@ void combat(Predateur** LP, Environnement* E, ListFourmi* LF){
     // supp_fourmis_mort(LF, E);
 }
 
-ListFourmi* cycle_jour(int niveau, Population* population, Contexte* contexte) {
+ListFourmi* cycle_jour(Population* population, Contexte* contexte) {
     if (!population->fourmis) return NULL;
 
     Reine* reine = population->reine;
@@ -117,7 +117,7 @@ ListFourmi* cycle_jour(int niveau, Population* population, Contexte* contexte) {
     }
 
     for (int i = 1; i <= ponte; i++) {
-        Stade* stade = creationLarve(i, reine->type, true);
+        Stade* stade = creationLarve(i, reine->espece);
         if (stade) population->larves = ajout_larve(&population->larves, stade);
     }
 
@@ -125,7 +125,7 @@ ListFourmi* cycle_jour(int niveau, Population* population, Contexte* contexte) {
 
     int nbNymphe = compter_Liste_Nymphe(population->larves);
     for (int b = 0; b < nbNymphe; b++) {
-        Fourmi* fourmi = creationFourmi(b, reine->type, true);
+        Fourmi* fourmi = creationFourmi(b, reine->espece, true);
         if (fourmi) population->fourmis = ajout_fourmi(&population->fourmis, fourmi);
     }
 
@@ -235,7 +235,7 @@ void simulation() {
 
     srand(time(NULL));
 
-    Population population = { Initialisation_List(), Initialisation_List_Larve(), creationReine(1, 1) };
+    Population population = { Initialisation_List(), Initialisation_List_Larve(), creationReine(1, espece) };
     if (!population.reine) {
         fprintf(stderr, "Erreur : Impossible de créer la reine.\n");
         exit(EXIT_FAILURE);
@@ -243,7 +243,7 @@ void simulation() {
 
     while (1) {
         printf("\033c");
-        population.fourmis = cycle_jour(5, &population, &contexte);
+        population.fourmis = cycle_jour(&population, &contexte);
         journee(contexte.map, contexte.meteo, contexte.temps, &predateurs, population.fourmis);
         // afficher_envi(environnement);
         cycleFourmiliere(ressources, T, pieces);

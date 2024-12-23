@@ -6,7 +6,7 @@
 #define MAX_CHAR 50
 
 typedef struct {
-    int type;
+    int espece;
     bool royale;
     int id_reine;
     char role[MAX_CHAR];

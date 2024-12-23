@@ -4,7 +4,7 @@
 void gerer_creation_fourmis_males(ListFourmi** fourmis, Reine* reine) {
     if (reine->royale) {
         for (int j = 0; j < 10; j++) {
-            Fourmi* fourmi_male = creationFourmi(2000, reine->type, false);
+            Fourmi* fourmi_male = creationFourmi(2000, reine->espece, false);
             *fourmis = ajout_fourmi(fourmis, fourmi_male);
         }
     } else if (rand() % 100 == 19) {

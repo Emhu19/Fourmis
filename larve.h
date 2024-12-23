@@ -13,6 +13,8 @@ typedef enum {
 
 typedef struct {
     Cycle cycle;
+    int id;
+    int espece;
     int salle;
     int age;
     bool sante;
@@ -23,7 +25,7 @@ typedef struct ListLarve {
     struct ListLarve* next;
 } ListLarve;
 
-Stade* creationLarve(int id, int type_fourmi, bool sexe);
+Stade* creationLarve(int id, int type_fourmi);
 ListLarve* Initialisation_List_Larve();
 ListLarve* ajout_larve(ListLarve** liste, Stade* stade);
 ListLarve* retirer_larve(ListLarve** liste, Stade* stade);

@@ -23,7 +23,7 @@ typedef enum {
 
 typedef struct {
     Role role;
-    char espece[MAX_CHAR];
+    int espece;
     int id_fourmi;
     int salle;
     bool sexe;

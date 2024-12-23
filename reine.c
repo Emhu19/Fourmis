@@ -27,7 +27,7 @@ const ReineTemplate reine_templates[] = {
 
 void initialiserReine(Reine* reine, const ReineTemplate* template) {
     if (!reine || !template) return;
-    reine->salle = 1;
+    reine->salle = 1; //salle de la Reine
     reine->royale = false;
     strcpy(reine->role, "Reine");
     reine->spermatec = template->spermatec;
@@ -44,7 +44,7 @@ void initialiserReine(Reine* reine, const ReineTemplate* template) {
 
 Reine* creationReine(int id, int type_reine) {
     if (type_reine < 1 || type_reine > 8) {
-        fprintf(stderr, "Erreur : type de reine invalide.\n");
+        fprintf(stderr, "Erreur : espece de reine invalide.\n");
         return NULL;
     }
 
@@ -55,7 +55,7 @@ Reine* creationReine(int id, int type_reine) {
     }
 
     nouvelle_reine->id_reine = id;
-    nouvelle_reine->type = type_reine;
+    nouvelle_reine->espece = type_reine;
     initialiserReine(nouvelle_reine, &reine_templates[type_reine - 1]);
 
     return nouvelle_reine;
@@ -64,7 +64,7 @@ Reine* creationReine(int id, int type_reine) {
 void afficher_Reine(const Reine* reine) {
     if (!reine) return;
     printf("\n--- Reine %d ---\n", reine->id_reine);
-    printf("Espèce : %d\n", reine->type);
+    printf("Espèce : %d\n", reine->espece);
     printf("Ponte par jour : %d\n", reine->capacite_ponte);
     printf("Spermatec : %d\n", reine->spermatec);
     printf("Âge : %d\n", reine->age);
