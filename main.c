@@ -153,19 +153,19 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP, ListFourmi* L
 
     // Afficher les informations temporelles
 
-    printf("\n=== Informations Temps ===\n");
+    printf("\n=========================================================================== Informations Temps ===========================================================================\n");
     const char* saisons[] = {"Hiver", "Printemps", "Été", "Automne"};
     printf("Saison : %s\n", saisons[T->saison]);
     printf("Mois : %d\n", T->mois + 1); // Ajouter 1 pour afficher mois de 1 à 12
     printf("Jour : %d\n", T->jour);
     printf("année : %d\n", T->annee);
-
+    printf("========================================================================\n");
     // Afficher les informations météorologiques
-    printf("\n=== Informations Météo ===\n");
+    printf("\n=========================================================================== Informations Météo ===========================================================================\n");
     printf("Température actuelle : %.2f °C\n", M->temperature);
     printf("Précipitations : %s\n", M->precipitation ? "Oui" : "Non");
     printf("Orages : %s\n", M->orage ? "Oui" : "Non");
-
+    printf("========================================================================\n");
     printf("\n=== Informations Prédateurs ===\n");
     if (*LP == NULL) {
         printf("il n'y a aucun prédateur dans les environs\n");
@@ -180,7 +180,7 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP, ListFourmi* L
     printf("il y a un total de %d prédateurs", compter_predateurs(*LP));
 
     // Ligne de séparation
-    printf("\n========================\n");
+    printf("\n========================================================================\n");
 
 
     trouver_id_predateurs_loin(LP);
@@ -190,15 +190,12 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP, ListFourmi* L
 
 void simulation() {
 
-    Population population = { Initialisation_List(), Initialisation_List_Larve(), creationReine(1, 1) };
-    if (!population.reine) {
-        fprintf(stderr, "Erreur : Impossible de créer la reine.\n");
-        exit(EXIT_FAILURE);
-    }
+
     logo_1();
     printf("\033c");
     Environnement environnement = genererEnvironnement(logo_3());
     printf("\033c");
+    int espece = logo_2();
     printf("\033c");
     printf("génération de l'environnement en cours\nCette opération peut prendre un certain temps\n");
     calculer_dist(&environnement);
@@ -237,6 +234,12 @@ void simulation() {
     T = init(A);
 
     srand(time(NULL));
+
+    Population population = { Initialisation_List(), Initialisation_List_Larve(), creationReine(1, 1) };
+    if (!population.reine) {
+        fprintf(stderr, "Erreur : Impossible de créer la reine.\n");
+        exit(EXIT_FAILURE);
+    }
 
     while (1) {
         printf("\033c");

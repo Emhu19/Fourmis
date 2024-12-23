@@ -1429,19 +1429,19 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
 
     // Afficher les informations temporelles
     
-    printf("\n=== Informations Temps ===\n");
+    printf("\n========================================== Informations Temps ==========================================\n");
     const char* saisons[] = {"Hiver", "Printemps", "Été", "Automne"};
     printf("Saison : %s\n", saisons[T->saison]);
     printf("Mois : %d\n", T->mois + 1); // Ajouter 1 pour afficher mois de 1 à 12
     printf("Jour : %d\n", T->jour);
     printf("année : %d\n", T->annee);
-
+    printf("========================================================================\n");
     // Afficher les informations météorologiques
-    printf("\n=== Informations Météo ===\n");
+    printf("\n========================================== Informations Météo ==========================================\n");
     printf("Température actuelle : %.2f °C\n", M->temperature);
     printf("Précipitations : %s\n", M->precipitation ? "Oui" : "Non");
-    
-    printf("\n=== Informations Prédateurs ===\n");
+    printf("========================================================================\n");
+    printf("\n========================================== Informations Prédateurs ==========================================\n");
     if (*LP == NULL) {
         printf("il n'y a aucun prédateur dans les environs\n");
     } else {
@@ -1455,7 +1455,7 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
     printf("il y a un total de %d prédateurs", compter_predateurs(*LP));
 
     // Ligne de séparation
-    printf("\n========================\n");
+    printf("\n========================================================================\n");
 
 
     trouver_id_predateurs_loin(LP);

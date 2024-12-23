@@ -1632,7 +1632,6 @@ void trouver_id_predateurs_loin(Predateur** LP) {
 //     printf("il y a un total de %d prédateurs", compter_predateurs(*LP));
 
 //     // Ligne de séparation
-//     printf("\n========================\n");
 
 
 //     trouver_id_predateurs_loin(LP);
