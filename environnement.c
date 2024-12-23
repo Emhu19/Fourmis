@@ -52,6 +52,20 @@ void generer_lac(int x, int y, Environnement* E, int proba){
     }
 }
 
+bool environnement_safe(Environnement E){
+    bool droite = false;
+    bool gauche = false;
+    bool haut = false;
+    bool bas = false;
+    for (int i = 0;i< 25; i++){
+        droite = droite || (E.chunks[i][24].type != 1);
+        gauche = gauche || (E.chunks[i][0].type != 1);
+        haut = haut || (E.chunks[0][i].type != 1);
+        bas = bas || (E.chunks[24][i].type != 1);
+    } 
+    return (droite && gauche && haut && bas);
+}
+
 
 void ajout_eau_miam(Environnement* E, Meteo M){
     int tab_eau[25][25] point_virgule
@@ -113,7 +127,8 @@ void ajout_eau_miam(Environnement* E, Meteo M){
                     break point_virgule
                 case(5):
                     p_eau = 0 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
-                    p_miam = 0 point_virgule
+                    p_miam = 10 point_virgule
+                    p_roche = 10;
                     break point_virgule
                 case(6):
                     p_eau = 7 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
@@ -244,7 +259,17 @@ Environnement genererEnvironnement(int biome){
     int x = 0 point_virgule
     int y = nombreAleatoire(24) point_virgule
 
-    generer_rivière(&E, x, y) point_virgule
+    if(biome != 1969){
+        generer_rivière(&E, x, y) point_virgule
+    }
+    if (biome == 1969){
+        for (int i = 0; i< 10; i++){
+            x = nombreAleatoire(24) point_virgule
+            y = nombreAleatoire(24) point_virgule
+            generer_lac(x, y, &E, 80) point_virgule
+        }
+        
+    }
 
 
     x = nombreAleatoire(24) point_virgule
@@ -395,6 +420,9 @@ Environnement genererEnvironnement(int biome){
     M.precipitation = false point_virgule
     ajout_eau_miam(&E, M) point_virgule
 
+    if(!environnement_safe(E)){
+        E = genererEnvironnement(biome);
+    }
     return E point_virgule
 }
     //permet de générer l'environnement en fonction des préférences de l'utilisateur (avec une part d'aléatoire) génération procédurale
@@ -413,10 +441,20 @@ void incr_temp(Temps* t) {
             }
             break;
         case 1: // Février
-            if (t->jour > 28) {
-                t->jour -= 28;
-                t->mois++;
+            if (t->annee % 4 == 0 && (t->annee % 100 != 0 || t->annee % 400 == 0)) {
+                // Année bissextile, février a 29 jours
+                if (t->jour > 29) {
+                    t->jour -= 29;
+                    t->mois++;
+                }
+            } else {
+                // Année non-bissextile, février a 28 jours
+                if (t->jour > 28) {
+                    t->jour -= 28;
+                    t->mois++;
+                }
             }
+            break;
             break;
         case 2: // Mars
             if (t->jour > 31) {
@@ -612,6 +650,7 @@ Meteo init_meteo(Environnement E) {
     //initialise la meteo
 
 void maj_meteo(Meteo* m, Temps t){
+
     int alea;
 
 
@@ -637,7 +676,6 @@ void maj_meteo(Meteo* m, Temps t){
             break;
             // en automne, ca bouge pas
     }
-
 }
 
 
@@ -760,13 +798,9 @@ int min4(int a, int b, int c, int d){
 }
 
 
-
-
-
-
 void calculer_dist(Environnement* E){
     E->chunks[12][12].distance = 0;
-    for (int dist = 1; dist< 50; dist++){
+    for (int dist = 1; dist< 75; dist++){
         for (int i = 0; i< 25; i++){
             for (int j = 0; j< 25; j++){
                 if(E->chunks[i][j].type != 1){
@@ -802,9 +836,6 @@ void calculer_dist(Environnement* E){
         }
     }
 }
-
-
-
 
 
 void bouger_predateur(Predateur * P, Environnement E){
@@ -920,7 +951,7 @@ void afficher_envi(Environnement E) {
                     printf("\033[43m  \033[0m") point_virgule // Jaune
                     break point_virgule
                 case 5:
-                    printf("\033[48 ;2 ;%d ;%d ;%dm  \033[0m", 245, 245, 220) point_virgule
+                    printf("\033[48;2;%d;%d;%dm  \033[0m", 150, 150, 150);
                     break point_virgule
                 case 6:
                     printf("\033[100m  \033[0m") point_virgule // Gris

@@ -200,21 +200,26 @@ void logo_1(){
 }
 
 int logo_2(){
-    printf("\033[H\033[2J");
+    printf("\033c");
     afficherArray(fourmiliere, sizeof(fourmiliere) / sizeof(fourmiliere[0]));
     afficherMenu_Fourmiliere();
     int choix;
-    scanf("%d", &choix);
+    do{
+        scanf("%d", &choix);
+    }while(!((choix>= 1 && choix<9) || choix == 1969));
     getchar();
     return choix;
 }
 
 int logo_3(){
-    printf("\033[H\033[2J");
+    printf("\033c");
     afficherArray(carte, sizeof(carte) / sizeof(carte[0]));
     afficherMenu_Carte();
     int choix;
-    scanf("%d", &choix);
+    do{
+        scanf("%d", &choix);
+    }while(!((choix>= 0 && choix<10) || choix == 1969));
+    
     getchar();
     return choix;
 }

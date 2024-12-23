@@ -142,6 +142,9 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP, ListFourmi* L
     incr_temp(T);
     ajout_eau_miam(E, *M);
     maj_meteo(M, *T);
+    if (E->biome == 1969){
+        M->temperature = 0;
+    }
     bouger_predateurs(LP, *E);
     generer_predateur(*E, LP);
     combat(LP, E, LF);
@@ -201,7 +204,7 @@ void simulation() {
     calculer_dist(&environnement);
     printf("\033c");
     printf("voici l'environnement généré aléatoirement :\n");
-    afficher_envi_v(environnement);
+    afficher_envi(environnement);
     getchar();
     printf("\033c");
     Meteo meteo = init_meteo(environnement);
