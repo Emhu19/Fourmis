@@ -89,7 +89,7 @@ int trouver_id_predateur(Predateur* LP);
 Predateur* ajouter_predateur(Predateur* LP, Predateur P);
 void generer_predateur(Environnement E, Predateur** LP);
 void trouver_id_predateurs_loin(Predateur** LP);
-void calculer_dist(Environnement* E, int x,int y, int dist);
+void calculer_dist(Environnement* E);
 //void combat(Predateur** LP, Environnement* E, ListFourmi* LF);
 
 

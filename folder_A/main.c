@@ -198,10 +198,10 @@ void simulation() {
     printf("\033c");
     printf("\033c");
     printf("génération de l'environnement en cours\nCette opération peut prendre un certain temps\n");
-    calculer_dist(&environnement, 12,12,0);
+    calculer_dist(&environnement);
     printf("\033c");
     printf("voici l'environnement généré aléatoirement :\n");
-    afficher_envi(environnement);
+    afficher_envi_v(environnement);
     getchar();
     printf("\033c");
     Meteo meteo = init_meteo(environnement);

@@ -676,45 +676,136 @@ void tuer_predateur(int id, Predateur** LP) {
 }
 
 
-void calculer_dist(Environnement* E, int x,int y, int dist){
-    E->chunks[x][y].distance = dist;
-    // printf("%d\n", dist);
-    // sleep(1);
-    if (dist > 50){
-        //printf("#");
-        return;
-    }
-    // if(dist == 5){
-    //     printf("#");
-    // }
+// void calculer_dist(Environnement* E, int x,int y, int dist){
+//     E->chunks[x][y].distance = dist;
+//     // printf("%d\n", dist);
+//     // sleep(1);
+//     if (dist > 50){
+//         //printf("#");
+//         return;
+//     }
+//     // if(dist == 5){
+//     //     printf("#");
+//     // }
 
-    if (x < 24 && E->chunks[x+1][y].type != 1 && E->chunks[x+1][y].distance > dist){
-        E->chunks[x+1][y].distance = dist+1;
-    }
-    if (x > 0 && E->chunks[x-1][y].type != 1 && E->chunks[x-1][y].distance > dist){
-        E->chunks[x-1][y].distance = dist+1;
-    }
-    if (y < 24 && E->chunks[x][y+1].type != 1 && E->chunks[x][y+1].distance > dist){
-        E->chunks[x][y+1].distance = dist+1;
-    }
-    if (y > 0 && E->chunks[x][y-1].type != 1 && E->chunks[x][y-1].distance > dist){
-        E->chunks[x][y-1].distance = dist+1;
-    }
+//     if (x < 24 && E->chunks[x+1][y].type != 1 && E->chunks[x+1][y].distance > dist){
+//         E->chunks[x+1][y].distance = dist+1;
+//     }
+//     if (x > 0 && E->chunks[x-1][y].type != 1 && E->chunks[x-1][y].distance > dist){
+//         E->chunks[x-1][y].distance = dist+1;
+//     }
+//     if (y < 24 && E->chunks[x][y+1].type != 1 && E->chunks[x][y+1].distance > dist){
+//         E->chunks[x][y+1].distance = dist+1;
+//     }
+//     if (y > 0 && E->chunks[x][y-1].type != 1 && E->chunks[x][y-1].distance > dist){
+//         E->chunks[x][y-1].distance = dist+1;
+//     }
 
 
-    if (x < 24 && E->chunks[x+1][y].type != 1 && E->chunks[x+1][y].distance > dist){
-        calculer_dist(E, x+1, y, dist +1);
+//     if (x < 24 && E->chunks[x+1][y].type != 1 && E->chunks[x+1][y].distance > dist){
+//         calculer_dist(E, x+1, y, dist +1);
+//     }
+//     if (x > 0 && E->chunks[x-1][y].type != 1 && E->chunks[x-1][y].distance > dist){
+//         calculer_dist(E, x-1, y, dist +1);
+//     }
+//     if (y < 24 && E->chunks[x][y+1].type != 1 && E->chunks[x][y+1].distance > dist){
+//         calculer_dist(E, x, y+1, dist +1);
+//     }
+//     if (y > 0 && E->chunks[x][y-1].type != 1 && E->chunks[x][y-1].distance > dist){
+//         calculer_dist(E, x, y-1, dist +1);
+//     }
+// }
+
+
+int min3(int a, int b, int c){
+    int min = a;
+    if (b < min){
+        min = b;
     }
-    if (x > 0 && E->chunks[x-1][y].type != 1 && E->chunks[x-1][y].distance > dist){
-        calculer_dist(E, x-1, y, dist +1);
+    if (c < min){
+        min = c;
     }
-    if (y < 24 && E->chunks[x][y+1].type != 1 && E->chunks[x][y+1].distance > dist){
-        calculer_dist(E, x, y+1, dist +1);
+    return min;
+}
+
+int min5(int a, int b, int c, int d, int e){
+    int min = a;
+    if (b < min){
+        min = b;
     }
-    if (y > 0 && E->chunks[x][y-1].type != 1 && E->chunks[x][y-1].distance > dist){
-        calculer_dist(E, x, y-1, dist +1);
+    if (c < min){
+        min = c;
+    }
+    if (d < min){
+        min = d;
+    }
+    if (e < min){
+        min = e;
+    }
+    return min;
+}
+
+int min4(int a, int b, int c, int d){
+    int min = a;
+    if (b < min){
+        min = b;
+    }
+    if (c < min){
+        min = c;
+    }
+    if (d < min){
+        min = d;
+    }
+    return min;
+}
+
+
+
+
+
+
+void calculer_dist(Environnement* E){
+    E->chunks[12][12].distance = 0;
+    for (int dist = 1; dist< 50; dist++){
+        for (int i = 0; i< 25; i++){
+            for (int j = 0; j< 25; j++){
+                if(E->chunks[i][j].type != 1){
+                    if(i<24 && i>0 && j<24 && j>0){
+                        E->chunks[i][j].distance = min5(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i-1][j].distance, E->chunks[i][j+1].distance, E->chunks[i][j-1].distance) + 1;
+                    }
+                    else if(i == 0 && j == 0){
+                        E->chunks[i][j].distance = min3(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i][j+1].distance) + 1;
+                    }
+                    else if(i == 0 && j == 24){
+                        E->chunks[i][j].distance = min3(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i][j-1].distance) + 1;
+                    }
+                    else if(i == 24 && j == 0){
+                        E->chunks[i][j].distance = min3(E->chunks[i][j].distance-1, E->chunks[i-1][j].distance, E->chunks[i][j+1].distance) + 1;
+                    }
+                    else if(i == 24 && j == 24){
+                        E->chunks[i][j].distance = min3(E->chunks[i][j].distance-1, E->chunks[i-1][j].distance, E->chunks[i][j-1].distance) + 1;
+                    }
+                    else if(i == 0){
+                        E->chunks[i][j].distance = min4(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i][j+1].distance, E->chunks[i][j-1].distance) + 1;
+                    }
+                    else if(i == 24){
+                        E->chunks[i][j].distance = min4(E->chunks[i][j].distance-1, E->chunks[i-1][j].distance, E->chunks[i][j+1].distance, E->chunks[i][j-1].distance) + 1;
+                    }
+                    else if(j == 0){
+                        E->chunks[i][j].distance = min4(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i-1][j].distance, E->chunks[i][j+1].distance) + 1;
+                    }
+                    else if (j == 24){
+                        E->chunks[i][j].distance = min4(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i-1][j].distance, E->chunks[i][j-1].distance) + 1;
+                    }
+                }
+            }
+        }
     }
 }
+
+
+
+
 
 void bouger_predateur(Predateur * P, Environnement E){
     for (int i = 0; i< P->vitesse; i++){
@@ -806,9 +897,6 @@ void bouger_predateurs(Predateur** LP, Environnement E){
 }
 
 
-
-
-
 void afficher_envi(Environnement E) {
     for (int i = 0 point_virgule i < 25 point_virgule i++) {
         for (int j = 0 point_virgule j < 25 point_virgule j++) {
@@ -853,7 +941,7 @@ void afficher_envi(Environnement E) {
 void afficher_envi_v(Environnement E){
     for (int i = 0 point_virgule i< 25 point_virgule i++){
         for (int j = 0 point_virgule j< 25 point_virgule j++){
-            printf("%2d ", E.chunks[i][j].distance) point_virgule
+            printf("%4d ", E.chunks[i][j].distance) point_virgule
         }
         printf("\n") point_virgule
     }
