@@ -158,6 +158,7 @@ void detruitPiece(ArbrePiece *T){
                 printf("la salle %s est détruite c'est dommage\n", T->salle.typePiece);
                 T->salle.etat = 0;
                 T->salle.ressourceNecessaire->quantiteMax -= 50;
+                T->salle.stock = 0;
                 if(T->salle.ressourceNecessaire->quantiteRessource > T->salle.ressourceNecessaire->quantiteMax){
                     T->salle.ressourceNecessaire->quantiteRessource -= T->salle.ressourceNecessaire->quantiteMax - T->salle.ressourceNecessaire->quantiteRessource;
                 }
@@ -168,34 +169,7 @@ void detruitPiece(ArbrePiece *T){
     }
 }
 
-ArbrePiece *ajouteStock(ArbrePiece *T, int quantiteAjout, Ressource *ressource){
-    if(T == NULL){
-        return NULL;
-    }
-    if(T->salle.ressourceStock->id == ressource->id && T->salle.stock + quantiteAjout < T->salle.capaciteMax){
-        T->salle.stock += quantiteAjout;
-        return T;
-    }
-    else if(T->filsG->salle.ressourceStock->id == ressource->id){
-        T->filsG = ajouteStock(T->filsG, quantiteAjout, ressource);
-        return T;
-    }
-    else if(T->filsD->salle.ressourceStock->id == ressource->id){
-        T->filsD = ajouteStock(T->filsD, quantiteAjout, ressource);
-        return T;
-    }
-    else if(ajouteStock(T->filsG, quantiteAjout, ressource) != NULL){
-        T->filsG = ajouteStock(T->filsG, quantiteAjout, ressource);
-        return T;
-    }
-    else if(ajouteStock(T->filsD, quantiteAjout, ressource) != NULL){
-        T->filsD = ajouteStock(T->filsD, quantiteAjout, ressource);
-        return T;        
-    }
-    else{
-        return T;
-    }
-}
+
 
 Maladie genereMaladie();
 // permet de generer des maladie au sein de la fourmilière de manière aléatoire
@@ -486,8 +460,71 @@ void afficheList(ListRessource *T){
     }
 }
 
+int compareStock(ArbrePiece *T1, ArbrePiece *T2){
+    if(T1 == NULL && T2 == NULL){
+        return true;
+    }
+    if(T1->salle.stock != T2->salle.stock){
+        return false;
+    }
+    if(compareStock(T1->filsD, T2->filsD) == false || compareStock(T1->filsG, T2->filsG) == false){
+        return false;
+    }
+    return true;
+}
+
+ArbrePiece *ajouteStock(ArbrePiece *T, int quantiteAjout, Ressource *ressource){
+    ArbrePiece *temp;
+    if(T == NULL){
+        return NULL;
+    }
+    if(T->salle.ressourceStock == ressource && T->salle.etat != 0 && T->salle.stock < T->salle.capaciteMax){
+        T->salle.stock += quantiteAjout;
+        return T;
+    }
+    temp = T->filsG;
+    if(T->filsG != NULL){
+        T->filsG = ajouteStock(T->filsG, quantiteAjout, ressource);
+    }
+    if(compareStock(temp, T->filsG) == true){
+        if(T->filsD != NULL){
+            T->filsD = ajouteStock(T->filsD, quantiteAjout, ressource);
+        }
+    }
+    return T;
+}
+
+ArbrePiece *retireStock(ArbrePiece *T, int quantiteRetire, Ressource *ressource){
+    ArbrePiece *temp;
+    if(T == NULL){
+        return NULL;
+    }
+    if(T->salle.ressourceStock == ressource && T->salle.etat != 0 && T->salle.stock >= quantiteRetire){
+        T->salle.stock -= quantiteRetire;
+        return T;
+    }
+    temp = T->filsG;
+    if(T->filsG != NULL){
+        T->filsG = retireStock(T->filsG, quantiteRetire, ressource);
+    }
+    if(compareStock(temp, T->filsG) == true){
+        if(T->filsD != NULL){
+            T->filsD = ajouteStock(T->filsD, quantiteRetire, ressource);
+        }
+    }
+    return T;
+}
+
+void afficheStock(ArbrePiece *T){
+    if(T != NULL){
+        printf("%s contient %d %s\n", T->salle.typePiece, T->salle.stock, T->salle.ressourceStock->typeRessource);
+        afficheStock(T->filsG);
+        afficheStock(T->filsD);
+    }
+}
+
 void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *pieces){
-    detruitPiece(T);
+    // detruitPiece(T);
     ListRessource *temp;
     ListPiece *tempP;
     temp = ressources;
@@ -496,10 +533,14 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
     while(temp != NULL){
         if(temp->ressource->quantiteRessource < temp->ressource->quantiteMax){
             temp->ressource->quantiteRessource++;
+            T = ajouteStock(T, 1, temp->ressource);
+            printf("%s : %d\n",temp->ressource->typeRessource, temp->ressource->quantiteRessource);
+            printf("QMax : %d\n", temp->ressource->quantiteMax);
             // printf("%d %d\n", temp->ressource->quantiteRessource, temp->ressource->quantiteMax);
         }
         temp = temp->suivant;
     }
+    afficheStock(T);
     temp = ressources;
     // afficheList(temp);
     while(temp != NULL){
@@ -510,6 +551,7 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
             }
             temp->ressource->quantiteMax += 10;
             temp->ressource->quantiteRessource -= tempP->piece.quantiteRessourceNecessaire;
+            T = retireStock(T, tempP->piece.quantiteRessourceNecessaire, temp->ressource);
             ajoutePiece(T, tempP->piece);
         }
         tempP = pieces;
@@ -539,7 +581,7 @@ int main(){
     Piece stockMetal;
     stockMetal = initPiece(3, metal, 5,  "stockMetal", metal);
     pieces = ajoutePieceList(pieces, stockMetal);
-    A = initPiece(1, bois, 0, "Principale", bois);
+    A = initPiece(1, bois, 0, "Principale", metal);
     T = init(A);
     niveau++;
     while(1){
