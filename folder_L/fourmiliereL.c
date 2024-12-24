@@ -153,15 +153,17 @@ void detruitPiece(ArbrePiece *T){
 // permet de détruire une salle renvoie les matériaux que la destrucion donne
     if(T != NULL){
         if(T->salle.etat != 0 && T->salle.id != 1){
-            T->salle.vie -= 50;
-            if(T->salle.vie < 0){
+            T->salle.vie -= 25;
+            printf("%s : %d vie\n", T->salle.typePiece, T->salle.vie);
+            if(T->salle.vie <= 0){
                 printf("la salle %s est détruite c'est dommage\n", T->salle.typePiece);
                 T->salle.etat = 0;
-                T->salle.ressourceNecessaire->quantiteMax -= 50;
+                T->salle.ressourceNecessaire->quantiteMax -= 10;
                 T->salle.stock = 0;
                 if(T->salle.ressourceNecessaire->quantiteRessource > T->salle.ressourceNecessaire->quantiteMax){
-                    T->salle.ressourceNecessaire->quantiteRessource -= T->salle.ressourceNecessaire->quantiteMax - T->salle.ressourceNecessaire->quantiteRessource;
+                    T->salle.ressourceNecessaire->quantiteRessource -= T->salle.stock;
                 }
+                T->salle.stock = 0;
             }
         }
         detruitPiece(T->filsD);
@@ -290,30 +292,50 @@ void affiche_auto(ArbrePiece *piece){
         }
         else if(piece->taille== 2){
             if(piece->filsD != NULL){
-                if(piece->salle.etat != 0){
+                 if(piece->salle.etat != 0 && piece->filsD->salle.etat != 0){
                     afficher_salles_alignees(piece->salle.typePiece, piece->filsD->salle.typePiece);
                     afficher_connexion_double();
                 }
-                else if(piece->filsD->salle.etat != 0){
+                else if(piece->filsD->salle.etat == 0 && piece->salle.etat != 0){
+                    afficher_salle_simple(piece->salle.typePiece);
+                    afficher_connexion_simple();
+                }
+                else if(piece->filsD->salle.etat != 0 && piece->salle.etat == 0){
                     afficher_salle_simple(piece->filsD->salle.typePiece);
                     afficher_connexion_simple();
                 }
             }
             else if(piece->filsG != NULL){
-                if(piece->salle.etat != 0){
+                if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0){
                     afficher_salles_alignees(piece->salle.typePiece, piece->filsG->salle.typePiece);
                     afficher_connexion_double();
                 }
-                else if(piece->filsG->salle.etat != 0){
+                else if(piece->filsG->salle.etat == 0 && piece->salle.etat != 0){
+                    afficher_salle_simple(piece->salle.typePiece);
+                    afficher_connexion_simple();
+                }
+                else if(piece->filsG->salle.etat != 0 && piece->salle.etat == 0){
                     afficher_salle_simple(piece->filsG->salle.typePiece);
                     afficher_connexion_simple();
                 }
             }
         }
         else if(piece->taille == 3){
-            if(piece->salle.etat != 0){
+            if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0 && piece->filsD->salle.etat != 0){
                 afficher_salles_alignees_3(piece->salle.typePiece, piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
                 afficher_connexion_triple();
+            }
+            else if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
+                afficher_salles_alignees(piece->salle.typePiece, piece->filsG->salle.typePiece);
+                afficher_connexion_double();
+            }
+            else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat != 0){
+                afficher_salles_alignees(piece->salle.typePiece, piece->filsD->salle.typePiece);
+                afficher_connexion_double();
+            }
+            else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat == 0){
+                afficher_salle_simple(piece->salle.typePiece);
+                afficher_connexion_simple();
             }
             else if(piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
                 afficher_salle_simple(piece->filsG->salle.typePiece);
@@ -524,7 +546,7 @@ void afficheStock(ArbrePiece *T){
 }
 
 void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *pieces){
-    // detruitPiece(T);
+    detruitPiece(T);
     ListRessource *temp;
     ListPiece *tempP;
     temp = ressources;
@@ -533,9 +555,9 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
     while(temp != NULL){
         if(temp->ressource->quantiteRessource < temp->ressource->quantiteMax){
             temp->ressource->quantiteRessource++;
-            T = ajouteStock(T, 1, temp->ressource);
-            printf("%s : %d\n",temp->ressource->typeRessource, temp->ressource->quantiteRessource);
-            printf("QMax : %d\n", temp->ressource->quantiteMax);
+            // T = ajouteStock(T, 1, temp->ressource);
+            // printf("%s : %d\n",temp->ressource->typeRessource, temp->ressource->quantiteRessource);
+            // printf("QMax : %d\n", temp->ressource->quantiteMax);
             // printf("%d %d\n", temp->ressource->quantiteRessource, temp->ressource->quantiteMax);
         }
         temp = temp->suivant;
@@ -551,7 +573,7 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
             }
             temp->ressource->quantiteMax += 10;
             temp->ressource->quantiteRessource -= tempP->piece.quantiteRessourceNecessaire;
-            T = retireStock(T, tempP->piece.quantiteRessourceNecessaire, temp->ressource);
+            // T = retireStock(T, tempP->piece.quantiteRessourceNecessaire, temp->ressource);
             ajoutePiece(T, tempP->piece);
         }
         tempP = pieces;
@@ -575,14 +597,18 @@ int main(){
     Ressource *bois;
     bois = initRessource(2, 10, "bois");
     ressources = ajouteRessource(ressources, bois);
+    Ressource *null;
+    null = initRessource(0, 0, "null");
     Piece stockBois;
     stockBois = initPiece(2, bois, 5,  "stockBois", bois);
     pieces = initListP(stockBois);
     Piece stockMetal;
     stockMetal = initPiece(3, metal, 5,  "stockMetal", metal);
     pieces = ajoutePieceList(pieces, stockMetal);
-    A = initPiece(1, bois, 0, "Principale", metal);
+    A = initPiece(1, bois, 0, "Principale", null);
     T = init(A);
+    T = ajoutePiece(T, stockBois);
+    T = ajoutePiece(T, stockMetal);
     niveau++;
     while(1){
        printf("\n\nnouveau jour !\n\n"); 
