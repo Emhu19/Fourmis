@@ -2,6 +2,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef struct {
+    int spermatec;
+    int capacite_ponte;
+    int faim;
+    int eau;
+    int besoin_faim;
+    int besoin_eau;
+    int sante;
+} ReineTemplate;
+
+const ReineTemplate reine_templates[] = {
+    {40000000, 20, 80, 90, 2, 2, 100}, // Atta
+    {1500000, 10, 100, 100, 2, 1, 100}, // Cataglyphis
+    {2000000, 8, 90, 80, 1, 1, 95}, // Messor
+    {50000000, 30, 120, 100, 2, 2, 100}, // Eciton
+    {3000000, 12, 95, 95, 1, 1, 98}, // Formica
+    {1500000, 10, 100, 80, 2, 1, 100}, // Pogonomyrmex
+    {6000000, 25, 110, 100, 2, 2, 100}, // Acromyrmex
+    {25000000, 15, 90, 120, 1, 2, 95}  // Polyrhachis
+};
+
 Fourmi* creationFourmi(int id, int espece_fourmi, bool sexe) {
     Fourmi* nouvelle_fourmi = (Fourmi*)malloc(sizeof(Fourmi));
     if (!nouvelle_fourmi) {

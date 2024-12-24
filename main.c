@@ -8,7 +8,6 @@
 #include "environnement.h"
 #include "larve.h"
 
-#define JOUR_SIMULATION 6
 #define BASE_COOR_X 12
 #define BASE_COOR_Y 12
 
@@ -23,8 +22,6 @@ typedef struct {
     ListLarve* larves;
     Reine* reine;
 } Population;
-
-
 
 void supp_predateurs_mort(Predateur** LP, Environnement* E){
     if (*LP == NULL){
