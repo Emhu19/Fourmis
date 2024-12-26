@@ -116,7 +116,7 @@ const char *fourmiliere[] = {
         "                                    .=================.                       ==============.....                               .========--==..                  ",
         "                                      .===============.                       ============...:==.                             .-=============..                  ",
         "                                      .==============..      .                ===========.. .===.                           .:=================..                ",
-        "                                      .============..                         .==========.. .===.                           :==================..                ",
+        "                                      .============..                         .==========.. .===.                           :========= 4 ======..                ",
         "                                      .============..                       . .-=========.. .==..                           :==================..                ",
         "                                      .===========:..                         ...======.... .....                           :==================..                ",
         "                                .     .=========:..                             .........                                   .::::....-=======..                  ",
@@ -170,7 +170,7 @@ void afficherMenu_Carte() {
     printf("\n|                                                                                       |\n");
     printf("| 0. Forêt                                        |    1. Désert                        |\n");
     printf("| 2. Plaine                                       |    3. Forêt tropicale               |\n");
-    printf("| 4. Ville                                        |    5. Toundra                       |\n");
+    printf("| 4. Outback australien                           |    5. Toundra                       |\n");
     printf("| 6. Taiga (Forêt boréale)                        |    7. Montagne                      |\n");
     printf("| 8. Haute montagne                               |    9. Mangrove                      |\n");
     printf("|                                                                                       |\n");
@@ -200,21 +200,26 @@ void logo_1(){
 }
 
 int logo_2(){
-    printf("\033[H\033[2J");
+    printf("\033c");
     afficherArray(fourmiliere, sizeof(fourmiliere) / sizeof(fourmiliere[0]));
     afficherMenu_Fourmiliere();
     int choix;
-    scanf("%d", &choix);
+    do{
+        scanf("%d", &choix);
+    }while(!((choix>= 1 && choix<9) || choix == 1969));
     getchar();
     return choix;
 }
 
 int logo_3(){
-    printf("\033[H\033[2J");
+    printf("\033c");
     afficherArray(carte, sizeof(carte) / sizeof(carte[0]));
     afficherMenu_Carte();
     int choix;
-    scanf("%d", &choix);
+    do{
+        scanf("%d", &choix);
+    }while(!((choix>= 0 && choix<10) || choix == 1969));
+    
     getchar();
     return choix;
 }
