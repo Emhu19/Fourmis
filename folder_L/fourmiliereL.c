@@ -158,11 +158,8 @@ void detruitPiece(ArbrePiece *T){
             if(T->salle.vie <= 0){
                 printf("la salle %s est détruite c'est dommage\n", T->salle.typePiece);
                 T->salle.etat = 0;
-                T->salle.ressourceNecessaire->quantiteMax -= 10;
-                T->salle.stock = 0;
-                if(T->salle.ressourceNecessaire->quantiteRessource > T->salle.ressourceNecessaire->quantiteMax){
-                    T->salle.ressourceNecessaire->quantiteRessource -= T->salle.stock;
-                }
+                T->salle.ressourceStock->quantiteMax -= 10;
+                T->salle.ressourceStock->quantiteRessource -= T->salle.stock;
                 T->salle.stock = 0;
             }
         }
@@ -514,7 +511,7 @@ ArbrePiece *retireStock(ArbrePiece *T, int *quantiteRetire, Ressource *ressource
     if(T == NULL){
         return NULL;
     }
-    if(T->salle.ressourceStock == ressource && T->salle.etat != 0 && T->salle.stock >= *quantiteRetire){
+    if(T->salle.ressourceStock == ressource && T->salle.etat != 0){
         T->salle.stock -= *quantiteRetire;
         *quantiteRetire -= *quantiteRetire;
         return T;
@@ -523,7 +520,7 @@ ArbrePiece *retireStock(ArbrePiece *T, int *quantiteRetire, Ressource *ressource
         T->filsG = retireStock(T->filsG, quantiteRetire, ressource);
     }
     if(T->filsD != NULL){
-        T->filsD = ajouteStock(T->filsD, quantiteRetire, ressource);
+        T->filsD = retireStock(T->filsD, quantiteRetire, ressource);
     }
     return T;
 }
@@ -537,9 +534,9 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
     int *quantiteAjout;
     quantiteAjout = malloc(sizeof(int));
     *quantiteAjout = 1;
-    // int *quantiteRetire;
-    // quantiteRetire = malloc(sizeof(int));
-    // *quantiteRetire = 1;
+    int *quantiteRetire;
+    quantiteRetire = malloc(sizeof(int));
+    *quantiteRetire = 1;
     temp = ressources;
     tempP = pieces;
     // afficheList(temp);
@@ -548,7 +545,7 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
             temp->ressource->quantiteRessource++;
             *quantiteAjout = 1;
             T = ajouteStock(T, quantiteAjout, temp->ressource);
-            // printf("%s : %d\n",temp->ressource->typeRessource, temp->ressource->quantiteRessource);
+            printf("%s : %d\n",temp->ressource->typeRessource, temp->ressource->quantiteRessource);
             // printf("QMax : %d\n", temp->ressource->quantiteMax);
             // printf("%d %d\n", temp->ressource->quantiteRessource, temp->ressource->quantiteMax);
         }
@@ -563,10 +560,13 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
             while(temp->ressource->id != tempP->piece.ressourceStock->id){
                 tempP = tempP->suivant;
             }
-            // *quantiteRetire = tempP->piece.quantiteRessourceNecessaire;
+            printf("%s\n", temp->ressource->typeRessource);
+            *quantiteRetire = tempP->piece.quantiteRessourceNecessaire;
+            printf("%d\n", *quantiteRetire);
             temp->ressource->quantiteMax += 10;
             // temp->ressource->quantiteRessource -= tempP->piece.quantiteRessourceNecessaire;
-            // T = retireStock(T, quantite, temp->ressource);
+            T = retireStock(T, quantiteRetire, temp->ressource);
+            temp->ressource->quantiteRessource -= tempP->piece.quantiteRessourceNecessaire;
             ajoutePiece(T, tempP->piece);
         }
         tempP = pieces;
