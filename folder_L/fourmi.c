@@ -3,17 +3,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define BASE_COOR_X 25
-#define BASE_COOR_Y 25
-
-Fourmi* creationFourmi(int id, int type_fourmi) {
+Fourmi* creationFourmi(int id, const char* role_fourmi, int type_fourmi) {
     Fourmi* nouvelle_fourmi = (Fourmi*)malloc(sizeof(Fourmi));
     if (nouvelle_fourmi == NULL) {
         perror("Erreur d'allocation mémoire pour la fourmi");
         return NULL;
     }
     nouvelle_fourmi->id_fourmi = id;
-    // strcpy(nouvelle_fourmi->role, role_fourmi);
+    strcpy(nouvelle_fourmi->role, role_fourmi);
     nouvelle_fourmi->age = 1;
     nouvelle_fourmi->salle = 2;
     nouvelle_fourmi->sexe = true;
@@ -187,7 +184,7 @@ ListFourmi* fusionner_listes(ListFourmi* liste1, ListFourmi* liste2) { //utitile
     return liste1;
 }
 
-void update_day_fourmi(Fourmi* fourmi, Environnement* map){
+void update_day_fourmi(Fourmi* fourmi){
      if (fourmi == NULL) return;
     fourmi->faim -= fourmi->besoin_faim;
     fourmi->eau -= fourmi->besoin_eau;
@@ -196,63 +193,43 @@ void update_day_fourmi(Fourmi* fourmi, Environnement* map){
         fourmi->eau += 1;
 //         ressource--;
     }
-    if(fourmi->coord_x != BASE_COOR_X || fourmi->coord_y != BASE_COOR_Y){
-        printf("Fourmi à l'extérieur\n");
-        // pheromone_chunk(fourmi->coord_x, fourmi->coord_y);
-    }
-
-    if (fourmi->age < 10) {
-        fourmi->role = NOURRICE;
-    }
-    else if (fourmi->age >= 10 && fourmi->age < 20) {
-        fourmi->role = EXPLORATRICE;
-    }
-    else if (fourmi->age >= 20 && fourmi->age < 30) {
-        fourmi->role = COLLECTRICE_MIELLAT;
-    }
-
-    else if (fourmi->age >= 30 && fourmi->age < 1001) {
-        fourmi->role = SOLDAT;
-    }
-    else {
-        //la fourmis doit mourir de veilleisse
-        return;
-    }
 }
 
-void ajuster_role_par_saison(Fourmi* fourmi) {
-    // switch (saison) {
-    //     case HIVER:
-    //         if (fourmi->role == COLLECTRICE_MIELLAT) {
-    //             fourmi->role = NOURRICE;
-    //         }
-    //         break;
-    //     case PRINTEMPS:
-    //         if (fourmi->role == NOURRICE) {
-    //             fourmi->role = EXPLORATRICE;
-    //         }
-    //         break;
-    //     case ETE:
-    //         if (fourmi->role == NOURRICE) {
-    //             fourmi->role = COLLECTRICE_MIELLAT;
-    //         }
-    //         break;
-    //     case AUTOMNE:
-    //         if (fourmi->role == COLLECTRICE_MIELLAT) {
-    //             fourmi->role = SOLDAT;
-    //         }
-    //         break;
-    // }
-}
-
-void update_day_liste_fourmi(ListFourmi* liste, Environnement* maps){
+void update_day_liste_fourmi(ListFourmi* liste){
     ListFourmi* newList = liste;
     if(newList->fourmi == NULL){
         printf("Liste vide\n");
         return;
     }
     while(newList != NULL){
-        update_day_fourmi(newList->fourmi, maps);
+        update_day_fourmi(newList->fourmi);
         newList = newList->next;
     }
 }
+
+// void mise_a_jour_fourmi(Fourmi* fourmi) {
+//     if (fourmi == NULL) return;
+//     fourmi->age++;
+//     fourmi->faim += 5;
+//     fourmi->eau -= 2;
+//     if (fourmi->faim > 100 || fourmi->eau <= 0) {
+//         fourmi->sante = false;
+//         strcpy(fourmi->maladie, "Mort");
+//     } else if (fourmi->faim > 70) {
+//         strcpy(fourmi->maladie, "Sous-alimentation");
+//     }
+// }
+//
+// void nourrir_fourmi(Fourmi* fourmi) {
+//     if (fourmi == NULL) return;
+//     fourmi->faim -= 30;
+//     if (fourmi->faim < 0) fourmi->faim = 0;
+//     strcpy(fourmi->maladie, "Rien");
+// }
+//
+// void deplacer_fourmi(Fourmi* fourmi, int x, int y) {
+//     if (fourmi == NULL) return;
+//     fourmi->coord_x = x;
+//     fourmi->coord_y = y;
+//     printf("Fourmi %d déplacée à (%d, %d).\n", fourmi->id_fourmi, x, y);
+// }

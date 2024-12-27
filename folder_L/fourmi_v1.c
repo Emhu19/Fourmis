@@ -1,12 +1,65 @@
-#include "environnement.h"
-#include "fourmi.h"
-//#define entier int
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+#include <stdbool.h>
+#include <unistd.h>
+
+#define point_virgule ;
+//#define entier int 
 
 
 // Fonction pour générer un nombre aléatoire entre 0 et n
 int nombreAleatoire(int n) {
     return rand() % (n + 1)point_virgule
 }
+
+
+typedef struct {
+    int proba_precipitation point_virgule
+    int force_precipitation point_virgule
+    float temperature_moyenne point_virgule
+    float variation_temperature point_virgule
+    float temperature point_virgule             // Température actuelle
+    bool precipitation point_virgule            // Niveau de précipitation
+} Meteo point_virgule
+
+// Structure pour les prédateurs
+typedef struct Predateur Predateur;
+struct Predateur{
+    int id;
+    int type;
+    char nom_predateur[50] point_virgule
+    int x point_virgule
+    int y point_virgule
+    int sante point_virgule
+    int vitesse point_virgule
+    int force point_virgule  // le degat qu'il fait
+    int victimes;
+    Predateur* suivant;
+};
+
+typedef struct {
+    int nourriture point_virgule
+    int materiaux point_virgule
+    int eau point_virgule
+    int type point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
+}Chunk point_virgule
+
+// Structure pour l'environnement
+typedef struct {
+    int biome point_virgule               // Biome (forêt, désert, plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
+    Chunk chunks[25][25] point_virgule
+}Environnement point_virgule
+
+// Structure pour le temps
+typedef struct {
+    int saison point_virgule
+    int mois point_virgule
+    int jour point_virgule
+    int annee;
+} Temps point_virgule
+
 
 void generer_rivière(Environnement* E,int x, int y){
     if (x >= 25 || x < 0 || y >= 25 || y< 0){
@@ -28,7 +81,7 @@ void generer_rivière(Environnement* E,int x, int y){
             y -- point_virgule
             break point_virgule
     }
-
+    
     generer_rivière(E, x, y) point_virgule
 }
 
@@ -52,44 +105,26 @@ void generer_lac(int x, int y, Environnement* E, int proba){
     }
 }
 
-bool environnement_safe(Environnement E){
-    bool droite = false;
-    bool gauche = false;
-    bool haut = false;
-    bool bas = false;
-    for (int i = 0;i< 25; i++){
-        droite = droite || (E.chunks[i][24].type != 1);
-        gauche = gauche || (E.chunks[i][0].type != 1);
-        haut = haut || (E.chunks[0][i].type != 1);
-        bas = bas || (E.chunks[24][i].type != 1);
-    } 
-    return (droite && gauche && haut && bas);
-}
+Environnement ajout_eau_miam(Environnement E, Meteo M){
+
+    Environnement E_final point_virgule
+    E_final.biome = E.biome point_virgule
+    for (int i = 0 point_virgule i< 25 point_virgule i++){    // copie l'Environnement
+        for (int j = 0 point_virgule j< 25 point_virgule j++){
+            E_final.chunks[i][j].type = E.chunks[i][j].type point_virgule
+        }
+    }
 
 
-void ajout_eau_miam(Environnement* E, Meteo M){
-    int tab_eau[25][25] point_virgule
 
     for (int i = 0 point_virgule i< 25 point_virgule i++){   // ajoute des points d'eau sur la map
         for (int j = 0 point_virgule j< 25 point_virgule j++){
             int p_eau = 0 point_virgule
             int p_miam = 0 point_virgule
-            int p_bois = 0;
-            int p_roche = 0;
-            int p_feuille = 0;
-            int p_seve = 0;
-            int p_champignon = 0;
-
+            
             int alea = nombreAleatoire(99) point_virgule
             int alea2 = nombreAleatoire(99) point_virgule
-            int alea3 = nombreAleatoire(99) point_virgule
-            int alea4 = nombreAleatoire(99) point_virgule
-            int alea5 = nombreAleatoire(99) point_virgule
-            int alea6 = nombreAleatoire(99) point_virgule
-            int alea7 = nombreAleatoire(99) point_virgule
-
-
-            switch(E->chunks[i][j].type){
+            switch(E.chunks[i][j].type){
                 case(0):
                     p_eau = 50 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
                     p_miam = 0 point_virgule
@@ -101,176 +136,120 @@ void ajout_eau_miam(Environnement* E, Meteo M){
                 case(2):
                     p_eau = 10 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
                     p_miam = 10 point_virgule
-                    p_bois = 0;
-                    p_roche = 0;
-                    p_feuille = 5;
-                    p_seve = 0;
-                    p_champignon = 0;
                     break point_virgule
                 case(3):
                     p_eau = 25 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
                     p_miam = 25 point_virgule
-                    p_bois = 10;
-                    p_roche = 0;
-                    p_feuille = 15;
-                    p_seve = 5;
-                    p_champignon = 2;
                     break point_virgule
                 case(4):
                     p_eau = 5 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
                     p_miam = 15 point_virgule
-                    p_bois = 0;
-                    p_roche = 10;
-                    p_feuille = 0;
-                    p_seve = 0;
-                    p_champignon = 0;
                     break point_virgule
                 case(5):
                     p_eau = 0 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
-                    p_miam = 10 point_virgule
-                    p_roche = 10;
+                    p_miam = 0 point_virgule
                     break point_virgule
                 case(6):
                     p_eau = 7 point_virgule //-1 : NULL, 0 : fourmilière, 1 : riviere, 2 : plaine, 3 : arbre/buisson, 4 : sable, 5 : roche lunaire, 6 : roche
                     p_miam = 15 point_virgule
-                    p_bois = 0;
-                    p_roche = 15;
-                    p_feuille = 5;
-                    p_seve = 0;
-                    p_champignon = 0;
                     break point_virgule
-
+                
             }
-            if(alea <= p_eau && E->chunks[i][j].eau< alea){
-                E->chunks[i][j].eau = alea point_virgule
+            if(alea <= p_eau && E.chunks[i][j].eau< alea){
+                E.chunks[i][j].eau = alea point_virgule
             }
-            if(E->chunks[i][j].type == 1){   //met a 100 le niveau d'eau si on est dans une rivière
-                E->chunks[i][j].eau = 49 point_virgule
-            }
-
-
-            if(alea2 <= p_miam && E->chunks[i][j].nourriture< alea2){  // la nourriture aussi peut etre au dessus de 1
-                E->chunks[i][j].nourriture = alea2 point_virgule
+            if(E.chunks[i][j].type == 1){   //met a 100 le niveau d'eau si on est dans une rivière
+                E.chunks[i][j].eau = 99 point_virgule
             }
 
-            if(alea3 <= p_bois){   // les materiaux ne peuvent pas etre a plus que 1 par case
-                E->chunks[i][j].bois = 1 point_virgule
-            }
 
-            if(alea4 <= p_feuille){
-                E->chunks[i][j].feuille = 1 point_virgule
-            }
-
-            if(alea5 <= p_roche){
-                E->chunks[i][j].roche = 1 point_virgule
-            }
-
-            if(alea6 <= p_seve){
-                E->chunks[i][j].seve = 1 point_virgule
-            }
-
-            if(alea7 <= p_champignon){
-                E->chunks[i][j].champignon = 1 point_virgule
+            if(alea2 <= p_miam && E.chunks[i][j].nourriture< alea2){
+                E_final.chunks[i][j].nourriture = alea2 point_virgule
             }
         }
     }
-
-
-    for (int i = 1; i < 24; i++) {
-        for (int j = 1; j < 24; j++) {
-            tab_eau[i][j] = (E->chunks[i-1][j].eau + E->chunks[i-1][j-1].eau + E->chunks[i-1][j+1].eau +E->chunks[i][j-1].eau + E->chunks[i][j+1].eau +E->chunks[i+1][j-1].eau + E->chunks[i+1][j].eau + E->chunks[i+1][j+1].eau +(8 * E->chunks[i][j].eau)) / 16;
-        }
-    }
-    for (int i = 1; i < 24; i++) {
-        tab_eau[i][0] = (E->chunks[i-1][0].eau + E->chunks[i-1][1].eau + E->chunks[i][1].eau +E->chunks[i+1][0].eau + E->chunks[i+1][1].eau +(8 * E->chunks[i][0].eau)) / 13;
-        tab_eau[0][i] = (E->chunks[0][i-1].eau + E->chunks[0][i+1].eau + E->chunks[1][i-1].eau +E->chunks[1][i].eau + E->chunks[1][i+1].eau +(8 * E->chunks[0][i].eau)) / 13;
-        tab_eau[i][24] = (E->chunks[i-1][24].eau + E->chunks[i-1][23].eau + E->chunks[i][23].eau +E->chunks[i+1][23].eau + E->chunks[i+1][24].eau +(8 * E->chunks[i][24].eau)) / 13;
-        tab_eau[24][i] = (E->chunks[23][i].eau + E->chunks[23][i-1].eau + E->chunks[23][i+1].eau +E->chunks[24][i-1].eau + E->chunks[24][i+1].eau +(8 * E->chunks[24][i].eau)) / 13;
-    }
-    tab_eau[0][0] = (E->chunks[0][1].eau + E->chunks[1][0].eau + E->chunks[1][1].eau +(8 * E->chunks[0][0].eau)) / 11;
-    tab_eau[0][24] = (E->chunks[0][23].eau + E->chunks[1][23].eau + E->chunks[1][24].eau +(8 * E->chunks[0][24].eau)) / 11;
-    tab_eau[24][0] = (E->chunks[23][0].eau + E->chunks[23][1].eau + E->chunks[24][1].eau +(8 * E->chunks[24][0].eau)) / 11;
-    tab_eau[24][24] = (E->chunks[23][24].eau + E->chunks[23][23].eau + E->chunks[24][23].eau +(8 * E->chunks[24][24].eau)) / 11;
 
     for (int i = 0 point_virgule i< 25 point_virgule i++){
         for (int j = 0 point_virgule j< 25 point_virgule j++){
-            if (E->chunks[i][j].type == 1){
-                tab_eau[i][j] = 49 point_virgule
+            if (E.chunks[i][j].type == 1){
+                E.chunks[i][j].eau = 49 point_virgule
             }
         }
     }
 
-    for (int i = 0; i< 25; i++){
-        for (int j = 0; j< 25; j++){
-            E->chunks[i][j].eau = tab_eau[i][j];
-            if(E->chunks[i][j].eau > 49){
-                E->chunks[i][j].eau = 49;
+
+
+    for (int i = 1 point_virgule i< 24 point_virgule i++){
+        for (int j = 1 point_virgule j< 24 point_virgule j++){
+            E_final.chunks[i][j].eau = (E.chunks[i-1][j].eau+E.chunks[i-1][j-1].eau+E.chunks[i-1][j+1].eau+E.chunks[i][j-1].eau+E.chunks[i][j+1].eau+E.chunks[i+1][j-1].eau+E.chunks[i+1][j].eau+E.chunks[i+1][j+1].eau+(8*E.chunks[i][j].eau))/16 point_virgule
+        }
+    }
+    for (int i = 1 point_virgule i< 24 point_virgule i++){
+        E_final.chunks[i][0].eau = (E.chunks[i-1][0].eau+E.chunks[i-1][1].eau+E.chunks[i][1].eau+E.chunks[i+1][0].eau+E.chunks[i+1][1].eau+(8*E.chunks[i][0].eau))/13 point_virgule
+        E_final.chunks[0][i].eau = (E.chunks[0][i-1].eau+E.chunks[0][i+1].eau+E.chunks[1][i-1].eau+E.chunks[1][i].eau+E.chunks[1][i+1].eau+(8*E.chunks[0][i].eau))/13 point_virgule
+        E_final.chunks[i][24].eau = (E.chunks[i-1][24].eau+E.chunks[i-1][23].eau+E.chunks[i][23].eau+E.chunks[i+1][23].eau+E.chunks[i+1][24].eau+(8*E.chunks[i][24].eau))/13 point_virgule
+        E_final.chunks[24][i].eau = (E.chunks[23][i].eau+E.chunks[23][i-1].eau+E.chunks[23][i+1].eau+E.chunks[24][i-1].eau+E.chunks[24][i+1].eau+(8*E.chunks[24][i].eau))/13 point_virgule
+
+    }
+    E_final.chunks[0][0].eau = (E.chunks[0][1].eau+E.chunks[1][0].eau+E.chunks[1][1].eau+(8*E.chunks[0][0].eau))/11 point_virgule
+
+    E_final.chunks[0][24].eau = (E.chunks[0][23].eau+E.chunks[1][23].eau+E.chunks[1][24].eau+(8*E.chunks[0][24].eau))/11 point_virgule
+
+    E_final.chunks[24][0].eau = (E.chunks[23][0].eau+E.chunks[23][1].eau+E.chunks[24][1].eau+(8*E.chunks[24][0].eau))/11 point_virgule
+
+    E_final.chunks[24][24].eau = (E.chunks[23][24].eau+E.chunks[23][23].eau+E.chunks[24][23].eau+(8*E.chunks[24][24].eau))/11 point_virgule
+
+
+    for (int i = 0 point_virgule i< 25 point_virgule i++){
+        for (int j = 0 point_virgule j< 25 point_virgule j++){
+            if (E.chunks[i][j].type == 1){
+                E_final.chunks[i][j].eau = 49 point_virgule
             }
         }
     }
-
 
     if (M.precipitation){
         for (int i = 0; i< 25; i++){
             for (int j = 0; j< 25; j++){
-                E->chunks[i][j].eau += M.force_precipitation;
-                if(E->chunks[i][j].eau > 49){
-                    E->chunks[i][j].eau = 49;
-                }
+                E.chunks[i][j].eau += M.force_precipitation;
             }
         }
     }
+
+
+    return E_final point_virgule
 }
 
-
-Environnement genererEnvironnement(int biome){
+Environnement genererEnvironnement(){
     Environnement E point_virgule
 
-    // printf("dans quel biome est votre fourmilière ?\n") point_virgule
-    // printf("Tapez 0 pour la forêt,\n") point_virgule
-    // printf("Tapez 1 pour la desert,\n") point_virgule
-    // printf("Tapez 2 pour la plaine,\n") point_virgule
-    // printf("Tapez 3 pour la forêt tropicale,\n") point_virgule
-    // printf("Tapez 4 pour la ville,\n") point_virgule
-    // printf("Tapez 5 pour la toundra,\n") point_virgule
-    // printf("Tapez 6 pour la taiga,\n") point_virgule
-    // printf("Tapez 7 pour la montagne,\n") point_virgule
-    // printf("Tapez 8 pour la haute montagne,\n") point_virgule
-    // printf("Tapez 9 pour la mangrove,\n") point_virgule
+    printf("dans quel biome est votre fourmilière ?\n") point_virgule
+    printf("Tapez 0 pour la forêt,\n") point_virgule
+    printf("Tapez 1 pour la desert,\n") point_virgule
+    printf("Tapez 2 pour la plaine,\n") point_virgule
+    printf("Tapez 3 pour la forêt tropicale,\n") point_virgule
+    printf("Tapez 4 pour la ville,\n") point_virgule
+    printf("Tapez 5 pour la toundra,\n") point_virgule
+    printf("Tapez 6 pour la taiga,\n") point_virgule
+    printf("Tapez 7 pour la montagne,\n") point_virgule
+    printf("Tapez 8 pour la haute montagne,\n") point_virgule
+    printf("Tapez 9 pour la mangrove,\n") point_virgule
 
-    // scanf("%d", &E.biome) point_virgule
+    scanf("%d", &E.biome) point_virgule
 
-    E.biome = biome;
     for (int i = 0 point_virgule i< 25 point_virgule i++){
         for (int j = 0 point_virgule j<25 point_virgule j++){
             E.chunks[i][j].type = -1 point_virgule
             E.chunks[i][j].eau = 0 point_virgule
             E.chunks[i][j].nourriture = 0 point_virgule
-            E.chunks[i][j].pheromones = 0;
-            E.chunks[i][j].champignon = 0;
-            E.chunks[i][j].feuille = 0;
-            E.chunks[i][j].seve = 0;
-            E.chunks[i][j].bois = 0;
-            E.chunks[i][j].roche = 0;
-            E.chunks[i][j].distance = 2024;
         }
     }
 
     int x = 0 point_virgule
     int y = nombreAleatoire(24) point_virgule
 
-    if(biome != 1969){
-        generer_rivière(&E, x, y) point_virgule
-    }
-    if (biome == 1969){
-        for (int i = 0; i< 10; i++){
-            x = nombreAleatoire(24) point_virgule
-            y = nombreAleatoire(24) point_virgule
-            generer_lac(x, y, &E, 80) point_virgule
-        }
-        
-    }
-
+    generer_rivière(&E, x, y) point_virgule
+    
 
     x = nombreAleatoire(24) point_virgule
     y = nombreAleatoire(24) point_virgule
@@ -414,19 +393,13 @@ Environnement genererEnvironnement(int biome){
             }
         }
     }
-    E.chunks[12][12].type = 0 point_virgule
     Meteo M point_virgule
     M.force_precipitation = 0 point_virgule
     M.precipitation = false point_virgule
-    ajout_eau_miam(&E, M) point_virgule
+    E = ajout_eau_miam(E, M) point_virgule
 
-    if(!environnement_safe(E)){
-        E = genererEnvironnement(biome);
-    }
     return E point_virgule
 }
-    //permet de générer l'environnement en fonction des préférences de l'utilisateur (avec une part d'aléatoire) génération procédurale
-
 
 void incr_temp(Temps* t) {
     // Incrémentation du jour
@@ -441,20 +414,10 @@ void incr_temp(Temps* t) {
             }
             break;
         case 1: // Février
-            if (t->annee % 4 == 0 && (t->annee % 100 != 0 || t->annee % 400 == 0)) {
-                // Année bissextile, février a 29 jours
-                if (t->jour > 29) {
-                    t->jour -= 29;
-                    t->mois++;
-                }
-            } else {
-                // Année non-bissextile, février a 28 jours
-                if (t->jour > 28) {
-                    t->jour -= 28;
-                    t->mois++;
-                }
+            if (t->jour > 28) {
+                t->jour -= 28;
+                t->mois++;
             }
-            break;
             break;
         case 2: // Mars
             if (t->jour > 31) {
@@ -536,9 +499,6 @@ void incr_temp(Temps* t) {
     }
 }
 
-
-
-
 Temps init_temps(){
     Temps tps point_virgule
 
@@ -549,12 +509,8 @@ Temps init_temps(){
     return tps point_virgule
 }
 
-
-
 Meteo init_meteo(Environnement E) {
     Meteo m;
-    m.precipitation = false;
-    m.orage = false;
 
     switch (E.biome) {
         case 0: // Forêt
@@ -627,13 +583,6 @@ Meteo init_meteo(Environnement E) {
             m.variation_temperature = 0.0;
             break;
 
-        case 9: // mangrove
-            m.proba_precipitation = 10;
-            m.force_precipitation = 10;
-            m.temperature_moyenne = 25.0;
-            m.variation_temperature = 5.0;
-            break;
-
         default: // Biome non défini
             m.proba_precipitation = 0;
             m.force_precipitation = 0;
@@ -643,21 +592,16 @@ Meteo init_meteo(Environnement E) {
     }
 
     m.temperature = m.temperature_moyenne; // Initialiser la température actuelle à la moyenne
+    m.precipitation = false;               // Par défaut, pas de précipitation
 
     return m;
 }
 
-    //initialise la meteo
-
 void maj_meteo(Meteo* m, Temps t){
 
-    int alea;
-
-
-    alea = nombreAleatoire(99);
-    m->precipitation = (alea < m->proba_precipitation) ;
-    m->orage = (alea == 0) ;
-
+    int alea = nombreAleatoire(99);
+    alea ++ ;
+    m->precipitation = alea <= m->proba_precipitation ;
 
     alea = nombreAleatoire(99);
     alea -= 49 ;
@@ -676,10 +620,8 @@ void maj_meteo(Meteo* m, Temps t){
             break;
             // en automne, ca bouge pas
     }
+
 }
-
-
-
 
 void tuer_predateur(int id, Predateur** LP) {
     if (LP == NULL || *LP == NULL) {
@@ -713,132 +655,7 @@ void tuer_predateur(int id, Predateur** LP) {
     //printf("Élément avec l'id %d introuvable.\n", id);
 }
 
-
-// void calculer_dist(Environnement* E, int x,int y, int dist){
-//     E->chunks[x][y].distance = dist;
-//     // printf("%d\n", dist);
-//     // sleep(1);
-//     if (dist > 50){
-//         //printf("#");
-//         return;
-//     }
-//     // if(dist == 5){
-//     //     printf("#");
-//     // }
-
-//     if (x < 24 && E->chunks[x+1][y].type != 1 && E->chunks[x+1][y].distance > dist){
-//         E->chunks[x+1][y].distance = dist+1;
-//     }
-//     if (x > 0 && E->chunks[x-1][y].type != 1 && E->chunks[x-1][y].distance > dist){
-//         E->chunks[x-1][y].distance = dist+1;
-//     }
-//     if (y < 24 && E->chunks[x][y+1].type != 1 && E->chunks[x][y+1].distance > dist){
-//         E->chunks[x][y+1].distance = dist+1;
-//     }
-//     if (y > 0 && E->chunks[x][y-1].type != 1 && E->chunks[x][y-1].distance > dist){
-//         E->chunks[x][y-1].distance = dist+1;
-//     }
-
-
-//     if (x < 24 && E->chunks[x+1][y].type != 1 && E->chunks[x+1][y].distance > dist){
-//         calculer_dist(E, x+1, y, dist +1);
-//     }
-//     if (x > 0 && E->chunks[x-1][y].type != 1 && E->chunks[x-1][y].distance > dist){
-//         calculer_dist(E, x-1, y, dist +1);
-//     }
-//     if (y < 24 && E->chunks[x][y+1].type != 1 && E->chunks[x][y+1].distance > dist){
-//         calculer_dist(E, x, y+1, dist +1);
-//     }
-//     if (y > 0 && E->chunks[x][y-1].type != 1 && E->chunks[x][y-1].distance > dist){
-//         calculer_dist(E, x, y-1, dist +1);
-//     }
-// }
-
-
-int min3(int a, int b, int c){
-    int min = a;
-    if (b < min){
-        min = b;
-    }
-    if (c < min){
-        min = c;
-    }
-    return min;
-}
-
-int min5(int a, int b, int c, int d, int e){
-    int min = a;
-    if (b < min){
-        min = b;
-    }
-    if (c < min){
-        min = c;
-    }
-    if (d < min){
-        min = d;
-    }
-    if (e < min){
-        min = e;
-    }
-    return min;
-}
-
-int min4(int a, int b, int c, int d){
-    int min = a;
-    if (b < min){
-        min = b;
-    }
-    if (c < min){
-        min = c;
-    }
-    if (d < min){
-        min = d;
-    }
-    return min;
-}
-
-
-void calculer_dist(Environnement* E){
-    E->chunks[12][12].distance = 0;
-    for (int dist = 1; dist< 75; dist++){
-        for (int i = 0; i< 25; i++){
-            for (int j = 0; j< 25; j++){
-                if(E->chunks[i][j].type != 1){
-                    if(i<24 && i>0 && j<24 && j>0){
-                        E->chunks[i][j].distance = min5(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i-1][j].distance, E->chunks[i][j+1].distance, E->chunks[i][j-1].distance) + 1;
-                    }
-                    else if(i == 0 && j == 0){
-                        E->chunks[i][j].distance = min3(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i][j+1].distance) + 1;
-                    }
-                    else if(i == 0 && j == 24){
-                        E->chunks[i][j].distance = min3(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i][j-1].distance) + 1;
-                    }
-                    else if(i == 24 && j == 0){
-                        E->chunks[i][j].distance = min3(E->chunks[i][j].distance-1, E->chunks[i-1][j].distance, E->chunks[i][j+1].distance) + 1;
-                    }
-                    else if(i == 24 && j == 24){
-                        E->chunks[i][j].distance = min3(E->chunks[i][j].distance-1, E->chunks[i-1][j].distance, E->chunks[i][j-1].distance) + 1;
-                    }
-                    else if(i == 0){
-                        E->chunks[i][j].distance = min4(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i][j+1].distance, E->chunks[i][j-1].distance) + 1;
-                    }
-                    else if(i == 24){
-                        E->chunks[i][j].distance = min4(E->chunks[i][j].distance-1, E->chunks[i-1][j].distance, E->chunks[i][j+1].distance, E->chunks[i][j-1].distance) + 1;
-                    }
-                    else if(j == 0){
-                        E->chunks[i][j].distance = min4(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i-1][j].distance, E->chunks[i][j+1].distance) + 1;
-                    }
-                    else if (j == 24){
-                        E->chunks[i][j].distance = min4(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i-1][j].distance, E->chunks[i][j-1].distance) + 1;
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-void bouger_predateur(Predateur * P, Environnement E){
+void bouger_predateur(Predateur * P, Environnement E, Predateur* LP){
     for (int i = 0; i< P->vitesse; i++){
         int alea = nombreAleatoire(3);
         switch(alea){
@@ -903,30 +720,45 @@ void print_id(Predateur* LP) {
     printf("\n"); // Ajoute une nouvelle ligne après avoir affiché tous les IDs
 }
 
-
-
-/*int p_enfant;
-    int p_fourmilier;
-    int p_fourmilier_lunaire;
-    int p_araignée;
-    int p_serpent;
-    int p_renard_polaire = 0;
-    int p_renard_roux = 0;
-*/
-
-
 void bouger_predateurs(Predateur** LP, Environnement E){
+    
     if (*LP == NULL){
         return;
     }
-    bouger_predateur(*LP, E);
+    //int nb = compter_predateurs(*LP);
+    //int Liste_meurtre[nb];
+    //for (int i = 0; i< nb; i++){
+    //    Liste_meurtre[i] = -1;
+    //}
+
+
+    bouger_predateur(*LP, E, *LP);
     Predateur* copie = *LP;
+    //int i = 0;
+
     while(copie->suivant != NULL){ // bouge tous les predateurs
+        //Liste_meurtre[i] = 
+        
         copie = copie->suivant;
-        bouger_predateur(copie, E);
+        bouger_predateur(copie, E, *LP);
+        //printf("nouvel element de la liste : %d\n", Liste_meurtre[i]);
     }
+
+    //for (int i = 0; i< nb; i++){   // tue les predateurs qui sortent de la map
+        //printf("tuons le predateur %d\n", Liste_meurtre[i]);
+        //print_id(*LP);
+        //if (Liste_meurtre[i] != -1){
+            
+        //    tuer_predateur(Liste_meurtre[i], LP);
+        //}
+    //}
+
 }
 
+/*
+void maj_predateur(*Predateur LP, Environnement E, Temps T, Liste_fourmilière LF)
+    //met a jour les infos du predateur (position, traverse la rivière ou pas etc...), et gère les combats avec les fourmis s'ils se rencontrent 
+*/
 
 void afficher_envi(Environnement E) {
     for (int i = 0 point_virgule i < 25 point_virgule i++) {
@@ -934,9 +766,6 @@ void afficher_envi(Environnement E) {
             switch (E.chunks[i][j].type) {
                 case -1:
                     printf("\033[47m  \033[0m") point_virgule // Blanc
-                    break point_virgule
-                case 0:
-                    printf("\033[41m  \033[0m") point_virgule // Blanc
                     break point_virgule
                 case 1:
                     printf("\033[44m  \033[0m") point_virgule // Bleu
@@ -951,14 +780,14 @@ void afficher_envi(Environnement E) {
                     printf("\033[43m  \033[0m") point_virgule // Jaune
                     break point_virgule
                 case 5:
-                    printf("\033[48;2;%d;%d;%dm  \033[0m", 150, 150, 150);
+                    printf("\033[48 ;2 ;%d ;%d ;%dm  \033[0m", 245, 245, 220) point_virgule
                     break point_virgule
                 case 6:
                     printf("\033[100m  \033[0m") point_virgule // Gris
                     break point_virgule
                 default:
                     printf("\033[40m  \033[0m") point_virgule // Noir (valeur inattendue)
-                    //printf("%d", E.chunks[i][j].type);
+                    printf("%d", E.chunks[i][j].type);
                     break point_virgule
             }
         }
@@ -966,13 +795,10 @@ void afficher_envi(Environnement E) {
     }
 }
 
-
-
-
 void afficher_envi_v(Environnement E){
     for (int i = 0 point_virgule i< 25 point_virgule i++){
         for (int j = 0 point_virgule j< 25 point_virgule j++){
-            printf("%4d ", E.chunks[i][j].distance) point_virgule
+            printf("%2d ", E.chunks[i][j].nourriture) point_virgule
         }
         printf("\n") point_virgule
     }
@@ -1006,7 +832,7 @@ Predateur* ajouter_predateur(Predateur* LP, Predateur P) {
         printf("Erreur d'allocation mémoire\n");
         return LP;
     }
-
+    
     // Copier les données du prédateur
     nouveau->type = P.type;
     strcpy(nouveau->nom_predateur, P.nom_predateur);
@@ -1028,7 +854,7 @@ Predateur* ajouter_predateur(Predateur* LP, Predateur P) {
     while (copie->suivant != NULL) {
         copie = copie->suivant;
     }
-
+    
     copie->suivant = nouveau;
     copie->suivant->id = trouver_id_predateur(LP);
 
@@ -1039,15 +865,14 @@ Predateur* ajouter_predateur(Predateur* LP, Predateur P) {
     return LP;
 }
 
-
 void generer_predateur(Environnement E, Predateur** LP){
     int p_enfant;
     int p_fourmilier;
     int p_fourmilier_lunaire;
     int p_araignée;
     int p_serpent;
-    int p_renard_polaire = 0;
-    int p_renard_roux = 0;
+    int p_renard_polaire;
+    int p_renard_roux;
 
 
     switch(E.biome){  //les probabilites sont sur 1000
@@ -1132,20 +957,20 @@ void generer_predateur(Environnement E, Predateur** LP){
             p_renard_polaire = 0;
             p_renard_roux = 0;
             break;
-        case(9):// Biome (forêt, désert, plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
-            p_enfant = 0;
-            p_fourmilier = 0;
-            p_fourmilier_lunaire = 0;
-            p_araignée = 20;
-            p_serpent = 0;
-            p_renard_polaire = 0;
-            p_renard_roux = 0;
-            break;
         case(1969):// Biome (forêt, désert, plaine, foret tropicale, ville, toundra, taiga, montagne, haute montagne, espace)
             p_enfant = 0;
             p_fourmilier = 0;
             p_fourmilier_lunaire = 20;
             p_araignée = 0;
+            p_serpent = 0;
+            p_renard_polaire = 0;
+            p_renard_roux = 0;
+            break;
+        case(9):// Biome (mangrove)
+            p_enfant = 0;
+            p_fourmilier = 0;
+            p_fourmilier_lunaire = 0;
+            p_araignée = 20;
             p_serpent = 0;
             p_renard_polaire = 0;
             p_renard_roux = 0;
@@ -1169,7 +994,7 @@ void generer_predateur(Environnement E, Predateur** LP){
         P.victimes = 0;
         P.suivant = NULL;
 
-
+        
 
         int alea = nombreAleatoire(0);
         switch(alea){
@@ -1177,7 +1002,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P.x = 0;
                 P.y = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P.x][P.y].type == 1){
                     P.y = (P.y+1)%25;
                 }
@@ -1186,7 +1011,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P.x = 24;
                 P.y = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P.x][P.y].type == 1){
                     P.y = (P.y+1)%25;
                 }
@@ -1195,7 +1020,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P.y = 0;
                 P.x = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P.x][P.y].type == 1){
                     P.x = (P.x+1)%25;
                 }
@@ -1204,7 +1029,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P.y = 24;
                 P.x = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P.x][P.y].type == 1){
                     P.x = (P.x+1)%25;
                 }
@@ -1213,7 +1038,7 @@ void generer_predateur(Environnement E, Predateur** LP){
         }
         *LP = ajouter_predateur(*LP, P);
     }
-
+    
     if (alea_fourmilier<p_fourmilier){
         Predateur P1;
         P1.type = 1;
@@ -1230,7 +1055,7 @@ void generer_predateur(Environnement E, Predateur** LP){
             case(0):
                 P1.x = 0;
                 P1.y = nombreAleatoire(24);
-
+            
                 while(E.chunks[P1.x][P1.y].type == 1){
                     P1.y = (P1.y+1)%25;
                 }
@@ -1239,7 +1064,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P1.x = 24;
                 P1.y = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P1.x][P1.y].type == 1){
                     P1.y = (P1.y+1)%25;
                 }
@@ -1248,7 +1073,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P1.y = 0;
                 P1.x = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P1.x][P1.y].type == 1){
                     P1.x = (P1.x+1)%25;
                 }
@@ -1257,7 +1082,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P1.y = 24;
                 P1.x = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P1.x][P1.y].type == 1){
                     P1.x = (P1.x+1)%25;
                 }
@@ -1283,7 +1108,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P2.x = 0;
                 P2.y = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P2.x][P2.y].type == 1){
                     P2.y = (P2.y+1)%25;
                 }
@@ -1292,7 +1117,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P2.x = 24;
                 P2.y = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P2.x][P2.y].type == 1){
                     P2.y = (P2.y+1)%25;
                 }
@@ -1301,7 +1126,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P2.y = 0;
                 P2.x = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P2.x][P2.y].type == 1){
                     P2.x = (P2.x+1)%25;
                 }
@@ -1310,7 +1135,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P2.y = 24;
                 P2.x = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P2.x][P2.y].type == 1){
                     P2.x = (P2.x+1)%25;
                 }
@@ -1337,7 +1162,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P3.x = 0;
                 P3.y = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P3.x][P3.y].type == 1){
                     P3.y = (P3.y+1)%25;
                 }
@@ -1346,7 +1171,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P3.x = 24;
                 P3.y = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P3.x][P3.y].type == 1){
                     P3.y = (P3.y+1)%25;
                 }
@@ -1355,7 +1180,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P3.y = 0;
                 P3.x = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P3.x][P3.y].type == 1){
                     P3.x = (P3.x+1)%25;
                 }
@@ -1364,7 +1189,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P3.y = 24;
                 P3.x = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P3.x][P3.y].type == 1){
                     P3.x = (P3.x+1)%25;
                 }
@@ -1392,7 +1217,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P4.x = 0;
                 P4.y = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P4.x][P4.y].type == 1){
                     P4.y = (P4.y+1)%25;
                 }
@@ -1401,7 +1226,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P4.x = 24;
                 P4.y = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P4.x][P4.y].type == 1){
                     P4.y = (P4.y+1)%25;
                 }
@@ -1410,7 +1235,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P4.y = 0;
                 P4.x = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P4.x][P4.y].type == 1){
                     P4.x = (P4.x+1)%25;
                 }
@@ -1419,7 +1244,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P4.y = 24;
                 P4.x = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P4.x][P4.y].type == 1){
                     P4.x = (P4.x+1)%25;
                 }
@@ -1446,7 +1271,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P5.x = 0;
                 P5.y = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P5.x][P5.y].type == 1){
                     P5.y = (P5.y+1)%25;
                 }
@@ -1455,7 +1280,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P5.x = 24;
                 P5.y = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P5.x][P5.y].type == 1){
                     P5.y = (P5.y+1)%25;
                 }
@@ -1464,7 +1289,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P5.y = 0;
                 P5.x = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P5.x][P5.y].type == 1){
                     P5.x = (P5.x+1)%25;
                 }
@@ -1473,7 +1298,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P5.y = 24;
                 P5.x = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P5.x][P5.y].type == 1){
                     P5.x = (P5.x+1)%25;
                 }
@@ -1481,7 +1306,7 @@ void generer_predateur(Environnement E, Predateur** LP){
 
         }
         *LP = ajouter_predateur(*LP, P5);
-
+        
 
     }
     if (alea_renard_polaire<p_renard_polaire){
@@ -1501,7 +1326,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P6.x = 0;
                 P6.y = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P6.x][P6.y].type == 1){
                     P6.y = (P6.y+1)%25;
                 }
@@ -1510,7 +1335,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P6.x = 24;
                 P6.y = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P6.x][P6.y].type == 1){
                     P6.y = (P6.y+1)%25;
                 }
@@ -1519,7 +1344,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P6.y = 0;
                 P6.x = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P6.x][P6.y].type == 1){
                     P6.x = (P6.x+1)%25;
                 }
@@ -1528,7 +1353,7 @@ void generer_predateur(Environnement E, Predateur** LP){
                 P6.y = 24;
                 P6.x = nombreAleatoire(24);
                 //P.y = 0;
-
+            
                 while(E.chunks[P6.x][P6.y].type == 1){
                     P6.x = (P6.x+1)%25;
                 }
@@ -1536,7 +1361,7 @@ void generer_predateur(Environnement E, Predateur** LP){
 
         }
 
-        *LP = ajouter_predateur(*LP, P6);
+        *LP = ajouter_predateur(*LP, P6);   
     }
 }
 
@@ -1592,53 +1417,68 @@ void trouver_id_predateurs_loin(Predateur** LP) {
     free(ids);
 }
 
+void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
+    Environnement E2;
+    incr_temp(T);
+    E2 = ajout_eau_miam(*E, *M);
+    maj_meteo(M, *T);
+    bouger_predateurs(LP, *E);
+    generer_predateur(*E, LP);
 
-// void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP) {
+    
+
+    // Afficher les informations temporelles
+    
+    printf("\n========================================== Informations Temps ==========================================\n");
+    const char* saisons[] = {"Hiver", "Printemps", "Été", "Automne"};
+    printf("Saison : %s\n", saisons[T->saison]);
+    printf("Mois : %d\n", T->mois + 1); // Ajouter 1 pour afficher mois de 1 à 12
+    printf("Jour : %d\n", T->jour);
+    printf("année : %d\n", T->annee);
+    printf("========================================================================\n");
+    // Afficher les informations météorologiques
+    printf("\n========================================== Informations Météo ==========================================\n");
+    printf("Température actuelle : %.2f °C\n", M->temperature);
+    printf("Précipitations : %s\n", M->precipitation ? "Oui" : "Non");
+    printf("========================================================================\n");
+    printf("\n========================================== Informations Prédateurs ==========================================\n");
+    if (*LP == NULL) {
+        printf("il n'y a aucun prédateur dans les environs\n");
+    } else {
+        Predateur* copie = *LP;
+        while (copie != NULL) {
+            printf("Il y a un %s en (%d, %d), qui a déjà fait %d victimes !\n", copie->nom_predateur,copie->x, copie->y, copie->victimes);
+            copie = copie->suivant;
+        }
+    }
+
+    printf("il y a un total de %d prédateurs", compter_predateurs(*LP));
+
+    // Ligne de séparation
+    printf("\n========================================================================\n");
 
 
-//     incr_temp(T);
-//     ajout_eau_miam(E, *M);
-//     maj_meteo(M, *T);
-//     bouger_predateurs(LP, *E);
-//     generer_predateur(*E, LP);
+    trouver_id_predateurs_loin(LP);
+    //print_id(*LP);
+    *E = E2;
+}
 
+int main() {
+    srand(time(NULL)) ;
 
+    Environnement E = genererEnvironnement() ;
+    afficher_envi(E) ;
+    Meteo M = init_meteo(E);
+    Temps T = init_temps();
+    Predateur* LP = NULL;
+/*
 
-//     // Afficher les informations temporelles
-
-//     printf("\n=== Informations Temps ===\n");
-//     const char* saisons[] = {"Hiver", "Printemps", "Été", "Automne"};
-//     printf("Saison : %s\n", saisons[T->saison]);
-//     printf("Mois : %d\n", T->mois + 1); // Ajouter 1 pour afficher mois de 1 à 12
-//     printf("Jour : %d\n", T->jour);
-//     printf("année : %d\n", T->annee);
-
-//     // Afficher les informations météorologiques
-//     printf("\n=== Informations Météo ===\n");
-//     printf("Température actuelle : %.2f °C\n", M->temperature);
-//     printf("Précipitations : %s\n", M->precipitation ? "Oui" : "Non");
-
-//     printf("\n=== Informations Prédateurs ===\n");
-//     if (*LP == NULL) {
-//         printf("il n'y a aucun prédateur dans les environs\n");
-//     } else {
-//         Predateur* copie = *LP;
-//         while (copie != NULL) {
-//             printf("Il y a un %s en (%d, %d), qui a déjà fait %d victimes !\n", copie->nom_predateur,copie->x, copie->y, copie->victimes);
-//             copie = copie->suivant;
-//         }
-//     }
-
-//     printf("il y a un total de %d prédateurs", compter_predateurs(*LP));
-
-//     // Ligne de séparation
-
-
-//     trouver_id_predateurs_loin(LP);
-//     //print_id(*LP);
-//     // getchar();
-// }
-
-void pheromone_chunk(int coor_x, int coor_y, Environnement* maps){
-    maps->chunks[coor_x][coor_y].pheromones++;
+    while(true){
+        printf("\033[H\033[J");
+        //afficher_envi(E) ;
+        journee(&E, &M, &T, &LP);
+        sleep(1);
+    }
+*/
+    return 0 ;
 }

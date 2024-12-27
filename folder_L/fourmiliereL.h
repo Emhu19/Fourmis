@@ -1,9 +1,11 @@
-#ifndef FOURMILIERE_H
-#define FOURMILIERE_H
+#ifndef FOURMILIEREL_H
+#define FOURMILIEREL_H
 
 #include "fourmi.h"
 
 typedef struct ArbrePiece ArbrePiece;
+typedef struct ListRessource ListRessource;
+typedef struct ListPiece ListPiece;
 
 typedef struct{
     char *typeRessource;
@@ -33,6 +35,16 @@ struct ArbrePiece{
     ArbrePiece *filsD;
 };
 
+struct ListRessource{
+    Ressource *ressource;
+    ListRessource *suivant;
+};
+
+struct ListPiece{
+    Piece piece;
+    ListPiece *suivant;
+};
+
 ArbrePiece *init(Piece e);
 int puiss2(int n);
 ArbrePiece *ajoutePiece(ArbrePiece *T, Piece R);
@@ -50,5 +62,17 @@ void afficher_fourmiliere_niveau(int niveau);
 void afficher_legende();
 void afficher_fourmiliere(int niveau, ListFourmi* liste, Reine* reine);
 void affiche_auto(ArbrePiece *piece);
+Ressource *initRessource(int id, int quantiteMax, char *typeRessource);
+Piece initPiece(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Ressource *ressourceStock);
+ListRessource *initListR(Ressource *ressource);
+ListRessource *ajouteRessource(ListRessource *ressources, Ressource *ressource);
+ListPiece *initListP(Piece piece);
+ListPiece *ajoutePieceList(ListPiece *pieces, Piece piece);
+void afficheStock(ArbrePiece *T);
+ArbrePiece *ajouteStock(ArbrePiece *T, int *quantiteAjout, Ressource *ressource);
+ArbrePiece *retireStock(ArbrePiece *T, int *quantiteRetire, Ressource *ressource);
+void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *pieces);
+int evaluerBesoinNourriture(ListFourmi *Fourmis, Ressource *Nourriture);
+
 
 #endif

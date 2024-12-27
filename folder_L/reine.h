@@ -2,12 +2,12 @@
 #define REINE_H
 
 #include <stdbool.h>
-#include "liste_fourmis.h"
 
 #define MAX_CHAR 50
 
 typedef struct {
-    int type;
+    int espece;
+    bool royale;
     int id_reine;
     char role[MAX_CHAR];
     int salle;
@@ -27,5 +27,6 @@ Reine* creationReine(int id, int type_reine);
 void afficher_Reine(const Reine* reine);
 void update_day_Reine(Reine* reine);
 void update_year_Reine(Reine* reine);
+int calculer_ponte(Reine* reine);
 
 #endif
