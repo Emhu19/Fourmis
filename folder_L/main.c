@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "fourmiliere.h"
 #include "fourmiliereL.h"
 #include "fourmi.h"
@@ -185,6 +186,18 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP, ListFourmi* L
     // getchar();
 }
 
+void afficheFourmiArbre(ArbrePiece *T){
+    if(T != NULL){
+        printf("%s : ", T->salle.typePiece);
+        if(T->salle.fourmis != NULL){
+            afficher_Liste_fourmi(T->salle.fourmis);
+        }
+        printf("\n");
+        afficheFourmiArbre(T->filsD);
+        afficheFourmiArbre(T->filsG);
+    }
+}
+
 void simulation() {
 
 
@@ -241,18 +254,18 @@ void simulation() {
     nourriture = initRessource(4, 10, "nourriture");
     ressources = ajouteRessource(ressources, nourriture);
     Piece stockBois;
-    stockBois = initPiece(2, bois, 5,  "stockBois", bois);
+    stockBois = initPiece(2, bois, 5,  "stockBois", bois, 1);
     pieces = initListP(stockBois);
     Piece stockRoche;
-    stockRoche = initPiece(3, roche, 5,  "stockRoche", roche);
+    stockRoche = initPiece(3, roche, 5,  "stockRoche", roche, 1);
     pieces = ajoutePieceList(pieces, stockRoche);
     Piece stockFeuille;
-    stockFeuille = initPiece(4, feuille, 5, "sFeuille", feuille);
+    stockFeuille = initPiece(4, feuille, 5, "sFeuille", feuille, 1);
     pieces = ajoutePieceList(pieces, stockFeuille);
     Piece stockNourriture;
-    stockNourriture = initPiece(5, nourriture, 5, "sNourriture", nourriture);
+    stockNourriture = initPiece(5, nourriture, 5, "sNourriture", nourriture, 1);
     pieces = ajoutePieceList(pieces, stockNourriture);
-    A = initPiece(1, bois, 0, "Principale", null);
+    A = initPiece(1, bois, 0, "Principale", null, 0);
     T = init(A);
     T = ajoutePiece(T, stockBois);
     T = ajoutePiece(T, stockRoche);
@@ -268,26 +281,40 @@ void simulation() {
         exit(EXIT_FAILURE);
     }
 
-    while (1) {
-        printf("\033c");
-        population.fourmis = cycle_jour(&population, &contexte);
-        journee(contexte.map, contexte.meteo, contexte.temps, &predateurs, population.fourmis);
+    // while (1) {
+        // printf("\033c");
+        // population.fourmis = cycle_jour(&population, &contexte);
+        // journee(contexte.map, contexte.meteo, contexte.temps, &predateurs, population.fourmis);
         // afficher_envi(environnement);
-        cycleFourmiliere(ressources, T, pieces);
-        besoin = evaluerBesoinNourriture(fourmis, nourriture);
-        printf("il y a besoin de %d nourriture\n", besoin);
-        getchar();
-        
-    }
+        // cycleFourmiliere(ressources, T, pieces);
+        // besoin = evaluerBesoinNourriture(fourmis, nourriture);
+        // printf("il y a besoin de %d nourriture\n", besoin);
+        // getchar();
+        // 
+    // }
+    Maladie maladie1;
+    Maladie maladie2;
+    Maladie maladie3;
+    maladie1 = initMaladie(1, "laPremiereMaladie");
+    maladie2 = initMaladie(2, "laDeuxièmeMaladie");
+    maladie3 = initMaladie(3, "laTroisimeMaladie");
+    ListMaladie *maladies;
+    maladies = initListMaladie(maladie1);
+    maladies = ajouterMaladie(maladies, maladie2);
+    maladies = ajouterMaladie(maladies, maladie3);
+    genererMaladie(fourmis, maladies);
+    afficher_Liste_fourmi(fourmis);
 
     liberer_liste(population.fourmis);
     liberer_liste_larves(population.larves);
     free(population.reine);
+    libereArbre(T);
 
 }
 
 
 int main() {
+    srand( time( NULL ) );
     simulation();
     return 0;
 }

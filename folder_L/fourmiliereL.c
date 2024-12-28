@@ -306,35 +306,6 @@ void affiche_auto(ArbrePiece *piece){
     }
 }
 
-// int salle_reine(Reine* reine){
-    // if(reine->salle == 1){
-        // return 1;
-    // }
-    // else{
-        // return 0;
-    // }
-// }
-
-// void afficher_legende(ListFourmi* liste, Reine* reine) {
-    // printf("\n\033[1;33mLégende :\033[0m\n");
-    // printf("Reine : Salle de la reine (%d/1)\n", salle_reine(reine));
-    // printf("Nourriture : Stockage de nourriture(0/120)\n");
-    // printf("Larves : Salle des larves(%d/125)\n", compter_fourmi_salle(liste, 2));
-    // printf("Ressources : Stockage de ressources(0/100)\n");
-    // printf("Exterieur : (%d)\n", compter_fourmi_salle(liste, 0));
-// }
-
-// void afficher_fourmiliere(int niveau/*, ListFourmi* liste, Reine* reine */) {
-    // clear_terminal();
-    // afficher_titre("Fourmilière");
-    // afficher_fourmiliere_niveau(niveau);
-    // afficher_legende(liste, reine);
-    // compter_Liste_fourmi(liste);
-    // printf("\n\033[1;32mAppuyez sur Entrée pour continuer...\033[0m\n");
-    // usleep(500000);
-    // getchar();
-// }
-
 Ressource *initRessource(int id, int quantiteMax, char *typeRessource){
     Ressource *ressource;
     ressource = malloc(sizeof(Ressource *));
@@ -345,7 +316,7 @@ Ressource *initRessource(int id, int quantiteMax, char *typeRessource){
     return ressource;
 }
 
-Piece initPiece(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Ressource *ressourceStock){
+Piece initPiece(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Ressource *ressourceStock, int quantiteFourmiMax){
     Piece piece;
     piece.id = id;
     piece.ressourceNecessaire = ressourceNecessaire;
@@ -356,7 +327,9 @@ Piece initPiece(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire,
     piece.capaciteMax = 10;
     piece.quantiteRessourceNecessaire = quantiteRNecessaire;
     piece.etat = 1;
-    piece.capaciteMax = 10;
+    piece.fourmis = NULL;
+    piece.quantiteFourmiMax = quantiteFourmiMax;
+    piece.quantiteFourmi = 0;
     return piece;
 }
 
@@ -447,6 +420,48 @@ ArbrePiece *retireStock(ArbrePiece *T, int *quantiteRetire, Ressource *ressource
     return T;
 }
 
+ArbrePiece *ajouteFourmi(ArbrePiece *T, Fourmi **fourmi){
+    if(T == NULL){
+        return NULL;
+    }
+    if(T->salle.etat != 0 && T->salle.quantiteFourmi < T->salle.quantiteFourmiMax){
+        if(fourmi != NULL){
+            if(T->salle.fourmis == NULL){
+                T->salle.fourmis = Initialisation_List();
+            }
+            ajout_fourmi(&T->salle.fourmis, *fourmi);
+        }
+        fourmi = NULL;
+        return T;
+    }
+    if(T->filsG != NULL){
+        T->filsG = ajouteFourmi(T->filsG, fourmi);
+    }
+    if(T->filsD != NULL){
+        T->filsD = ajouteFourmi(T->filsD, fourmi);
+    }
+    return T;
+}
+
+ArbrePiece *retireFourmi(ArbrePiece *T, int *quantiteRetire, Ressource *ressource){
+    if(T == NULL){
+        return NULL;
+    }
+    if(T->salle.ressourceStock == ressource && T->salle.etat != 0){
+        T->salle.stock -= *quantiteRetire;
+        *quantiteRetire -= *quantiteRetire;
+        return T;
+    }
+    if(T->filsG != NULL){
+        T->filsG = retireStock(T->filsG, quantiteRetire, ressource);
+    }
+    if(T->filsD != NULL){
+        T->filsD = retireStock(T->filsD, quantiteRetire, ressource);
+    }
+    return T;
+}
+
+
 int evaluerBesoinNourriture(ListFourmi *Fourmis, Ressource *Nourriture){
     if(Nourriture->id != 4){
         printf("ce n'est pas de la nourriture !");
@@ -510,6 +525,62 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
     }
     free(quantiteAjout);
     affiche_auto(T);
+}
+
+void libereArbre(ArbrePiece *T){
+    if(T != NULL){
+        libereArbre(T->filsD);
+        libereArbre(T->filsG);
+        free(T);
+    }
+}
+
+Maladie initMaladie(int id, char *typeMaladie){
+    Maladie result;
+    result.id = id;
+    result.typeMaladie = typeMaladie;
+    return result;
+}
+
+ListMaladie *initListMaladie(Maladie maladie){
+    ListMaladie *result;
+    result = malloc(sizeof(ListMaladie *));
+    result->maladie = maladie;
+    result->suivant = NULL;
+    return result;
+}
+
+ListMaladie *ajouterMaladie(ListMaladie *maladies, Maladie maladie){
+    ListMaladie *temp;
+    temp = malloc(sizeof(ListMaladie *));
+    temp->maladie = maladie;
+    temp->suivant = maladies;
+    return temp;
+}
+
+void genererMaladie(ListFourmi *fourmis, ListMaladie *maladies){
+    int malade;
+    int i = 0;
+    ListFourmi *tempF;
+    tempF = fourmis;
+    ListMaladie *tempM;
+    tempM = maladies;
+    while(tempF->next != NULL){
+        tempM = maladies;
+        malade = rand()%3;
+        printf("%d\n", malade);
+        while(tempM != NULL){
+            if(tempM->maladie.id == malade){
+                i = 0;
+                while(tempM->maladie.typeMaladie[i] != '\0' && i<50){
+                    tempF->fourmi->maladie[i] = tempM->maladie.typeMaladie[i];
+                    i++;
+                }
+            }
+            tempM = tempM->suivant;
+        }
+        tempF = tempF->next;
+    }
 }
 
 // int main(){
