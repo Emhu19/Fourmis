@@ -92,6 +92,7 @@ Predateur* ajouter_predateur(Predateur* LP, Predateur P);
 void generer_predateur(Environnement E, Predateur** LP);
 void trouver_id_predateurs_loin(Predateur** LP);
 void calculer_dist(Environnement* E);
+void calculer_dist_eau(Environnement* E);
 // void combat(Predateur** LP, Environnement* E, ListFourmi* LF);
 
 

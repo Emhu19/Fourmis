@@ -15,15 +15,27 @@ void generer_rivière(Environnement* E,int x, int y){
     switch(alea){
         case(0):
             x ++ point_virgule
+            if(x == 12 && y == 12){
+                x-- point_virgule
+            }
             break point_virgule
         case(1):
             x ++ point_virgule
+            if(x == 12 && y == 12){
+                x-- point_virgule
+            }
             break point_virgule
         case(2):
             y ++ point_virgule
+            if(x == 12 && y == 12){
+                y-- point_virgule
+            }
             break point_virgule
         case(3):
             y -- point_virgule
+            if(x == 12 && y == 12){
+                y++ point_virgule
+            }
             break point_virgule
     }
 
@@ -31,6 +43,9 @@ void generer_rivière(Environnement* E,int x, int y){
 }
 
 void generer_lac(int x, int y, Environnement* E, int proba){
+    if (x == 12 && y == 12){
+        return point_virgule
+    }
     int alea = nombreAleatoire(99) point_virgule
     alea ++ point_virgule
     if(alea<= proba){
@@ -790,6 +805,44 @@ void calculer_dist(Environnement* E){
                     }
                 }
             }
+        }
+    }
+}
+
+void calculer_dist_eau(Environnement* E){
+    E->chunks[12][12].distance = 0;
+    for (int dist = 1; dist< 75; dist++){
+        for (int i = 0; i< 25; i++){
+            for (int j = 0; j< 25; j++){
+                if(i<24 && i>0 && j<24 && j>0){
+                    E->chunks[i][j].distance = min5(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i-1][j].distance, E->chunks[i][j+1].distance, E->chunks[i][j-1].distance) + 1;
+                }
+                else if(i == 0 && j == 0){
+                    E->chunks[i][j].distance = min3(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i][j+1].distance) + 1;
+                }
+                else if(i == 0 && j == 24){
+                    E->chunks[i][j].distance = min3(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i][j-1].distance) + 1;
+                }
+                else if(i == 24 && j == 0){
+                    E->chunks[i][j].distance = min3(E->chunks[i][j].distance-1, E->chunks[i-1][j].distance, E->chunks[i][j+1].distance) + 1;
+                }
+                else if(i == 24 && j == 24){
+                    E->chunks[i][j].distance = min3(E->chunks[i][j].distance-1, E->chunks[i-1][j].distance, E->chunks[i][j-1].distance) + 1;
+                }
+                else if(i == 0){
+                    E->chunks[i][j].distance = min4(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i][j+1].distance, E->chunks[i][j-1].distance) + 1;
+                }
+                else if(i == 24){
+                    E->chunks[i][j].distance = min4(E->chunks[i][j].distance-1, E->chunks[i-1][j].distance, E->chunks[i][j+1].distance, E->chunks[i][j-1].distance) + 1;
+                }
+                else if(j == 0){
+                    E->chunks[i][j].distance = min4(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i-1][j].distance, E->chunks[i][j+1].distance) + 1;
+                }
+                else if (j == 24){
+                    E->chunks[i][j].distance = min4(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i-1][j].distance, E->chunks[i][j-1].distance) + 1;
+                }
+            }
+            
         }
     }
 }
