@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "fourmiliereL.h"
 
 Fourmi* creationFourmi(int id, const char* role_fourmi, int type_fourmi) {
     Fourmi* nouvelle_fourmi = (Fourmi*)malloc(sizeof(Fourmi));
@@ -20,7 +21,8 @@ Fourmi* creationFourmi(int id, const char* role_fourmi, int type_fourmi) {
     nouvelle_fourmi->besoin_faim = 1;
     nouvelle_fourmi->besoin_eau = 1;
     nouvelle_fourmi->sante = true;
-    strcpy(nouvelle_fourmi->maladie, "Rien");
+    nouvelle_fourmi->maladie = initMaladie(0, "rien", 0, 0);
+    nouvelle_fourmi->estMalade = false;
     nouvelle_fourmi->coord_x = 0;
     nouvelle_fourmi->coord_y = 0;
     return nouvelle_fourmi;
