@@ -462,7 +462,7 @@ Piece initPieceStock(int id, Ressource *ressourceNecessaire, int quantiteRNecess
     return piece;
 }
 
-Piece initPieceAgriculture(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Champignon champignon, Puceron puceron){
+Piece initPieceChampignon(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Champignon champignon){
     Piece piece;
     piece.id = id;
     piece.ressourceNecessaire = ressourceNecessaire;
@@ -473,10 +473,31 @@ Piece initPieceAgriculture(int id, Ressource *ressourceNecessaire, int quantiteR
     piece.typePiece = typePiece;
     piece.quantiteRessourceNecessaire = quantiteRNecessaire;
     piece.etat = 1;
+<<<<<<< HEAD
     piece.champignon = champignon;
     piece.puceron = puceron;
     piece.champignon.nbChampignon = 0;
     piece.puceron.nbPuceron = 0;
+=======
+    piece.champigon = champignon;
+    piece.nbChampignon = 0;
+    return piece;
+}
+
+Piece initPiecePuceron(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Puceron puceron){
+    Piece piece;
+    piece.id = id;
+    piece.ressourceNecessaire = ressourceNecessaire;
+    piece.ressourceStock = NULL;
+    piece.stock = 0;
+    piece.capaciteMax = 10;
+    piece.vie = 500;
+    piece.typePiece = typePiece;
+    piece.quantiteRessourceNecessaire = quantiteRNecessaire;
+    piece.etat = 1;
+    piece.puceron = puceron;
+    piece.nbPuceron = 0;
+>>>>>>> 6f0b2c002f45db590496e3addb3c21e730ff2467
     return piece;
 }
 
