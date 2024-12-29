@@ -300,8 +300,10 @@ void simulation() {
     pieces = initListP(stockBois);
     stockMetal = initPieceStock(3, metal, 5,  "stockMetal", metal);
     pieces = ajoutePieceList(pieces, stockMetal);
-    stockPuce = initPiecePuceron(4, bois, 1, "stockPuceron", puceron);
-    stockChampi = initPieceChampignon(5, bois, 1, "stockChampi", champignon);
+    stockPuce = initPiecePuceron(4, bois, 1, "Pucerons", puceron);
+    stockChampi = initPieceChampignon(5, bois, 1, "Champignons", champignon);
+    pieces = ajoutePieceList(pieces, stockChampi);
+    pieces = ajoutePieceList(pieces, stockPuce);
     
     A = initPieceStock(1, bois, 0, "Principale", bois);
     T = init(A);

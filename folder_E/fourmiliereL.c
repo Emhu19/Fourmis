@@ -528,12 +528,12 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
     temp = ressources;
     while(temp != NULL){
         if(temp->ressource->quantiteRessource >= temp->ressource->quantiteMax){
-            if(tempP->piece.ressourceStock == NULL){
+            while(tempP->piece.ressourceStock == NULL){
                 tempP = tempP->suivant;
             }
             while(temp->ressource->id != tempP->piece.ressourceStock->id){
                 tempP = tempP->suivant;
-                if(tempP->piece.ressourceStock == NULL){
+                while(tempP->piece.ressourceStock == NULL){
                     tempP = tempP->suivant;
                 }
             }
