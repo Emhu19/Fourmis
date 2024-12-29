@@ -473,14 +473,8 @@ Piece initPieceChampignon(int id, Ressource *ressourceNecessaire, int quantiteRN
     piece.typePiece = typePiece;
     piece.quantiteRessourceNecessaire = quantiteRNecessaire;
     piece.etat = 1;
-<<<<<<< HEAD
     piece.champignon = champignon;
-    piece.puceron = puceron;
     piece.champignon.nbChampignon = 0;
-    piece.puceron.nbPuceron = 0;
-=======
-    piece.champigon = champignon;
-    piece.nbChampignon = 0;
     return piece;
 }
 
@@ -496,8 +490,7 @@ Piece initPiecePuceron(int id, Ressource *ressourceNecessaire, int quantiteRNece
     piece.quantiteRessourceNecessaire = quantiteRNecessaire;
     piece.etat = 1;
     piece.puceron = puceron;
-    piece.nbPuceron = 0;
->>>>>>> 6f0b2c002f45db590496e3addb3c21e730ff2467
+    piece.puceron.nbPuceron = 0;
     return piece;
 }
 
