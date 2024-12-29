@@ -75,7 +75,7 @@ bool environnement_safe(Environnement E){
         gauche = gauche || (E.chunks[i][0].type != 1);
         haut = haut || (E.chunks[0][i].type != 1);
         bas = bas || (E.chunks[24][i].type != 1);
-    } 
+    }
     return (droite && gauche && haut && bas);
 }
 
@@ -281,7 +281,7 @@ Environnement genererEnvironnement(int biome){
             y = nombreAleatoire(24) point_virgule
             generer_lac(x, y, &E, 80) point_virgule
         }
-        
+
     }
 
 
@@ -842,7 +842,7 @@ void calculer_dist_eau(Environnement* E){
                     E->chunks[i][j].distance = min4(E->chunks[i][j].distance-1, E->chunks[i+1][j].distance, E->chunks[i-1][j].distance, E->chunks[i][j-1].distance) + 1;
                 }
             }
-            
+
         }
     }
 }
