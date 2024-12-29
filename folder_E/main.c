@@ -286,7 +286,8 @@ void simulation() {
     Champignon champignon;
     Piece stockBois;
     Piece stockMetal;
-    Piece agriculture;
+    Piece stockPuce;
+    Piece stockChampi;
     puceron.miellat_produit = 1;
     puceron.sante = 10;
     champignon.croissance = 1;
@@ -299,11 +300,13 @@ void simulation() {
     pieces = initListP(stockBois);
     stockMetal = initPieceStock(3, metal, 5,  "stockMetal", metal);
     pieces = ajoutePieceList(pieces, stockMetal);
-    agriculture = initPieceAgriculture(4, bois, 1, "salleAgri", champignon, puceron);
-    pieces = ajoutePieceList(pieces, agriculture);
+    stockPuce = initPiecePuceron(4, bois, 1, "stockPuceron", puceron);
+    stockChampi = initPieceChampignon(5, bois, 1, "stockChampi", champignon);
+    
     A = initPieceStock(1, bois, 0, "Principale", bois);
     T = init(A);
-    T = ajoutePiece(T, agriculture);
+    T = ajoutePiece(T, stockChampi);
+    T = ajoutePiece(T, stockPuce);
 
     srand(time(NULL));
 
