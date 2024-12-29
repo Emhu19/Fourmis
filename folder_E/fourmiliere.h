@@ -17,6 +17,5 @@ void afficher_fourmiliere_niveau(int niveau);
 void afficher_legende();
 void afficher_fourmiliere(int niveau, ListFourmi* liste, Reine* reine);
 void deplacer_salle_fourmi(Fourmi* fourmi, int nouvelle_salle);
-void mort_de_la_fourmiliere(int raison);
 
 #endif

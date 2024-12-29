@@ -8,3 +8,7 @@ fourmi_deplacement.o
 fourmi_list.o
 fourmi_role.o
 fourmi_update.o
+fourmi_male.o
+reine.o
+animation.o
+fourmiliereL.o

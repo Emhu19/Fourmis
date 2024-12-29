@@ -125,18 +125,3 @@ void deplacer_salle_fourmi(Fourmi* fourmi, int nouvelle_salle) {
     if (!fourmi) return;
     fourmi->salle = nouvelle_salle;
 }
-
-void mort_de_la_fourmiliere(int raison){
-    if(raison == 1){ //mort de la reine
-        printf("La reine est mort, aucune autres reines dans la colonie pour faire survivre la fourmilières\n");
-        printf("La fourmiliere s'éteint lentement durant 2 ans et se termine quand la dernière fourmi meurt...\n");
-    }
-    else if(raison == 2){ //risque climatique
-        printf("La pluie à inonder la fourmilière\n");
-    }
-    else if(raison == 3){ //effondrement de la fourmiliere
-        printf("La fourmiliere était trop endommagé, aucune des salles n'a tenue, tout c'est éffondrer\n");
-    }
-    printf("Fin de la simulation, merci d'avoir simuler\n\n");
-    exit(1);
-}

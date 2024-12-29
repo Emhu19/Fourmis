@@ -204,51 +204,33 @@ void simulation() {
     getchar();
     printf("\033c");
     Meteo meteo = init_meteo(environnement);
-    
+
     Temps temps = init_temps();
     Predateur* predateurs = NULL;
 
-    
+
 
     Contexte contexte = {&environnement, &temps, &meteo };
 
 
-     ArbrePiece *T;
+    ArbrePiece *T;
     Piece A;
     ListRessource *ressources;
     ListPiece *pieces;
-    Ressource *roche;
-    roche = initRessource(1, 10, "roche");
-    ressources = initListR(roche);
+    Ressource *metal;
     Ressource *bois;
+    Piece stockBois;
+    Piece stockMetal;
+    metal = initRessource(1, 10, "metal");
+    ressources = initListR(metal);
     bois = initRessource(2, 10, "bois");
     ressources = ajouteRessource(ressources, bois);
-    Ressource *null;
-    null = initRessource(0, 0, "null");
-    Ressource *feuille;
-    feuille = initRessource(3, 10, "feuille");
-    ressources = ajouteRessource(ressources, feuille);
-    Ressource *nourriture;
-    nourriture = initRessource(4, 10, "nourriture");
-    ressources = ajouteRessource(ressources, nourriture);
-    Piece stockBois;
     stockBois = initPiece(2, bois, 5,  "stockBois", bois);
     pieces = initListP(stockBois);
-    Piece stockRoche;
-    stockRoche = initPiece(3, roche, 5,  "stockRoche", roche);
-    pieces = ajoutePieceList(pieces, stockRoche);
-    Piece stockFeuille;
-    stockFeuille = initPiece(4, feuille, 5, "sFeuille", feuille);
-    pieces = ajoutePieceList(pieces, stockFeuille);
-    Piece stockNourriture;
-    stockNourriture = initPiece(5, nourriture, 5, "sNourriture", nourriture);
-    pieces = ajoutePieceList(pieces, stockNourriture);
-    A = initPiece(1, bois, 0, "Principale", null);
+    stockMetal = initPiece(3, metal, 5,  "stockMetal", metal);
+    pieces = ajoutePieceList(pieces, stockMetal);
+    A = initPiece(1, bois, 0, "Principale", bois);
     T = init(A);
-    T = ajoutePiece(T, stockBois);
-    T = ajoutePiece(T, stockRoche);
-    T = ajoutePiece(T, stockFeuille);
-    T = ajoutePiece(T, stockNourriture);
 
     srand(time(NULL));
 
@@ -265,7 +247,7 @@ void simulation() {
         // afficher_envi(environnement);
         cycleFourmiliere(ressources, T, pieces);
         getchar();
-        
+
     }
 
     liberer_liste(population.fourmis);

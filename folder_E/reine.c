@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "fourmi.h"
-#include "fourmiliereL.h"
 
 typedef struct {
     int spermatec;
@@ -68,7 +67,7 @@ void afficher_Reine(const Reine* reine) {
     printf("Espèce : %d\n", reine->espece);
     printf("Ponte par jour : %d\n", reine->capacite_ponte);
     printf("Spermatec : %d\n", reine->spermatec);
-    printf("Âge en jour : %d\n", reine->age);
+    printf("Âge : %d\n", reine->age);
     printf("Faim : %d\n", reine->faim);
     printf("Eau : %d\n", reine->eau);
     printf("Santé : %d\n", reine->sante);
@@ -82,12 +81,12 @@ void update_day_Reine(Reine* reine) {
     reine->spermatec -= reine->capacite_ponte;
     if (reine->faim < 0) reine->faim = 0;
     if (reine->eau < 0) reine->eau = 0;
-    reine->age++;
-    if(reine->age > 10220)
-        mort_de_la_fourmiliere(1);
 }
 
-
+void update_year_Reine(Reine* reine) {
+    if (!reine) return;
+    reine->age++;
+}
 
 int calculer_ponte(Reine* reine) {
     return (reine->age < 730) ? rand() % 100 + reine->capacite_ponte : rand() % 50 + reine->capacite_ponte;
