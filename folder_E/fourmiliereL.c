@@ -97,8 +97,10 @@ void detruitPiece(ArbrePiece *T){
             if(T->salle.vie <= 0){
                 printf("la salle %s est détruite c'est dommage\n", T->salle.typePiece);
                 T->salle.etat = 0;
-                T->salle.ressourceStock->quantiteMax -= 10;
-                T->salle.ressourceStock->quantiteRessource -= T->salle.stock;
+                if(T->salle.ressourceStock != NULL){
+                    T->salle.ressourceStock->quantiteMax -= 10;
+                    T->salle.ressourceStock->quantiteRessource -= T->salle.stock;
+                }
                 T->salle.stock = 0;
             }
         }
@@ -405,7 +407,7 @@ Ressource *initRessource(int id, int quantiteMax, char *typeRessource){
     return ressource;
 }
 
-Piece initPiece(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Ressource *ressourceStock){
+Piece initPieceStock(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Ressource *ressourceStock){
     Piece piece;
     piece.id = id;
     piece.ressourceNecessaire = ressourceNecessaire;
@@ -417,6 +419,24 @@ Piece initPiece(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire,
     piece.quantiteRessourceNecessaire = quantiteRNecessaire;
     piece.etat = 1;
     piece.capaciteMax = 10;
+    return piece;
+}
+
+Piece initPieceAgriculture(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Champignon champignon, Puceron puceron){
+    Piece piece;
+    piece.id = id;
+    piece.ressourceNecessaire = ressourceNecessaire;
+    piece.ressourceStock = NULL;
+    piece.stock = 0;
+    piece.capaciteMax = 10;
+    piece.vie = 500;
+    piece.typePiece = typePiece;
+    piece.quantiteRessourceNecessaire = quantiteRNecessaire;
+    piece.etat = 1;
+    piece.champigon = champignon;
+    piece.puceron = puceron;
+    piece.nbChampignon = 0;
+    piece.nbPuceron = 0;
     return piece;
 }
 
@@ -488,16 +508,20 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
             temp->ressource->quantiteRessource++;
             *quantiteAjout = 1;
             T = ajouteStock(T, quantiteAjout, temp->ressource);
-            printf("%s : %d\n",temp->ressource->typeRessource, temp->ressource->quantiteRessource);
         }
         temp = temp->suivant;
     }
-    afficheStock(T);
     temp = ressources;
     while(temp != NULL){
         if(temp->ressource->quantiteRessource >= temp->ressource->quantiteMax){
+            if(tempP->piece.ressourceStock == NULL){
+                tempP = tempP->suivant;
+            }
             while(temp->ressource->id != tempP->piece.ressourceStock->id){
                 tempP = tempP->suivant;
+                if(tempP->piece.ressourceStock == NULL){
+                    tempP = tempP->suivant;
+                }
             }
             *quantiteRetire = tempP->piece.quantiteRessourceNecessaire;
             temp->ressource->quantiteMax += 10;
