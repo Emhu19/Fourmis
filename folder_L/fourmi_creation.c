@@ -41,7 +41,7 @@ Fourmi* creationFourmi(int id, int espece_fourmi, bool sexe) {
     nouvelle_fourmi->besoin_faim = 1;
     nouvelle_fourmi->besoin_eau = 1;
     nouvelle_fourmi->sante = true;
-    nouvelle_fourmi->maladie = initMaladie(0, "rien", 0, 0);
+    nouvelle_fourmi->maladie = initMaladie(0, "rien");
     nouvelle_fourmi->coord_x = BASE_COOR_X;
     nouvelle_fourmi->coord_y = BASE_COOR_Y;
     return nouvelle_fourmi;
@@ -53,6 +53,8 @@ void afficher_fourmi(const Fourmi* fourmi) {
     printf("Espèce : %d\n", fourmi->espece);
     printf("Âge : %d\n", fourmi->age);
     printf("Faim : %d\n", fourmi->faim);
+    printf("besoin_faim : %d\n", fourmi->besoin_faim);
+    printf("besoin_eau : %d\n", fourmi->besoin_eau);
     printf("Eau : %d\n", fourmi->eau);
     printf("Santé : %s\n", fourmi->sante ? "En bonne santé" : "Morte");
     printf("Maladie : %s\n", fourmi->maladie.typeMaladie);
