@@ -101,7 +101,7 @@ ListFourmi* cycle_jour(Population* population, Contexte* contexte) {
 
     Reine* reine = population->reine;
 
-    int ponte = calculer_ponte(reine);
+    int ponte = calculer_ponte(*reine);
 
     if (contexte->temps->saison == 2 && reine->royale) {
         gerer_creation_fourmis_males(&population->fourmis, reine);
@@ -184,70 +184,6 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP, ListFourmi* L
     //print_id(*LP);
     // getchar();
 }
-void verification_coherence_choix(int emplacement, int espece){
-    if(espece == 1){
-        if(emplacement != 2 && emplacement != 10)
-            return;
-        else{
-            afficher_incoherence();
-            //Impossible
-        }
-    }
-    if(espece == 2){
-        if(emplacement == 2)
-            return;
-        else{
-            afficher_incoherence();
-            //Impossible
-        }
-    }
-    if(espece == 3){
-        if(emplacement != 2 && emplacement != 10)
-            return;
-        else{
-            afficher_incoherence();
-            //Impossible
-        }
-    }
-    if(espece == 4){
-        if(emplacement == 5)
-            return;
-        else{
-            afficher_incoherence();
-            //Impossible
-        }
-    }
-    if(espece == 5){
-        if(emplacement != 2 && emplacement != 5 && emplacement != 10 && emplacement != 9)
-            return;
-        else{
-            afficher_incoherence();
-            //Impossible
-        }
-    }
-    if(espece == 6){
-        if(emplacement == 2)
-            return;
-        else{
-            //Impossible
-            afficher_incoherence();
-        }
-    }
-    if(espece == 7){// 7 Fourmis cultivatrices de champignons : Acromyrmex
-        if(emplacement != 2 && emplacement != 5 && emplacement != 6 && emplacement != 10 )
-            return;
-        else{
-            //Impossible
-        }
-    }
-     if(espece == 8){// 8 Fourmis nageuses : Polyrhachis
-        if(emplacement != 2)
-            return;
-        else{
-            afficher_incoherence();
-        }
-    }
-}
 
 void simulation() {
 
@@ -275,25 +211,39 @@ void simulation() {
 
     Contexte contexte = {&environnement, &temps, &meteo };
 
-
     ArbrePiece *T;
     Piece A;
     ListRessource *ressources;
     ListPiece *pieces;
     Ressource *metal;
     Ressource *bois;
+    Puceron puceron;
+    Champignon champignon;
     Piece stockBois;
     Piece stockMetal;
+    Piece stockPuce;
+    Piece stockChampi;
+    puceron.miellat_produit = 1;
+    puceron.sante = 10;
+    champignon.croissance = 1;
+    champignon.parasite = false;
     metal = initRessource(1, 10, "metal");
     ressources = initListR(metal);
     bois = initRessource(2, 10, "bois");
     ressources = ajouteRessource(ressources, bois);
-    stockBois = initPiece(2, bois, 5,  "stockBois", bois);
+    stockBois = initPieceStock(2, bois, 5,  "stockBois", bois);
     pieces = initListP(stockBois);
-    stockMetal = initPiece(3, metal, 5,  "stockMetal", metal);
+    stockMetal = initPieceStock(3, metal, 5,  "stockMetal", metal);
     pieces = ajoutePieceList(pieces, stockMetal);
-    A = initPiece(1, bois, 0, "Principale", bois);
+    stockPuce = initPiecePuceron(4, bois, 1, "Pucerons", puceron);
+    stockChampi = initPieceChampignon(5, bois, 1, "Champignons", champignon);
+    pieces = ajoutePieceList(pieces, stockChampi);
+    pieces = ajoutePieceList(pieces, stockPuce);
+
+    A = initPieceStock(1, bois, 0, "Principale", bois);
     T = init(A);
+    T = ajoutePiece(T, stockChampi);
+    T = ajoutePiece(T, stockPuce);
 
     srand(time(NULL));
 

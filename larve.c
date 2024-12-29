@@ -61,6 +61,7 @@ void update_day_larve(Stade* stade) {
     stade->age++;
     if (stade->age > 10) stade->cycle = LARVE;
     if (stade->age > 20) stade->cycle = NYMPHE;
+    if (stade->age > 21) stade->cycle = FINITO;
 }
 
 int compter_Liste_Nymphe(ListLarve* liste) {

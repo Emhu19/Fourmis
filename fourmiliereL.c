@@ -616,4 +616,5 @@ void mort_de_la_fourmiliere(int raison){
         printf("La fourmiliere était trop endommagé, aucune des salles n'a tenue, tout c'est éffondrer\n");
     }
     printf("Fin de la simulation, merci d'avoir simuler\n\n");
+    exit(1);
 }

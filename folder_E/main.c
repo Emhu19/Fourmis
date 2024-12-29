@@ -120,7 +120,7 @@ ListFourmi* cycle_jour(Population* population, Contexte* contexte) {
     for (int b = 0; b < nbNymphe; b++) {
         Fourmi* fourmi = creationFourmi(b, reine->espece, true);
         if (fourmi) population->fourmis = ajout_fourmi(&population->fourmis, fourmi);
-        population->larves = retirer_larve(&population->larves, stade);
+        // population->larves = retirer_larve(&population->larves, stade);
     }
 
     update_day_Reine(reine);
@@ -180,70 +180,6 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP, ListFourmi* L
     trouver_id_predateurs_loin(LP);
     //print_id(*LP);
     // getchar();
-}
-void verification_coherence_choix(int emplacement, int espece){
-    if(espece == 1){
-        if(emplacement != 2 && emplacement != 10)
-            return;
-        else{
-            afficher_incoherence();
-            //Impossible
-        }
-    }
-    if(espece == 2){
-        if(emplacement == 2)
-            return;
-        else{
-            afficher_incoherence();
-            //Impossible
-        }
-    }
-    if(espece == 3){
-        if(emplacement != 2 && emplacement != 10)
-            return;
-        else{
-            afficher_incoherence();
-            //Impossible
-        }
-    }
-    if(espece == 4){
-        if(emplacement == 5)
-            return;
-        else{
-            afficher_incoherence();
-            //Impossible
-        }
-    }
-    if(espece == 5){
-        if(emplacement != 2 && emplacement != 5 && emplacement != 10 && emplacement != 9)
-            return;
-        else{
-            afficher_incoherence();
-            //Impossible
-        }
-    }
-    if(espece == 6){
-        if(emplacement == 2)
-            return;
-        else{
-            //Impossible
-            afficher_incoherence();
-        }
-    }
-    if(espece == 7){// 7 Fourmis cultivatrices de champignons : Acromyrmex
-        if(emplacement != 2 && emplacement != 5 && emplacement != 6 && emplacement != 10 )
-            return;
-        else{
-            //Impossible
-        }
-    }
-     if(espece == 8){// 8 Fourmis nageuses : Polyrhachis
-        if(emplacement != 2)
-            return;
-        else{
-            afficher_incoherence();
-        }
-    }
 }
 
 void simulation() {

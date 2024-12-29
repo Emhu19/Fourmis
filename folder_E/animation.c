@@ -237,3 +237,68 @@ void afficher_incoherence(){
     printf("On préfère evité ce genre d'incohérence désolé :)\n");
     exit(1);
 }
+
+void verification_coherence_choix(int emplacement, int espece){
+    if(espece == 1){
+        if(emplacement != 2 && emplacement != 10)
+            return;
+        else{
+            afficher_incoherence();
+            //Impossible
+        }
+    }
+    if(espece == 2){
+        if(emplacement == 2)
+            return;
+        else{
+            afficher_incoherence();
+            //Impossible
+        }
+    }
+    if(espece == 3){
+        if(emplacement != 2 && emplacement != 10)
+            return;
+        else{
+            afficher_incoherence();
+            //Impossible
+        }
+    }
+    if(espece == 4){
+        if(emplacement == 5)
+            return;
+        else{
+            afficher_incoherence();
+            //Impossible
+        }
+    }
+    if(espece == 5){
+        if(emplacement != 2 && emplacement != 5 && emplacement != 10 && emplacement != 9)
+            return;
+        else{
+            afficher_incoherence();
+            //Impossible
+        }
+    }
+    if(espece == 6){
+        if(emplacement == 2)
+            return;
+        else{
+            //Impossible
+            afficher_incoherence();
+        }
+    }
+    if(espece == 7){// 7 Fourmis cultivatrices de champignons : Acromyrmex
+        if(emplacement != 2 && emplacement != 5 && emplacement != 6 && emplacement != 10 )
+            return;
+        else{
+            //Impossible
+        }
+    }
+     if(espece == 8){// 8 Fourmis nageuses : Polyrhachis
+        if(emplacement != 2)
+            return;
+        else{
+            afficher_incoherence();
+        }
+    }
+}

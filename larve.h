@@ -8,7 +8,8 @@
 typedef enum {
     OEUF,
     LARVE,
-    NYMPHE
+    NYMPHE,
+    FINITO
 } Cycle;
 
 typedef struct {
