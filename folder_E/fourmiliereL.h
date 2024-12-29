@@ -17,9 +17,11 @@ typedef struct{
 typedef struct{
     int croissance;
     bool parasite;
+    int nbChampignon;
 }Champignon;
 
 typedef struct{
+    int nbPuceron;
     int miellat_produit;
     int sante;
 }Puceron;
@@ -35,10 +37,8 @@ typedef struct{
     int vie;
     int etat;
     int stock;
-    Champignon champigon;
+    Champignon champignon;
     Puceron puceron;
-    int nbChampignon;
-    int nbPuceron;
 }Piece;
 
 struct ArbrePiece{

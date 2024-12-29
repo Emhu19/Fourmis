@@ -10,7 +10,7 @@ typedef struct {
     int sante;
     bool estCultivatrice; //Atta et Acromyrmex
     bool estNageuse; //Polyrhachis
-    bool estSpecialisteGraines; //Messor
+    bool estEleveur; //Formica
     bool estAustralienne; //Camponotus
 } FourmiTemplate;
 
@@ -40,7 +40,7 @@ void initialiserFourmi(Fourmi* fourmi, const FourmiTemplate* template) {
 
     fourmi->role_secondaire.estCultivatrice = template->estCultivatrice;
     fourmi->role_secondaire.estNageuse = template->estNageuse;
-    fourmi->role_secondaire.estSpecialisteGraines = template->estSpecialisteGraines;
+    fourmi->role_secondaire.estEleveur = template->estEleveur;
     fourmi->role_secondaire.estAustralienne = template->estAustralienne;
 }
 

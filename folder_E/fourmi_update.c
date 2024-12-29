@@ -2,10 +2,25 @@
 
 
 void update_day_fourmi_inventaire(Fourmi* fourmi, Environnement* map){
-    if(map->chunks[fourmi->coord_x][fourmi->coord_y].nourriture > 0 && fourmi->inventaire->nourriture < 6){
+    if(map->chunks[fourmi->coord_x][fourmi->coord_y].nourriture > 0 && fourmi->inventaire->nourriture <= 5){
         map->chunks[fourmi->coord_x][fourmi->coord_y].nourriture--;
         fourmi->inventaire->nourriture++;
     }
+}
+
+void update_day_fourmi_Miel(Fourmi* fourmi){
+    //doit aller dans sa salle si n'y est pas si nan doit attendre
+    return;
+}
+
+void update_day_fourmi_Agriculteur(Fourmi* fourmi){
+    //doit aller dans sa salle si n'y est pas et cultiver des champignons
+    return;
+}
+
+void update_day_fourmi_Eleveur(Fourmi* fourmi){
+    //doit aller dans sa salle si n'y est pas et cultiver des elevers des pucerons
+    return;
 }
 
 void update_day_fourmi(ListFourmi* liste ,Fourmi* fourmi, Environnement* map, Temps* saison){
@@ -23,6 +38,9 @@ void update_day_fourmi(ListFourmi* liste ,Fourmi* fourmi, Environnement* map, Te
 //         ressource--;
     }
     ajuster_role(fourmi, liste, saison);
+    if(fourmi->role == AGRICOLE) update_day_fourmi_Miel(fourmi);
+    if(fourmi->role == ELEVEUR) update_day_fourmi_Eleveur(fourmi);
+    if(fourmi->role == POT_DE_MIEL) update_day_fourmi_Agriculteur(fourmi);
     deplacement_fourmi(fourmi, map);
 }
 
