@@ -28,6 +28,7 @@ void update_day_fourmi(ListFourmi* liste ,Fourmi* fourmi, Environnement* map, Te
         fprintf(stderr, "Erreur : le pointeur fourmi est NULL.\n");
         return;
     }
+    fourmi->age++;
     fourmi->faim -= fourmi->besoin_faim;
     fourmi->eau -= fourmi->besoin_eau;
     // int besoin_nourriture = evaluerBesoinNourriture(liste, );

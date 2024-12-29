@@ -101,20 +101,16 @@ ListFourmi* cycle_jour(Population* population, Contexte* contexte) {
 
     Reine* reine = population->reine;
 
-    int ponte = calculer_ponte(reine);
+    int ponte = calculer_ponte(*reine);
 
     if (contexte->temps->saison == 2 && reine->royale) {
         gerer_creation_fourmis_males(&population->fourmis, reine);
         reine->royale = false;
-    }
-
-    if (contexte->meteo->precipitation) {
         supprimer_fourmis_males(population->fourmis);
-
     }
-
+    Stade* stade;
     for (int i = 1; i <= ponte; i++) {
-        Stade* stade = creationLarve(i, reine->espece);
+        stade = creationLarve(i, reine->espece);
         if (stade) population->larves = ajout_larve(&population->larves, stade);
     }
 
@@ -124,6 +120,7 @@ ListFourmi* cycle_jour(Population* population, Contexte* contexte) {
     for (int b = 0; b < nbNymphe; b++) {
         Fourmi* fourmi = creationFourmi(b, reine->espece, true);
         if (fourmi) population->fourmis = ajout_fourmi(&population->fourmis, fourmi);
+        population->larves = retirer_larve(&population->larves, stade);
     }
 
     update_day_Reine(reine);
