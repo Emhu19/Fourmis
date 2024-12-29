@@ -4,7 +4,14 @@ fourmiliere_simulation
 environnement.o
 fourmi_deplacement.c
 fourmi_update.o
+<<<<<<< HEAD
 fourmi.role.o
 fourmi_male.o
 fourmi_list.o
 
+=======
+fourmi_male.o
+reine.o
+animation.o
+fourmiliereL.o
+>>>>>>> 35a6e37589e4c362330f2a1d82ebc759b634bc4c

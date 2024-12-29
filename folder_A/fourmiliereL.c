@@ -5,55 +5,6 @@
 #include <unistd.h>
 #include "fourmiliereL.h"
 
-// typedef struct ListFourmi ListFourmi;
-// typedef struct ListReine ListReine;
-// typedef struct ArbrePiece ArbrePiece;
-// 
-// struct ListFourmi{
-    // Fourmis *fourmi; //je suppose une structure ant on pourra changer le nom en fonction de ce qu'emilien fait
-    // ListFourmi *suivant;
-    // ListFourmi *precedent; //liste doublement chainée car on peut avoir besoin de revenir a la fourmis précedente 
-// };
-// 
-// struct ListReine{
-    // Reine *reine;
-    // ListReine *suivant;
-    // ListReine *precedent; //même raison que pour ListFourmi
-// };
-// 
-// typedef struct{
-    // char *typeRessource;
-    // int id;
-    // int quantiteRessource;
-    // int quantiteMax;
-// }Ressource;
-// 
-// typedef struct{
-    // ListFourmi *fourmi; //liste chainée car on aura besoin d'augmenter et de baisser les nombre de fourmis
-    // ListReine *reine; //liste chainée car on aura besoin d'augmenter et de baisser les nombre de reine (il est possible qu'il y ait plusieur reine dans la fourmilière)
-    // ArbrePiece *piece; //plus simple a parcourir pour savoir quelle salle mêne a ou
-// }Fourmilière;
-// 
-// typedef struct{
-    // int taille;
-    // int id;
-    // char *typePiece;
-    // int capaciteMax;
-    // Ressource *ressourceNecessaire;
-    // int quantiteRessourceNecessaire;
-    // Ressource *ressourceStock;
-    // int vie;
-    // int etat;
-    // int stock;
-// }Piece;
-// 
-// struct ArbrePiece{
-    // Piece salle;
-    // int taille;
-    // int profondeur;
-    // ArbrePiece *filsG;
-    // ArbrePiece *filsD;
-// };
 
 ArbrePiece *init(Piece e){
     ArbrePiece *result;
@@ -213,7 +164,7 @@ void afficher_salle_simple(const char *nom) {
     printf("+-----------------+\n");
 }
 
-void afficher_salle_simple_milieu(const char *nom) {
+void afficher_salle_simple_2(const char *nom) {
     printf("                            +-----------------+\n");
     printf("                            |                 |\n");
     printf("                            |     %-10s  |\n", nom);
@@ -221,6 +172,35 @@ void afficher_salle_simple_milieu(const char *nom) {
     printf("                            +-----------------+\n");
 }
 
+void afficher_salle_simple_3(const char *nom) {
+    printf("                                                        +-----------------+\n");
+    printf("                                                        |                 |\n");
+    printf("                                                        |     %-10s  |\n", nom);
+    printf("                                                        |                 |\n");
+    printf("                                                        +-----------------+\n");
+}
+
+void afficher_salle_simple_4(const char *nom) {
+    printf("                                                                                    +-----------------+\n");
+    printf("                                                                                    |                 |\n");
+    printf("                                                                                    |     %-10s  |\n", nom);
+    printf("                                                                                    |                 |\n");
+    printf("                                                                                    +-----------------+\n");
+}
+void afficher_salle_simple_5(const char *nom) {
+    printf("                                                                                                                +-----------------+\n");
+    printf("                                                                                                                |                 |\n");
+    printf("                                                                                                                |     %-10s  |\n", nom);
+    printf("                                                                                                                |                 |\n");
+    printf("                                                                                                                +-----------------+\n");
+}
+void afficher_salle_simple_6(const char *nom) {
+    printf("                                                                                                                                            +-----------------+\n");
+    printf("                                                                                                                                            |                 |\n");
+    printf("                                                                                                                                            |     %-10s  |\n", nom);
+    printf("                                                                                                                                            |                 |\n");
+    printf("                                                                                                                                            +-----------------+\n");
+}
 void afficher_connexion_simple() {
     printf("        |\n");
 }
@@ -239,7 +219,11 @@ void afficher_connexion_triple() {
 void afficher_connexion_simple_fin() {
     printf("                                                                  |\n");
 }
+/**********************************************************************************************************************************************************************************/
 
+
+
+/**********************************************************************************************************************************************************************************/
 void afficher_salles_alignees(const char *nom1, const char *nom2) {
     printf("+-----------------+         +-----------------+\n");
     printf("|                 |         |                 |\n");
@@ -247,7 +231,10 @@ void afficher_salles_alignees(const char *nom1, const char *nom2) {
     printf("|                 |         |                 |\n");
     printf("+-----------------+         +-----------------+\n");
 }
+/**********************************************************************************************************************************************************************************/
 
+
+/**********************************************************************************************************************************************************************************/
 void afficher_salles_alignees_3(const char *nom1, const char *nom2, const char *nom3) {
     printf("+-----------------+         +-----------------+         +-----------------+\n");
     printf("|                 |         |                 |         |                 |\n");
@@ -255,7 +242,10 @@ void afficher_salles_alignees_3(const char *nom1, const char *nom2, const char *
     printf("|                 |         |                 |         |                 |\n");
     printf("+-----------------+         +-----------------+         +-----------------+\n");
 }
+/**********************************************************************************************************************************************************************************/
 
+
+/**********************************************************************************************************************************************************************************/
 void afficher_salles_alignees_4(const char *nom1, const char *nom2, const char *nom3, const char *nom4) {
     printf("+-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
     printf("|                 |         |                 |         |                 |         |                 |\n");
@@ -264,6 +254,10 @@ void afficher_salles_alignees_4(const char *nom1, const char *nom2, const char *
     printf("+-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
 }
 
+/**********************************************************************************************************************************************************************************/
+
+
+/**********************************************************************************************************************************************************************************/
 void afficher_salles_alignees_5(const char *nom1, const char *nom2, const char *nom3, const char *nom4, const char *nom5) {
     printf("+-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
     printf("|                 |         |                 |         |                 |         |                 |         |                 |\n");
@@ -271,51 +265,32 @@ void afficher_salles_alignees_5(const char *nom1, const char *nom2, const char *
     printf("|                 |         |                 |         |                 |         |                 |         |                 |\n");
     printf("+-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
 }
+void afficher_salles_alignees_5_1(const char *nom1, const char *nom2, const char *nom3, const char *nom4, const char *nom5) {
+    printf("+-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
+    printf("|                 |         |                 |         |                 |         |                 |         |                 |\n");
+    printf("|     %-10s  |----+----|     %-10s  |     %-10s  |----+----|     %-10s  |----+----|      %-10s  |\n", nom1, nom2, nom3, nom4, nom5);
+    printf("|                 |         |                 |         |                 |         |                 |         |                 |\n");
+    printf("+-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
+}
+void afficher_salles_alignees_5_5(const char *nom1, const char *nom2, const char *nom3, const char *nom4, const char *nom5) {
+    printf("                            +-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
+    printf("                            |                 |         |                 |         |                 |         |                 |         |                 |\n");
+    printf("                            |     %-10s  |----+----|     %-10s  |     %-10s  |----+----|     %-10s  |----+----|      %-10s  |\n", nom1, nom2, nom3, nom4, nom5);
+    printf("                            |                 |         |                 |         |                 |         |                 |         |                 |\n");
+    printf("                            +-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
+}
+/**********************************************************************************************************************************************************************************/
 
+
+/**********************************************************************************************************************************************************************************/
 void afficher_salles_alignees_6(const char *nom1, const char *nom2, const char *nom3, const char *nom4, const char *nom5, const char *nom6) {
     printf("+-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
     printf("|                 |         |                 |         |                 |         |                 |         |                 |         |                 |\n");
-    printf("|     %-10s  |----+----|     %-10s  |----+----|     %-10s  |----+----|     %-10s  |     %-10s  |     %-10s  |\n", nom1, nom2, nom3, nom4, nom5, nom6);
+    printf("|     %-10s  |----+----|     %-10s  |     %-10s  |----+----|     %-10s  ||     %-10s  |----+----|     %-10s  |\n", nom1, nom2, nom3, nom4, nom5, nom6);
     printf("|                 |         |                 |         |                 |         |                 |         |                 |         |                 |\n");
     printf("+-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+         +-----------------+\n");
 }
-void afficher_fourmiliere_niveau(int niveau) {
-    switch (niveau) {
-        case 1:
-            afficher_salles_alignees("R", "N");
-            break;
-        case 2:
-            afficher_salles_alignees("R", "N");
-            afficher_connexion_simple();
-            afficher_salle_simple("L");
-            break;
-        case 3:
-            afficher_salles_alignees("R", "N");
-            afficher_connexion_double();
-            afficher_salles_alignees("L", "R");
-            break;
-        case 4:
-            afficher_salle_simple("R");
-            afficher_connexion_simple();
-            afficher_salles_alignees("L", "R");
-            break;
-        case 5:
-            afficher_salle_simple("R");
-            afficher_connexion_simple();
-            afficher_salles_alignees_3("L", "R", "R");
-            break;
-        case 6:
-            afficher_salle_simple("R");
-            afficher_connexion_simple();
-            afficher_salles_alignees_3("L", "R", "R");
-            afficher_connexion_simple_milieu();
-            afficher_salle_simple_milieu("L");
-            break;
-        default:
-            printf("Niveau %d non pris en charge.\n", niveau);
-            break;
-    }
-}
+/**********************************************************************************************************************************************************************************/
 
 void affiche_auto(ArbrePiece *piece){
     if(piece != NULL){
@@ -412,35 +387,6 @@ void affiche_auto(ArbrePiece *piece){
         }
     }
 }
-
-// int salle_reine(Reine* reine){
-    // if(reine->salle == 1){
-        // return 1;
-    // }
-    // else{
-        // return 0;
-    // }
-// }
-
-// void afficher_legende(ListFourmi* liste, Reine* reine) {
-    // printf("\n\033[1;33mLégende :\033[0m\n");
-    // printf("Reine : Salle de la reine (%d/1)\n", salle_reine(reine));
-    // printf("Nourriture : Stockage de nourriture(0/120)\n");
-    // printf("Larves : Salle des larves(%d/125)\n", compter_fourmi_salle(liste, 2));
-    // printf("Ressources : Stockage de ressources(0/100)\n");
-    // printf("Exterieur : (%d)\n", compter_fourmi_salle(liste, 0));
-// }
-
-// void afficher_fourmiliere(int niveau/*, ListFourmi* liste, Reine* reine */) {
-    // clear_terminal();
-    // afficher_titre("Fourmilière");
-    // afficher_fourmiliere_niveau(niveau);
-    // afficher_legende(liste, reine);
-    // compter_Liste_fourmi(liste);
-    // printf("\n\033[1;32mAppuyez sur Entrée pour continuer...\033[0m\n");
-    // usleep(500000);
-    // getchar();
-// }
 
 Ressource *initRessource(int id, int quantiteMax, char *typeRessource){
     Ressource *ressource;
