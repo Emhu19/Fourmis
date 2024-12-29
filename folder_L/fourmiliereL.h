@@ -6,17 +6,7 @@
 typedef struct ArbrePiece ArbrePiece;
 typedef struct ListRessource ListRessource;
 typedef struct ListPiece ListPiece;
-typedef struct ListMaladie ListMaladie;
 
-typedef struct{
-    char *typeMaladie;
-    int id;
-}Maladie;
-
-struct ListMaladie{
-    Maladie maladie;
-    ListMaladie *suivant;
-};
 
 typedef struct{
     char *typeRessource;
@@ -36,9 +26,6 @@ typedef struct{
     int vie;
     int etat;
     int stock;
-    ListFourmi *fourmis;
-    int quantiteFourmiMax;
-    int quantiteFourmi;
 }Piece;
 
 struct ArbrePiece{
@@ -77,7 +64,7 @@ void afficher_legende();
 void afficher_fourmiliere(int niveau, ListFourmi* liste, Reine* reine);
 void affiche_auto(ArbrePiece *piece);
 Ressource *initRessource(int id, int quantiteMax, char *typeRessource);
-Piece initPiece(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Ressource *ressourceStock, int quantiteFourmiMax);
+Piece initPiece(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Ressource *ressourceStock);
 ListRessource *initListR(Ressource *ressource);
 ListRessource *ajouteRessource(ListRessource *ressources, Ressource *ressource);
 ListPiece *initListP(Piece piece);
@@ -88,9 +75,8 @@ ArbrePiece *retireStock(ArbrePiece *T, int *quantiteRetire, Ressource *ressource
 void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *pieces);
 int evaluerBesoinNourriture(ListFourmi *Fourmis, Ressource *Nourriture);
 void libereArbre(ArbrePiece *T);
-ArbrePiece *ajouteFourmi(ArbrePiece *T, Fourmi **fourmi);
-Maladie initMaladie(int id, char *typeMaladie);
-void genererMaladie(ListFourmi *fourmis, ListMaladie *maladies);
+Maladie initMaladie(int id, char *typeMaladie, int faim, int soif);
+ListFourmi *genererMaladie(ListFourmi *fourmis, ListMaladie *maladies);
 ListMaladie *initListMaladie(Maladie maladie);
 ListMaladie *ajouterMaladie(ListMaladie *maladies, Maladie maladie);
 

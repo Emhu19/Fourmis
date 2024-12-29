@@ -186,18 +186,6 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP, ListFourmi* L
     // getchar();
 }
 
-void afficheFourmiArbre(ArbrePiece *T){
-    if(T != NULL){
-        printf("%s : ", T->salle.typePiece);
-        if(T->salle.fourmis != NULL){
-            afficher_Liste_fourmi(T->salle.fourmis);
-        }
-        printf("\n");
-        afficheFourmiArbre(T->filsD);
-        afficheFourmiArbre(T->filsG);
-    }
-}
-
 void simulation() {
 
 
@@ -254,18 +242,18 @@ void simulation() {
     nourriture = initRessource(4, 10, "nourriture");
     ressources = ajouteRessource(ressources, nourriture);
     Piece stockBois;
-    stockBois = initPiece(2, bois, 5,  "stockBois", bois, 1);
+    stockBois = initPiece(2, bois, 5,  "stockBois", bois);
     pieces = initListP(stockBois);
     Piece stockRoche;
-    stockRoche = initPiece(3, roche, 5,  "stockRoche", roche, 1);
+    stockRoche = initPiece(3, roche, 5,  "stockRoche", roche);
     pieces = ajoutePieceList(pieces, stockRoche);
     Piece stockFeuille;
-    stockFeuille = initPiece(4, feuille, 5, "sFeuille", feuille, 1);
+    stockFeuille = initPiece(4, feuille, 5, "sFeuille", feuille);
     pieces = ajoutePieceList(pieces, stockFeuille);
     Piece stockNourriture;
-    stockNourriture = initPiece(5, nourriture, 5, "sNourriture", nourriture, 1);
+    stockNourriture = initPiece(5, nourriture, 5, "sNourriture", nourriture);
     pieces = ajoutePieceList(pieces, stockNourriture);
-    A = initPiece(1, bois, 0, "Principale", null, 0);
+    A = initPiece(1, bois, 0, "Principale", null);
     T = init(A);
     T = ajoutePiece(T, stockBois);
     T = ajoutePiece(T, stockRoche);
@@ -295,15 +283,27 @@ void simulation() {
     Maladie maladie1;
     Maladie maladie2;
     Maladie maladie3;
-    maladie1 = initMaladie(1, "laPremiereMaladie");
-    maladie2 = initMaladie(2, "laDeuxièmeMaladie");
-    maladie3 = initMaladie(3, "laTroisimeMaladie");
+    maladie1 = initMaladie(1, "laPremiereMaladie", 2, 0);
+    maladie2 = initMaladie(2, "laDeuxièmeMaladie", 0, 2);
+    maladie3 = initMaladie(3, "laTroisimeMaladie", 2, 2);
     ListMaladie *maladies;
     maladies = initListMaladie(maladie1);
     maladies = ajouterMaladie(maladies, maladie2);
     maladies = ajouterMaladie(maladies, maladie3);
-    genererMaladie(fourmis, maladies);
-    afficher_Liste_fourmi(fourmis);
+    fourmis = genererMaladie(fourmis, maladies);
+    ListFourmi *nsm;
+    nsm = fourmis;
+    while(nsm->next != NULL){
+        // printf("\n--- Fourmi %d ---\n", nsm->fourmi->id_fourmi);
+        // printf("Espèce : %s\n", nsm->fourmi->espece);
+        // printf("Âge : %d\n", nsm->fourmi->age);
+        // printf("Faim : %d\n", nsm->fourmi->faim);
+        // printf("Eau : %d\n", nsm->fourmi->eau);
+        // printf("Santé : %s\n", nsm->fourmi->sante ? "En bonne santé" : "Morte");
+        printf("Maladie : %s\n", nsm->fourmi->maladie);
+        // printf("Coordonnées : (%d, %d)\n", nsm->fourmi->coord_x, nsm->fourmi->coord_y);
+        nsm = nsm->next;
+    }
 
     liberer_liste(population.fourmis);
     liberer_liste_larves(population.larves);

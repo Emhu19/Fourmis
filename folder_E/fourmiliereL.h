@@ -70,5 +70,6 @@ ListPiece *initListP(Piece piece);
 ListPiece *ajoutePieceList(ListPiece *pieces, Piece piece);
 void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *pieces);
 void mort_de_la_fourmiliere(int raison);
+void afficheStock(ArbrePiece *T);
 
 #endif

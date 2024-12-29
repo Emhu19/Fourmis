@@ -1,6 +1,7 @@
 #include "fourmi.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "fourmiliereL.h"
 
 typedef struct {
     int spermatec;
@@ -40,7 +41,7 @@ Fourmi* creationFourmi(int id, int espece_fourmi, bool sexe) {
     nouvelle_fourmi->besoin_faim = 1;
     nouvelle_fourmi->besoin_eau = 1;
     nouvelle_fourmi->sante = true;
-    strcpy(nouvelle_fourmi->maladie, "Rien");
+    nouvelle_fourmi->maladie = initMaladie(0, "rien", 0, 0);
     nouvelle_fourmi->coord_x = BASE_COOR_X;
     nouvelle_fourmi->coord_y = BASE_COOR_Y;
     return nouvelle_fourmi;
@@ -54,6 +55,6 @@ void afficher_fourmi(const Fourmi* fourmi) {
     printf("Faim : %d\n", fourmi->faim);
     printf("Eau : %d\n", fourmi->eau);
     printf("Santé : %s\n", fourmi->sante ? "En bonne santé" : "Morte");
-    printf("Maladie : %s\n", fourmi->maladie);
+    printf("Maladie : %s\n", fourmi->maladie.typeMaladie);
     printf("Coordonnées : (%d, %d)\n", fourmi->coord_x, fourmi->coord_y);
 }

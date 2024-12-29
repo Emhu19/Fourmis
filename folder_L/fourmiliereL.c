@@ -316,7 +316,7 @@ Ressource *initRessource(int id, int quantiteMax, char *typeRessource){
     return ressource;
 }
 
-Piece initPiece(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Ressource *ressourceStock, int quantiteFourmiMax){
+Piece initPiece(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Ressource *ressourceStock){
     Piece piece;
     piece.id = id;
     piece.ressourceNecessaire = ressourceNecessaire;
@@ -327,9 +327,6 @@ Piece initPiece(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire,
     piece.capaciteMax = 10;
     piece.quantiteRessourceNecessaire = quantiteRNecessaire;
     piece.etat = 1;
-    piece.fourmis = NULL;
-    piece.quantiteFourmiMax = quantiteFourmiMax;
-    piece.quantiteFourmi = 0;
     return piece;
 }
 
@@ -420,48 +417,6 @@ ArbrePiece *retireStock(ArbrePiece *T, int *quantiteRetire, Ressource *ressource
     return T;
 }
 
-ArbrePiece *ajouteFourmi(ArbrePiece *T, Fourmi **fourmi){
-    if(T == NULL){
-        return NULL;
-    }
-    if(T->salle.etat != 0 && T->salle.quantiteFourmi < T->salle.quantiteFourmiMax){
-        if(fourmi != NULL){
-            if(T->salle.fourmis == NULL){
-                T->salle.fourmis = Initialisation_List();
-            }
-            ajout_fourmi(&T->salle.fourmis, *fourmi);
-        }
-        fourmi = NULL;
-        return T;
-    }
-    if(T->filsG != NULL){
-        T->filsG = ajouteFourmi(T->filsG, fourmi);
-    }
-    if(T->filsD != NULL){
-        T->filsD = ajouteFourmi(T->filsD, fourmi);
-    }
-    return T;
-}
-
-ArbrePiece *retireFourmi(ArbrePiece *T, int *quantiteRetire, Ressource *ressource){
-    if(T == NULL){
-        return NULL;
-    }
-    if(T->salle.ressourceStock == ressource && T->salle.etat != 0){
-        T->salle.stock -= *quantiteRetire;
-        *quantiteRetire -= *quantiteRetire;
-        return T;
-    }
-    if(T->filsG != NULL){
-        T->filsG = retireStock(T->filsG, quantiteRetire, ressource);
-    }
-    if(T->filsD != NULL){
-        T->filsD = retireStock(T->filsD, quantiteRetire, ressource);
-    }
-    return T;
-}
-
-
 int evaluerBesoinNourriture(ListFourmi *Fourmis, Ressource *Nourriture){
     if(Nourriture->id != 4){
         printf("ce n'est pas de la nourriture !");
@@ -535,10 +490,12 @@ void libereArbre(ArbrePiece *T){
     }
 }
 
-Maladie initMaladie(int id, char *typeMaladie){
+Maladie initMaladie(int id, char *typeMaladie, int faim, int soif){
     Maladie result;
     result.id = id;
     result.typeMaladie = typeMaladie;
+    result.faim = faim;
+    result.soif = soif;
     return result;
 }
 
@@ -558,11 +515,12 @@ ListMaladie *ajouterMaladie(ListMaladie *maladies, Maladie maladie){
     return temp;
 }
 
-void genererMaladie(ListFourmi *fourmis, ListMaladie *maladies){
+ListFourmi *genererMaladie(ListFourmi *fourmis, ListMaladie *maladies){
     int malade;
-    int i = 0;
     ListFourmi *tempF;
+    ListFourmi *result;
     tempF = fourmis;
+    result = tempF;
     ListMaladie *tempM;
     tempM = maladies;
     while(tempF->next != NULL){
@@ -571,15 +529,24 @@ void genererMaladie(ListFourmi *fourmis, ListMaladie *maladies){
         printf("%d\n", malade);
         while(tempM != NULL){
             if(tempM->maladie.id == malade){
-                i = 0;
-                while(tempM->maladie.typeMaladie[i] != '\0' && i<50){
-                    tempF->fourmi->maladie[i] = tempM->maladie.typeMaladie[i];
-                    i++;
-                }
+                tempF->fourmi->estMalade = true;
+                tempF->fourmi->maladie = tempM->maladie;
+                printf("%s\n", tempF->fourmi->maladie.typeMaladie);
             }
             tempM = tempM->suivant;
         }
         tempF = tempF->next;
+    }
+    return result;
+}
+
+void effetMaladie(ListFourmi *fourmis){
+    ListFourmi *tempF;
+    tempF = fourmis;
+    while(tempF->next != NULL){
+        if(tempF->fourmi->estMalade == true){
+
+        }
     }
 }
 

@@ -9,6 +9,20 @@
 #include "environnement.h"
 #include "fourmi.h"
 
+typedef struct ListMaladie ListMaladie;
+
+typedef struct{
+    char *typeMaladie;
+    int id;
+    int faim;
+    int soif;
+}Maladie;
+
+struct ListMaladie{
+    Maladie maladie;
+    ListMaladie *suivant;
+};
+
 
 #define BASE_COOR_X 12
 #define BASE_COOR_Y 12
@@ -33,7 +47,8 @@ typedef struct {
     int besoin_faim;
     int besoin_eau;
     bool sante;
-    char maladie[MAX_CHAR];
+    Maladie maladie;
+    bool estMalade;
     float cgt;
     int coord_x;
     int coord_y;
