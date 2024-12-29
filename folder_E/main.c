@@ -190,10 +190,12 @@ void simulation() {
 
     logo_1();
     printf("\033c");
-    Environnement environnement = genererEnvironnement(logo_3());
+    int emplacement = logo_3();
+    Environnement environnement = genererEnvironnement(emplacement);
     printf("\033c");
     int espece = logo_2();
     printf("\033c");
+    verification_coherence_choix(emplacement, espece);
     printf("génération de l'environnement en cours\nCette opération peut prendre un certain temps\n");
     calculer_dist(&environnement);
     printf("\033c");
