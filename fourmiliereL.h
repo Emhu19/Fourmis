@@ -15,6 +15,16 @@ typedef struct{
 }Ressource;
 
 typedef struct{
+    int croissance;
+    bool parasite;
+}Champignon;
+
+typedef struct{
+    int miellat_produit;
+    int sante;
+}Puceron;
+
+typedef struct{
     int taille;
     int id;
     char *typePiece;
@@ -25,6 +35,10 @@ typedef struct{
     int vie;
     int etat;
     int stock;
+    Champignon champigon;
+    Puceron puceron;
+    int nbChampignon;
+    int nbPuceron;
 }Piece;
 
 struct ArbrePiece{
@@ -63,11 +77,15 @@ void afficher_legende();
 void afficher_fourmiliere(int niveau, ListFourmi* liste, Reine* reine);
 void affiche_auto(ArbrePiece *piece);
 Ressource *initRessource(int id, int quantiteMax, char *typeRessource);
-Piece initPiece(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Ressource *ressourceStock);
+Piece initPieceStock(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Ressource *ressourceStock);
+Piece initPieceChampignon(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Champignon champignon);
+Piece initPiecePuceron(int id, Ressource *ressourceNecessaire, int quantiteRNecessaire, char *typePiece, Puceron puceron);
 ListRessource *initListR(Ressource *ressource);
 ListRessource *ajouteRessource(ListRessource *ressources, Ressource *ressource);
 ListPiece *initListP(Piece piece);
 ListPiece *ajoutePieceList(ListPiece *pieces, Piece piece);
 void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *pieces);
+void mort_de_la_fourmiliere(int raison);
+void afficheStock(ArbrePiece *T);
 
 #endif
