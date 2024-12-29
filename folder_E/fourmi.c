@@ -3,14 +3,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-Fourmi* creationFourmi(int id, const char* role_fourmi, int type_fourmi) {
+Fourmi* creationFourmi(int id, int type_fourmi) {
     Fourmi* nouvelle_fourmi = (Fourmi*)malloc(sizeof(Fourmi));
     if (nouvelle_fourmi == NULL) {
         perror("Erreur d'allocation mémoire pour la fourmi");
         return NULL;
     }
     nouvelle_fourmi->id_fourmi = id;
-    strcpy(nouvelle_fourmi->role, role_fourmi);
     nouvelle_fourmi->age = 1;
     nouvelle_fourmi->salle = 2;
     nouvelle_fourmi->sexe = true;
