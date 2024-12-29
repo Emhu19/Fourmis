@@ -14,8 +14,6 @@ typedef struct ListMaladie ListMaladie;
 typedef struct{
     char *typeMaladie;
     int id;
-    int faim;
-    int soif;
 }Maladie;
 
 struct ListMaladie{

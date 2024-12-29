@@ -283,26 +283,19 @@ void simulation() {
     Maladie maladie1;
     Maladie maladie2;
     Maladie maladie3;
-    maladie1 = initMaladie(1, "laPremiereMaladie", 2, 0);
-    maladie2 = initMaladie(2, "laDeuxièmeMaladie", 0, 2);
-    maladie3 = initMaladie(3, "laTroisimeMaladie", 2, 2);
+    maladie1 = initMaladie(1, "laPremiereMaladie");
+    maladie2 = initMaladie(2, "laDeuxièmeMaladie");
+    maladie3 = initMaladie(3, "laTroisimeMaladie");
     ListMaladie *maladies;
     maladies = initListMaladie(maladie1);
     maladies = ajouterMaladie(maladies, maladie2);
     maladies = ajouterMaladie(maladies, maladie3);
-    fourmis = genererMaladie(fourmis, maladies);
-    ListFourmi *nsm;
-    nsm = fourmis;
-    while(nsm->next != NULL){
-        // printf("\n--- Fourmi %d ---\n", nsm->fourmi->id_fourmi);
-        // printf("Espèce : %s\n", nsm->fourmi->espece);
-        // printf("Âge : %d\n", nsm->fourmi->age);
-        // printf("Faim : %d\n", nsm->fourmi->faim);
-        // printf("Eau : %d\n", nsm->fourmi->eau);
-        // printf("Santé : %s\n", nsm->fourmi->sante ? "En bonne santé" : "Morte");
-        printf("Maladie : %s\n", nsm->fourmi->maladie);
-        // printf("Coordonnées : (%d, %d)\n", nsm->fourmi->coord_x, nsm->fourmi->coord_y);
-        nsm = nsm->next;
+    while(1){
+        fourmis = genererMaladie(fourmis, maladies);
+        effetMaladie(fourmis);
+        afficher_Liste_fourmi(fourmis);
+        soignerMaladie(fourmis);
+        afficher_Liste_fourmi(fourmis);
     }
 
     liberer_liste(population.fourmis);

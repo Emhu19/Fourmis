@@ -21,7 +21,7 @@ Fourmi* creationFourmi(int id, const char* role_fourmi, int type_fourmi) {
     nouvelle_fourmi->besoin_faim = 1;
     nouvelle_fourmi->besoin_eau = 1;
     nouvelle_fourmi->sante = true;
-    nouvelle_fourmi->maladie = initMaladie(0, "rien", 0, 0);
+    nouvelle_fourmi->maladie = initMaladie(0, "rien");
     nouvelle_fourmi->estMalade = false;
     nouvelle_fourmi->coord_x = 0;
     nouvelle_fourmi->coord_y = 0;

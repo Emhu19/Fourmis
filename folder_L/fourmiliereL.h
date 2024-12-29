@@ -75,10 +75,12 @@ ArbrePiece *retireStock(ArbrePiece *T, int *quantiteRetire, Ressource *ressource
 void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *pieces);
 int evaluerBesoinNourriture(ListFourmi *Fourmis, Ressource *Nourriture);
 void libereArbre(ArbrePiece *T);
-Maladie initMaladie(int id, char *typeMaladie, int faim, int soif);
+Maladie initMaladie(int id, char *typeMaladie);
 ListFourmi *genererMaladie(ListFourmi *fourmis, ListMaladie *maladies);
 ListMaladie *initListMaladie(Maladie maladie);
 ListMaladie *ajouterMaladie(ListMaladie *maladies, Maladie maladie);
+void soignerMaladie(ListFourmi *fourmis);
+void effetMaladie(ListFourmi *fourmis);
 
 
 #endif

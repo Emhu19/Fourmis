@@ -490,12 +490,10 @@ void libereArbre(ArbrePiece *T){
     }
 }
 
-Maladie initMaladie(int id, char *typeMaladie, int faim, int soif){
+Maladie initMaladie(int id, char *typeMaladie){
     Maladie result;
     result.id = id;
     result.typeMaladie = typeMaladie;
-    result.faim = faim;
-    result.soif = soif;
     return result;
 }
 
@@ -525,7 +523,7 @@ ListFourmi *genererMaladie(ListFourmi *fourmis, ListMaladie *maladies){
     tempM = maladies;
     while(tempF->next != NULL){
         tempM = maladies;
-        malade = rand()%3;
+        malade = rand()%4;
         printf("%d\n", malade);
         while(tempM != NULL){
             if(tempM->maladie.id == malade){
@@ -545,8 +543,36 @@ void effetMaladie(ListFourmi *fourmis){
     tempF = fourmis;
     while(tempF->next != NULL){
         if(tempF->fourmi->estMalade == true){
-
+            if(tempF->fourmi->maladie.id == 1){
+                tempF->fourmi->besoin_eau += 2;
+            }
+            if(tempF->fourmi->maladie.id == 2){
+                tempF->fourmi->besoin_faim += 2;
+            }
+            if(tempF->fourmi->maladie.id >= 3){
+                tempF->fourmi->besoin_faim += 2;
+                tempF->fourmi->besoin_eau += 2;
+            }
         }
+        tempF = tempF->next;
+    }
+}
+
+void soignerMaladie(ListFourmi *fourmis){
+    int malade;
+    Maladie soigne;
+    soigne = initMaladie(0, "rien");
+    ListFourmi *tempF;
+    tempF = fourmis;
+    while(tempF->next != NULL){
+        malade = rand()%4;
+        if(tempF->fourmi->estMalade){
+            if(tempF->fourmi->maladie.id == malade){
+                tempF->fourmi->estMalade = false;
+                tempF->fourmi->maladie = soigne;
+            }
+        }
+        tempF = tempF->next;
     }
 }
 
