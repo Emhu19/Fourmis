@@ -79,6 +79,7 @@ void fourmi_go_aléatoire(Fourmi* fourmi, Environnement* map) {
             return;
         }
     }
+    // printf("AWWWWWWWWWWWWWWWWWWWWWWWW\n");
 }
 
 
@@ -95,18 +96,25 @@ void deplacement_fourmi(Fourmi* fourmi, Environnement* map){
         deplacement_ronde(fourmi, map);
         return;
     }
-
     if(!fourmi_est_dans_base(*fourmi)){
-        if(fourmi->role != EXPLORATRICE){
-            //doit rentrer à la base
-            fourmi_go_base(fourmi, map);
+        if(fourmi->role == EXPLORATRICE || fourmi->role == COLLECTRICE_MIELLAT){
+            for(int i = 0; i < 5; i++){
+                    update_day_fourmi_inventaire(fourmi, map);
+                    fourmi_go_aléatoire(fourmi, map); //se déplace de manière aléatoire
+                }
         }
         else{
-            for(int i = 0; i < 5; i++){
-                update_day_fourmi_inventaire(fourmi, map);
-                fourmi_go_aléatoire(fourmi, map); //se déplace de manière aléatoire
-            }
+            fourmi_go_base(fourmi, map);
         }
     }
-    return;
+    else{
+        if(fourmi->role == EXPLORATRICE || fourmi->role == COLLECTRICE_MIELLAT){
+            for(int i = 0; i < 5; i++){
+                    // update_day_fourmi_inventaire(fourmi, map);
+                    if(fourmi == NULL)
+                        return;
+                    fourmi_go_aléatoire(fourmi, map); //se déplace de manière aléatoire
+                }
+        }
+    }
 }
