@@ -18,4 +18,6 @@ int affichage_animation_debut();
 void logo_1();
 int logo_2();
 int logo_3();
+void afficher_incoherence();
+
 #endif

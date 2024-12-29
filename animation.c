@@ -1,4 +1,5 @@
 #include "animation.h"
+#include <stdlib.h>
 
 const char *fourmi[] = {
     "                                                  ",
@@ -219,7 +220,7 @@ int logo_3(){
     do{
         scanf("%d", &choix);
     }while(!((choix>= 0 && choix<10) || choix == 1969));
-    
+
     getchar();
     return choix;
 }
@@ -229,4 +230,10 @@ int affichage_animation_debut(){
     int result = logo_2();
     logo_3();
     return result;
+}
+
+void afficher_incoherence(){
+    printf("HOUUUUULA nan mais aucune fourmi de cette espèce ne pourrait survivre dans cet endroit...\n");
+    printf("On préfère evité ce genre d'incohérence désolé :)\n");
+    exit(1);
 }

@@ -184,16 +184,81 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP, ListFourmi* L
     //print_id(*LP);
     // getchar();
 }
+void verification_coherence_choix(int emplacement, int espece){
+    if(espece == 1){
+        if(emplacement != 2 && emplacement != 10)
+            return;
+        else{
+            afficher_incoherence();
+            //Impossible
+        }
+    }
+    if(espece == 2){
+        if(emplacement == 2)
+            return;
+        else{
+            afficher_incoherence();
+            //Impossible
+        }
+    }
+    if(espece == 3){
+        if(emplacement != 2 && emplacement != 10)
+            return;
+        else{
+            afficher_incoherence();
+            //Impossible
+        }
+    }
+    if(espece == 4){
+        if(emplacement == 5)
+            return;
+        else{
+            afficher_incoherence();
+            //Impossible
+        }
+    }
+    if(espece == 5){
+        if(emplacement != 2 && emplacement != 5 && emplacement != 10 && emplacement != 9)
+            return;
+        else{
+            afficher_incoherence();
+            //Impossible
+        }
+    }
+    if(espece == 6){
+        if(emplacement == 2)
+            return;
+        else{
+            //Impossible
+            afficher_incoherence();
+        }
+    }
+    if(espece == 7){// 7 Fourmis cultivatrices de champignons : Acromyrmex
+        if(emplacement != 2 && emplacement != 5 && emplacement != 6 && emplacement != 10 )
+            return;
+        else{
+            //Impossible
+        }
+    }
+     if(espece == 8){// 8 Fourmis nageuses : Polyrhachis
+        if(emplacement != 2)
+            return;
+        else{
+            afficher_incoherence();
+        }
+    }
+}
 
 void simulation() {
 
-
     logo_1();
     printf("\033c");
-    Environnement environnement = genererEnvironnement(logo_3());
+    int emplacement = logo_3();
+    Environnement environnement = genererEnvironnement(emplacement);
     printf("\033c");
     int espece = logo_2();
     printf("\033c");
+    verification_coherence_choix(emplacement, espece);
     printf("génération de l'environnement en cours\nCette opération peut prendre un certain temps\n");
     calculer_dist(&environnement);
     printf("\033c");
@@ -202,11 +267,11 @@ void simulation() {
     getchar();
     printf("\033c");
     Meteo meteo = init_meteo(environnement);
-    
+
     Temps temps = init_temps();
     Predateur* predateurs = NULL;
 
-    
+
 
     Contexte contexte = {&environnement, &temps, &meteo };
 
@@ -245,7 +310,7 @@ void simulation() {
         // afficher_envi(environnement);
         cycleFourmiliere(ressources, T, pieces);
         getchar();
-        
+
     }
 
     liberer_liste(population.fourmis);
