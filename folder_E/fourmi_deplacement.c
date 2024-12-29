@@ -43,96 +43,44 @@ void un_deplacement_fourmi_aléatoire(Fourmi* fourmi){
 
 void fourmi_go_aléatoire(Fourmi* fourmi, Environnement* map) {
     map->chunks[fourmi->coord_x][fourmi->coord_y].pheromones++;
-    if (fourmi->coord_x == 1 && fourmi->coord_y == 1) {
-        srand(time(NULL));
-        int random_number = rand() % 2;
-        if (random_number == 0) {
-            fourmi->coord_x++;
+
+    int dx[] = {1, -1, 0, 0};
+    int dy[] = {0, 0, 1, -1};
+
+    double probabilités[4] = {0};
+    double somme_pheromones = 0.0;
+
+    for (int i = 0; i < 4; i++) {
+        int nx = fourmi->coord_x + dx[i];
+        int ny = fourmi->coord_y + dy[i];
+
+        if (nx >= 1 && nx <= 25 && ny >= 1 && ny <= 25) {
+            probabilités[i] = map->chunks[nx][ny].pheromones;
+            somme_pheromones += probabilités[i];
         } else {
-            fourmi->coord_y++;
+            probabilités[i] = 0;
         }
-        return;
     }
-    if (fourmi->coord_x == 1 && fourmi->coord_y == 25) {
-        srand(time(NULL));
-        int random_number = rand() % 2;
-        if (random_number == 0) {
-            fourmi->coord_x++;
-        } else {
-            fourmi->coord_y--;
+
+    for (int i = 0; i < 4; i++) {
+        if (somme_pheromones > 0) {
+            probabilités[i] /= somme_pheromones;
         }
-        return;
     }
-    if (fourmi->coord_x == 25 && fourmi->coord_y == 1) {
-        srand(time(NULL));
-        int random_number = rand() % 2;
-        if (random_number == 0) {
-            fourmi->coord_x--;
-        } else {
-            fourmi->coord_y++;
+
+    double rand_val = (double)rand() / RAND_MAX;
+    double seuil = 0.0;
+
+    for (int i = 0; i < 4; i++) {
+        seuil += probabilités[i];
+        if (rand_val <= seuil) {
+            fourmi->coord_x += dx[i];
+            fourmi->coord_y += dy[i];
+            return;
         }
-        return;
     }
-    if (fourmi->coord_x == 25 && fourmi->coord_y == 25) {
-        srand(time(NULL));
-        int random_number = rand() % 2;
-        if (random_number == 0) {
-            fourmi->coord_x--;
-        } else {
-            fourmi->coord_y--;
-        }
-        return;
-    }
-    if (fourmi->coord_x == 1) {
-        srand(time(NULL));
-        int random_number = rand() % 3;
-        if (random_number == 0) {
-            fourmi->coord_x++;
-        } else if (random_number == 1) {
-            fourmi->coord_y--;
-        } else {
-            fourmi->coord_y++;
-        }
-        return;
-    }
-    if (fourmi->coord_x == 25) {
-        srand(time(NULL));
-        int random_number = rand() % 3;
-        if (random_number == 0) {
-            fourmi->coord_x--;
-        } else if (random_number == 1) {
-            fourmi->coord_y--;
-        } else {
-            fourmi->coord_y++;
-        }
-        return;
-    }
-    if (fourmi->coord_y == 1) {
-        srand(time(NULL));
-        int random_number = rand() % 3;
-        if (random_number == 0) {
-            fourmi->coord_y++;
-        } else if (random_number == 1) {
-            fourmi->coord_x--;
-        } else {
-            fourmi->coord_x++;
-        }
-        return;
-    }
-    if (fourmi->coord_y == 25) {
-        srand(time(NULL));
-        int random_number = rand() % 3;
-        if (random_number == 0) {
-            fourmi->coord_y--;
-        } else if (random_number == 1) {
-            fourmi->coord_x--;
-        } else {
-            fourmi->coord_x++;
-        }
-        return;
-    }
-    un_deplacement_fourmi_aléatoire(fourmi);
 }
+
 
 void deplacement_ronde(Fourmi* fourmi, Environnement* map){
     if(fourmi_est_dans_base(*fourmi)){

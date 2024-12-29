@@ -17,8 +17,9 @@
 typedef enum {
     NOURRICE,
     EXPLORATRICE,
-    SOLDAT,
+    OUVRIERE,
     COLLECTRICE_MIELLAT,
+    SOLDAT,
     POT_DE_MIEL,
     AGRICOLE,
     ELEVEUR
@@ -27,7 +28,7 @@ typedef enum {
 typedef struct {
    bool estCultivatrice; //Atta et Acromyrmex
    bool estNageuse; //Polyrhachis
-   bool estSpecialisteGraines; //Messor
+   bool estEleveur; //Formica
    bool estAustralienne; //Camponotus
 } RoleSecondaire;
 

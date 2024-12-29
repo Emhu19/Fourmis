@@ -264,6 +264,46 @@ void afficher_salles_alignees_4(const char *nom1, const char *nom2, const char *
 }
 
 /**********************************************************************************************************************************************************************************/
+void gestionElevage(ArbrePiece *T) {
+    if (T == NULL) return;
+    if(T->salle.etat == 0) return;
+
+    if (strcmp(T->salle.typePiece, "Champignons") == 0) {
+        Champignon *champignon = &T->salle.champignon;
+
+        if (!champignon->parasite && (rand() % 100 < 5)) {
+            champignon->parasite = true;
+        }
+
+        if (champignon->parasite) {
+            champignon->nbChampignon -= 5;
+            if (champignon->nbChampignon < 0) champignon->nbChampignon = 0;
+        } else {
+            champignon->nbChampignon += champignon->croissance;
+            if (champignon->nbChampignon > T->salle.capaciteMax) {
+                champignon->nbChampignon = T->salle.capaciteMax;
+            }
+        }
+    }
+
+    if (strcmp(T->salle.typePiece, "Pucerons") == 0) {
+        Puceron *puceron = &T->salle.puceron;
+
+        if (puceron->sante > 0) {
+            puceron->miellat_produit += puceron->nbPuceron;
+            puceron->nbPuceron++;
+            if (puceron->nbPuceron > T->salle.capaciteMax) {
+                puceron->nbPuceron = T->salle.capaciteMax;
+            }
+        } else {
+            puceron->nbPuceron -= 1;
+            if (puceron->nbPuceron < 0) puceron->nbPuceron = 0;
+        }
+    }
+
+    gestionElevage(T->filsG);
+    gestionElevage(T->filsD);
+}
 
 
 /**********************************************************************************************************************************************************************************/
@@ -433,10 +473,10 @@ Piece initPieceAgriculture(int id, Ressource *ressourceNecessaire, int quantiteR
     piece.typePiece = typePiece;
     piece.quantiteRessourceNecessaire = quantiteRNecessaire;
     piece.etat = 1;
-    piece.champigon = champignon;
+    piece.champignon = champignon;
     piece.puceron = puceron;
-    piece.nbChampignon = 0;
-    piece.nbPuceron = 0;
+    piece.champignon.nbChampignon = 0;
+    piece.puceron.nbPuceron = 0;
     return piece;
 }
 
