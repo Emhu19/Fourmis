@@ -187,6 +187,9 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP, ListFourmi* L
 
 void simulation() {
 
+
+
+    srand(time(NULL));
     logo_1();
     printf("\033c");
     int emplacement = logo_3();
