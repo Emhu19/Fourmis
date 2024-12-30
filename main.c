@@ -178,7 +178,7 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP, ListFourmi* L
 
     // Ligne de séparation
     printf("\n========================================================================\n");
-    compter_Liste_fourmi(LF);
+    // compter_Liste_fourmi(LF);
 
 
     trouver_id_predateurs_loin(LP);
@@ -215,16 +215,16 @@ void simulation() {
 
     ArbrePiece *T;
     Piece A;
-    Maladie maladie1;
-    Maladie maladie2;
-    Maladie maladie3;
-    ListMaladie *maladies;
-    maladie1 = initMaladie(1, "maladieFaim");
-    maladie2 = initMaladie(2, "maladieSoif");
-    maladie3 = initMaladie(3, "maladieFaimEtSoif");
-    maladies = initListMaladie(maladie1);
-    maladies = ajouterMaladie(maladies, maladie2);
-    maladies = ajouterMaladie(maladies, maladie3);
+    // Maladie maladie1;
+    // Maladie maladie2;
+    // Maladie maladie3;
+    // ListMaladie *maladies;
+    // maladie1 = initMaladie(1, "maladieFaim");
+    // maladie2 = initMaladie(2, "maladieSoif");
+    // maladie3 = initMaladie(3, "maladieFaimEtSoif");
+    // maladies = initListMaladie(maladie1);
+    // maladies = ajouterMaladie(maladies, maladie2);
+    // maladies = ajouterMaladie(maladies, maladie3);
     ListRessource *ressources;
     ListPiece *pieces;
     Puceron puceron;
@@ -284,7 +284,7 @@ void simulation() {
         population.fourmis = cycle_jour(&population, &contexte);
         journee(contexte.map, contexte.meteo, contexte.temps, &predateurs, population.fourmis);
         // afficher_envi(environnement);
-        cycleFourmiliere(ressources, T, pieces, population.fourmis);
+        // cycleFourmiliere(ressources, T, pieces, population.fourmis);
         // population.fourmis = genererMaladie(population.fourmis, maladies);
         // effetMaladie(population.fourmis);
         // soignerMaladie(population.fourmis);

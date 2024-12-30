@@ -37,6 +37,9 @@ void initialiserFourmi(Fourmi* fourmi, const FourmiTemplate* template) {
     fourmi->age = 1;
     fourmi->coord_x = 12;
     fourmi->coord_y = 12;
+    fourmi->estMalade = false;
+    fourmi->maladie.id = 0;
+    fourmi->maladie.typeMaladie = "rien";
 
     fourmi->role_secondaire.estCultivatrice = template->estCultivatrice;
     fourmi->role_secondaire.estNageuse = template->estNageuse;
@@ -67,7 +70,6 @@ Fourmi* creationFourmi(int id, int espece_fourmi, bool sexe) {
     nouvelle_fourmi->sexe = sexe;
     initialiserFourmi(nouvelle_fourmi, &fourmi_templates[espece_fourmi - 1]);
 
-    strcpy(nouvelle_fourmi->maladie, "Rien");
     return nouvelle_fourmi;
 }
 
@@ -79,6 +81,6 @@ void afficher_fourmi(const Fourmi* fourmi) {
     printf("Faim : %d\n", fourmi->faim);
     printf("Eau : %d\n", fourmi->eau);
     printf("Santé : %s\n", fourmi->sante ? "En bonne santé" : "Morte");
-    printf("Maladie : %s\n", fourmi->maladie);
+    printf("Maladie : %s\n", fourmi->maladie.typeMaladie);
     printf("Coordonnées : (%d, %d)\n", fourmi->coord_x, fourmi->coord_y);
 }
