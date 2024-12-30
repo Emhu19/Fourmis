@@ -525,8 +525,8 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
     temp = ressources;
     tempP = pieces;
     tempF = fourmis;
-    while(fourmis->next != NULL){
-        if(fourmis->fourmi->inventaire != NULL){
+    while (tempF != NULL) {
+       if (tempF->fourmi != NULL && tempF->fourmi->inventaire != NULL) {
             quantiteSeve += tempF->fourmi->inventaire->seve;
             quantiteEau += tempF->fourmi->inventaire->eau;
             quantiteFeuille += tempF->fourmi->inventaire->feuilles;
