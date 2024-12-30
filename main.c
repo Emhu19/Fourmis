@@ -248,13 +248,13 @@ void simulation() {
     stockBois = initPieceStock(2, null, 0,  "stockBois", bois);
     pieces = initListP(stockBois);
     Piece stockRoche;
-    stockRoche = initPieceStock(3, bois, 5,  "stockRoche", roche);
+    stockRoche = initPieceStock(3, bois, 10,  "stockRoche", roche);
     pieces = ajoutePieceList(pieces, stockRoche);
     Piece stockFeuille;
-    stockFeuille = initPieceStock(4, roche, 5, "sFeuille", feuille);
+    stockFeuille = initPieceStock(4, roche, 10, "sFeuille", feuille);
     pieces = ajoutePieceList(pieces, stockFeuille);
     Piece stockNourriture;
-    stockNourriture = initPieceStock(5, feuille, 5, "sNourriture", nourriture);
+    stockNourriture = initPieceStock(5, feuille, 10, "sNourriture", nourriture);
     pieces = ajoutePieceList(pieces, stockNourriture);
     puceron.miellat_produit = 1;
     puceron.sante = 10;
@@ -284,9 +284,9 @@ void simulation() {
         journee(contexte.map, contexte.meteo, contexte.temps, &predateurs, population.fourmis);
         // afficher_envi(environnement);
         cycleFourmiliere(ressources, T, pieces, population.fourmis);
-        population.fourmis = genererMaladie(population.fourmis, maladies);
-        effetMaladie(population.fourmis);
-        soignerMaladie(population.fourmis);
+        // population.fourmis = genererMaladie(population.fourmis, maladies);
+        // effetMaladie(population.fourmis);
+        // soignerMaladie(population.fourmis);
         getchar();
 
     }

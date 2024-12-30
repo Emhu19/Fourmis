@@ -94,7 +94,7 @@ void detruitPiece(ArbrePiece *T){
                 printf("la salle %s est détruite c'est dommage\n", T->salle.typePiece);
                 T->salle.etat = 0;
                 if(T->salle.ressourceStock != NULL){
-                    T->salle.ressourceStock->quantiteMax -= 10;
+                    T->salle.ressourceStock->quantiteMax -= 25;
                     T->salle.ressourceStock->quantiteRessource -= T->salle.stock;
                     T->salle.stock = 0;
                 }
@@ -409,12 +409,12 @@ Piece initPieceStock(int id, Ressource *ressourceNecessaire, int quantiteRNecess
     piece.ressourceNecessaire = ressourceNecessaire;
     piece.ressourceStock = ressourceStock;
     piece.stock = 0;
-    piece.vie = 500;
+    piece.vie = 1000;
     piece.typePiece = typePiece;
     piece.capaciteMax = 0;
     piece.quantiteRessourceNecessaire = quantiteRNecessaire;
     piece.etat = 1;
-    piece.capaciteMax = 10;
+    piece.capaciteMax = 25;
     return piece;
 }
 
@@ -559,7 +559,7 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
             }
             if(tempP->piece.quantiteRessourceNecessaire <= tempP->piece.ressourceNecessaire->quantiteRessource){
                 *quantiteRetire = tempP->piece.quantiteRessourceNecessaire;
-                temp->ressource->quantiteMax += 10;
+                temp->ressource->quantiteMax += 25;
                 T = retireStock(T, quantiteRetire, tempP->piece.ressourceNecessaire);
                 tempP->piece.ressourceNecessaire->quantiteRessource -= tempP->piece.quantiteRessourceNecessaire;
                 ajoutePiece(T, tempP->piece);
@@ -608,7 +608,7 @@ ListFourmi *genererMaladie(ListFourmi *fourmis, ListMaladie *maladies){
     tempM = maladies;
     while(tempF->next != NULL){
         tempM = maladies;
-        malade = rand()%10;
+        malade = rand()%100;
         while(tempM != NULL){
             if(tempM->maladie.id == malade){
                 tempF->fourmi->estMalade = true;
@@ -653,6 +653,8 @@ void soignerMaladie(ListFourmi *fourmis){
             if(tempF->fourmi->maladie.id == malade){
                 tempF->fourmi->estMalade = false;
                 tempF->fourmi->maladie = soigne;
+                tempF->fourmi->besoin_faim = 1;
+                tempF->fourmi->besoin_eau = 1;
             }
         }
         tempF = tempF->next;
