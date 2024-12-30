@@ -291,7 +291,7 @@ void simulation() {
         // population.fourmis = genererMaladie(population.fourmis, maladies);
         // effetMaladie(population.fourmis);
         // soignerMaladie(population.fourmis);
-        getchar();
+        // getchar();
 
     }
 

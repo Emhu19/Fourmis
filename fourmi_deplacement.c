@@ -50,7 +50,7 @@ void fourmi_go_base(Fourmi* fourmi, Environnement* map){
     // maps.chunks[i][j].type == 1
     for(int i = 0; i < nombre_deplacement_jour; i++){
         if(fourmi_est_dans_base(*fourmi)) return;
-        map->chunks[fourmi->coord_x][fourmi->coord_y].pheromones++;
+        // map->chunks[fourmi->coord_x][fourmi->coord_y].pheromones++;
         if (fourmi->coord_x != BASE_COOR_X) {
             fourmi->coord_x += (fourmi->coord_x > BASE_COOR_X) ? -1 : 1;
         }
