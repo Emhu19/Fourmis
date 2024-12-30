@@ -259,7 +259,7 @@ void simulation() {
         population.fourmis = cycle_jour(&population, &contexte);
         journee(contexte.map, contexte.meteo, contexte.temps, &predateurs, population.fourmis);
         // afficher_envi(environnement);
-        cycleFourmiliere(ressources, T, pieces);
+        cycleFourmiliere(ressources, T, pieces, population.fourmis);
         getchar();
 
     }

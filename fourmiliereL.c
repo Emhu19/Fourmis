@@ -101,8 +101,8 @@ void detruitPiece(ArbrePiece *T){
                 if(T->salle.ressourceStock != NULL){
                     T->salle.ressourceStock->quantiteMax -= 10;
                     T->salle.ressourceStock->quantiteRessource -= T->salle.stock;
+                    T->salle.stock = 0;
                 }
-                T->salle.stock = 0;
             }
         }
         detruitPiece(T->filsD);
@@ -506,10 +506,16 @@ void afficheStock(ArbrePiece *T){
     }
 }
 
-void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *pieces){
+void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *pieces, ListFourmi *fourmis){
     detruitPiece(T);
     ListRessource *temp;
     ListPiece *tempP;
+    ListFourmi *tempF;
+    int quantiteSeve = 0;
+    int quantiteEau = 0;
+    int quantiteBois = 0;
+    int quantiteFeuille = 0;
+    int quantiteNourriture = 0;
     int *quantiteAjout;
     quantiteAjout = malloc(sizeof(int));
     *quantiteAjout = 1;
@@ -518,6 +524,25 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
     *quantiteRetire = 1;
     temp = ressources;
     tempP = pieces;
+    tempF = fourmis;
+    while(fourmis->next != NULL){
+        quantiteSeve += tempF->fourmi->inventaire->seve;
+        quantiteEau += tempF->fourmi->inventaire->eau;
+        quantiteFeuille += tempF->fourmi->inventaire->feuilles;
+        quantiteBois += tempF->fourmi->inventaire->bois;
+        quantiteNourriture += tempF->fourmi->inventaire->nourriture;
+        tempF->fourmi->inventaire->seve = 0;
+        tempF->fourmi->inventaire->eau = 0;
+        tempF->fourmi->inventaire->feuilles = 0;
+        tempF->fourmi->inventaire->bois = 0;
+        tempF->fourmi->inventaire->nourriture = 0;
+        tempF = tempF->next;
+    }
+    printf("quantiteSeve : %d\n", quantiteSeve);
+    printf("quantiteEau : %d\n", quantiteEau);
+    printf("quantiteFeuille : %d\n", quantiteFeuille);
+    printf("quantiteBois : %d\n", quantiteBois);
+    printf("quantiteNourriture : %d\n", quantiteNourriture);
     while(temp != NULL){
         if(temp->ressource->quantiteRessource < temp->ressource->quantiteMax){
             temp->ressource->quantiteRessource++;

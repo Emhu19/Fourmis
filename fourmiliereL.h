@@ -96,7 +96,7 @@ ListRessource *initListR(Ressource *ressource);
 ListRessource *ajouteRessource(ListRessource *ressources, Ressource *ressource);
 ListPiece *initListP(Piece piece);
 ListPiece *ajoutePieceList(ListPiece *pieces, Piece piece);
-void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *pieces);
+void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *pieces, ListFourmi *fourmis);
 void mort_de_la_fourmiliere(int raison);
 void afficheStock(ArbrePiece *T);
 
