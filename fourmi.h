@@ -25,6 +25,18 @@ typedef enum {
     ELEVEUR
 } RolePrincipal;
 
+typedef struct ListMaladie ListMaladie;
+
+typedef struct{
+    char *typeMaladie;
+    int id;
+}Maladie;
+
+struct ListMaladie{
+    Maladie maladie;
+    ListMaladie *suivant;
+};
+
 typedef struct {
    bool estCultivatrice; //Atta et Acromyrmex
    bool estNageuse; //Polyrhachis
@@ -54,7 +66,8 @@ typedef struct {
     int besoin_faim;
     int besoin_eau;
     int sante;
-    char maladie[MAX_CHAR];
+    Maladie maladie;
+    bool estMalade;
     float cgt;
     int coord_x;
     int coord_y;

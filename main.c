@@ -214,6 +214,16 @@ void simulation() {
 
     ArbrePiece *T;
     Piece A;
+    Maladie maladie1;
+    Maladie maladie2;
+    Maladie maladie3;
+    ListMaladie *maladies;
+    maladie1 = initMaladie(1, "maladieFaim");
+    maladie2 = initMaladie(2, "maladieSoif");
+    maladie3 = initMaladie(3, "maladieFaimEtSoif");
+    maladies = initListMaladie(maladie1);
+    maladies = ajouterMaladie(maladies, maladie2);
+    maladies = ajouterMaladie(maladies, maladie3);
     ListRessource *ressources;
     ListPiece *pieces;
     Puceron puceron;
@@ -274,6 +284,9 @@ void simulation() {
         journee(contexte.map, contexte.meteo, contexte.temps, &predateurs, population.fourmis);
         // afficher_envi(environnement);
         cycleFourmiliere(ressources, T, pieces, population.fourmis);
+        population.fourmis = genererMaladie(population.fourmis, maladies);
+        effetMaladie(population.fourmis);
+        soignerMaladie(population.fourmis);
         getchar();
 
     }

@@ -18,11 +18,6 @@ ArbrePiece *init(Piece e){
     return result;
 }
 
-typedef struct{
-    char *typeMaladie;
-    int id;
-}Maladie;
-
 int puiss2(int n){
     int result = 1;
     for(int i = 0; i<n; i++){
@@ -578,6 +573,90 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
     afficher_titre("Centre de la Terre");
     free(quantiteAjout);
     free(quantiteRetire);
+}
+
+Maladie initMaladie(int id, char *typeMaladie){
+    Maladie result;
+    result.id = id;
+    result.typeMaladie = typeMaladie;
+    return result;
+}
+
+ListMaladie *initListMaladie(Maladie maladie){
+    ListMaladie *result;
+    result = malloc(sizeof(ListMaladie *));
+    result->maladie = maladie;
+    result->suivant = NULL;
+    return result;
+}
+
+ListMaladie *ajouterMaladie(ListMaladie *maladies, Maladie maladie){
+    ListMaladie *temp;
+    temp = malloc(sizeof(ListMaladie *));
+    temp->maladie = maladie;
+    temp->suivant = maladies;
+    return temp;
+}
+
+ListFourmi *genererMaladie(ListFourmi *fourmis, ListMaladie *maladies){
+    int malade;
+    ListFourmi *tempF;
+    ListFourmi *result;
+    tempF = fourmis;
+    result = tempF;
+    ListMaladie *tempM;
+    tempM = maladies;
+    while(tempF->next != NULL){
+        tempM = maladies;
+        malade = rand()%10;
+        while(tempM != NULL){
+            if(tempM->maladie.id == malade){
+                tempF->fourmi->estMalade = true;
+                tempF->fourmi->maladie = tempM->maladie;
+            }
+            tempM = tempM->suivant;
+        }
+        tempF = tempF->next;
+    }
+    return result;
+}
+
+void effetMaladie(ListFourmi *fourmis){
+    ListFourmi *tempF;
+    tempF = fourmis;
+    while(tempF->next != NULL){
+        if(tempF->fourmi->estMalade == true){
+            if(tempF->fourmi->maladie.id == 1){
+                tempF->fourmi->besoin_faim += 2;
+            }
+            if(tempF->fourmi->maladie.id == 2){
+                tempF->fourmi->besoin_eau += 2;
+            }
+            if(tempF->fourmi->maladie.id >= 3){
+                tempF->fourmi->besoin_faim += 2;
+                tempF->fourmi->besoin_eau += 2;
+            }
+        }
+        tempF = tempF->next;
+    }
+}
+
+void soignerMaladie(ListFourmi *fourmis){
+    int malade;
+    Maladie soigne;
+    soigne = initMaladie(0, "rien");
+    ListFourmi *tempF;
+    tempF = fourmis;
+    while(tempF->next != NULL){
+        malade = rand()%10;
+        if(tempF->fourmi->estMalade){
+            if(tempF->fourmi->maladie.id == malade){
+                tempF->fourmi->estMalade = false;
+                tempF->fourmi->maladie = soigne;
+            }
+        }
+        tempF = tempF->next;
+    }
 }
 
 // int main(){
