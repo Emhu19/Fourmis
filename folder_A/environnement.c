@@ -570,21 +570,21 @@ Meteo init_meteo(Environnement E) {
 
     switch (E.biome) {
         case 0: // Forêt
-            m.proba_precipitation = 10;
+            m.proba_precipitation = 20;
             m.force_precipitation = 15;
             m.temperature_moyenne = 15.0;
             m.variation_temperature = 5.0;
             break;
 
         case 1: // Désert
-            m.proba_precipitation = 1;
+            m.proba_precipitation = 4;
             m.force_precipitation = 5;
             m.temperature_moyenne = 35.0;
             m.variation_temperature = 5.0;
             break;
 
         case 2: // Plaine
-            m.proba_precipitation = 10;
+            m.proba_precipitation = 15;
             m.force_precipitation = 10;
             m.temperature_moyenne = 20.0;
             m.variation_temperature = 4.5;
@@ -598,9 +598,9 @@ Meteo init_meteo(Environnement E) {
             break;
 
         case 4: // Ville
-            m.proba_precipitation = 10;
-            m.force_precipitation = 20;
-            m.temperature_moyenne = 18.0;
+            m.proba_precipitation = 15;
+            m.force_precipitation = 10;
+            m.temperature_moyenne = 21.0;
             m.variation_temperature = 3.0;
             break;
 
@@ -612,21 +612,21 @@ Meteo init_meteo(Environnement E) {
             break;
 
         case 6: // Taïga
-            m.proba_precipitation = 20;
+            m.proba_precipitation = 15;
             m.force_precipitation = 15;
             m.temperature_moyenne = 0.0;
             m.variation_temperature = 5.0;
             break;
 
         case 7: // Montagne
-            m.proba_precipitation = 15;
+            m.proba_precipitation = 20;
             m.force_precipitation = 15;
             m.temperature_moyenne = 5.0;
             m.variation_temperature = 4.5;
             break;
 
         case 8: // Haute montagne
-            m.proba_precipitation = 15;
+            m.proba_precipitation = 20;
             m.force_precipitation = 20;
             m.temperature_moyenne = -5.0;
             m.variation_temperature = 5.0;
@@ -640,7 +640,7 @@ Meteo init_meteo(Environnement E) {
             break;
 
         case 9: // mangrove
-            m.proba_precipitation = 10;
+            m.proba_precipitation = 15;
             m.force_precipitation = 10;
             m.temperature_moyenne = 25.0;
             m.variation_temperature = 5.0;

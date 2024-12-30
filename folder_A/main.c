@@ -64,6 +64,26 @@ void supp_predateurs_mort(Predateur** LP, Environnement* E){
 }
 
 
+void supp_fourmis_mort(ListFourmi* LF, Environnement* E){
+    if (LF == NULL || LF->fourmi == NULL){
+        return;
+    }
+    ListFourmi* copie = LF;
+    ListFourmi* prev = NULL;
+    while(copie != NULL){
+        if(copie->fourmi == NULL || copie->fourmi->sante <= 0){
+            if (prev != NULL) {
+                prev->next = copie->next; // Sauter l'élément à supprimer
+            }
+            E->chunks[copie->fourmi->coord_x][copie->fourmi->coord_y].nourriture = 10;
+            free(copie->fourmi); // Libérer la mémoire
+        }
+        prev = copie;       // Mettre à jour le pointeur précédent
+        copie = copie->next; // Avancer au suivant
+    }
+}
+
+
 void combat(Predateur** LP, Environnement* E, ListFourmi* LF){
     if (LP == NULL || LF == NULL){
         return;
@@ -254,6 +274,7 @@ void simulation() {
     logo_1();
     printf("\033c");
     int emplacement = logo_3();
+    emplacement --;
     Environnement environnement = genererEnvironnement(emplacement);
     printf("\033c");
     int espece = logo_2();
