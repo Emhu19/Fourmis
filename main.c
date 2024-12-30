@@ -190,7 +190,7 @@ void simulation() {
     logo_1();
     printf("\033c");
     int emplacement = logo_3();
-    emplacement --;
+    //emplacement --;
     Environnement environnement = genererEnvironnement(emplacement);
     printf("\033c");
     int espece = logo_2();

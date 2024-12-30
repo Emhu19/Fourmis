@@ -207,7 +207,7 @@ int logo_2(){
     int choix;
     do{
         scanf("%d", &choix);
-    }while(!((choix>= 1 && choix<9) || choix == 1969));
+    }while(!((choix>= 1 && choix<=10) || choix == 1969));
     getchar();
     return choix;
 }
@@ -219,7 +219,7 @@ int logo_3(){
     int choix;
     do{
         scanf("%d", &choix);
-    }while(!((choix>= 0 && choix<10) || choix == 1969));
+    }while(!((choix>= 0 && choix<=10) || choix == 1969));
 
     getchar();
     return choix;
