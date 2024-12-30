@@ -18,11 +18,6 @@ ArbrePiece *init(Piece e){
     return result;
 }
 
-typedef struct{
-    char *typeMaladie;
-    int id;
-}Maladie;
-
 int puiss2(int n){
     int result = 1;
     for(int i = 0; i<n; i++){
@@ -99,10 +94,10 @@ void detruitPiece(ArbrePiece *T){
                 printf("la salle %s est détruite c'est dommage\n", T->salle.typePiece);
                 T->salle.etat = 0;
                 if(T->salle.ressourceStock != NULL){
-                    T->salle.ressourceStock->quantiteMax -= 10;
+                    T->salle.ressourceStock->quantiteMax -= 25;
                     T->salle.ressourceStock->quantiteRessource -= T->salle.stock;
+                    T->salle.stock = 0;
                 }
-                T->salle.stock = 0;
             }
         }
         detruitPiece(T->filsD);
@@ -132,7 +127,7 @@ ArbrePiece *retireStock(ArbrePiece *T, int *quantiteRetire, Ressource *ressource
     if(T == NULL){
         return NULL;
     }
-    if(T->salle.ressourceStock == ressource && T->salle.etat != 0){
+    if(T->salle.ressourceStock == ressource && T->salle.etat != 0 && T->salle.stock >= *quantiteRetire){
         T->salle.stock -= *quantiteRetire;
         *quantiteRetire -= *quantiteRetire;
         return T;
@@ -312,66 +307,45 @@ void affiche_auto(ArbrePiece *piece){
         }
         else if(piece->taille== 2){
             if(piece->filsD != NULL){
-                if(piece->salle.etat != 0){
+                 if(piece->salle.etat != 0 && piece->filsD->salle.etat != 0){
                     afficher_connexion_double();
                     afficher_salles_alignees(piece->salle.typePiece, piece->filsD->salle.typePiece);
-
                 }
-                else if(piece->filsD->salle.etat != 0){
+                else if(piece->filsD->salle.etat == 0 && piece->salle.etat != 0){
                     afficher_connexion_simple();
+                    afficher_salle_simple(piece->salle.typePiece);
+                }
+                else if(piece->filsD->salle.etat != 0 && piece->salle.etat == 0){
                     afficher_salle_simple(piece->filsD->salle.typePiece);
                 }
             }
             else if(piece->filsG != NULL){
-                if(piece->salle.etat != 0){
+                if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0){
                     afficher_connexion_double();
                     afficher_salles_alignees(piece->salle.typePiece, piece->filsG->salle.typePiece);
-
                 }
-                else if(piece->filsG->salle.etat != 0){
+                else if(piece->filsG->salle.etat == 0 && piece->salle.etat != 0){
+                    afficher_connexion_simple();
+                    afficher_salle_simple(piece->salle.typePiece);
+                }
+                else if(piece->filsG->salle.etat != 0 && piece->salle.etat == 0){
                     afficher_connexion_simple();
                     afficher_salle_simple(piece->filsG->salle.typePiece);
-
                 }
             }
         }
         else if(piece->taille == 3){
-            if(piece->salle.etat != 0){
-                afficher_connexion_triple();
-                afficher_salles_alignees_3(piece->salle.typePiece, piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
-
-            }
-            else if(piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
-                afficher_connexion_simple();
-                afficher_salle_simple(piece->filsG->salle.typePiece);
-
-            }
-            else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat == 0){
-                afficher_connexion_simple();
-                afficher_salle_simple(piece->filsD->salle.typePiece);
-
-            }
-            else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat != 0){
-                afficher_connexion_double();
-                afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
-
-            }
-        }
-        else{
             if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0 && piece->filsD->salle.etat != 0){
                 afficher_connexion_triple();
                 afficher_salles_alignees_3(piece->salle.typePiece, piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
-
             }
             else if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
                 afficher_connexion_double();
                 afficher_salles_alignees(piece->salle.typePiece, piece->filsG->salle.typePiece);
-
             }
             else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat != 0){
                 afficher_connexion_double();
                 afficher_salles_alignees(piece->salle.typePiece, piece->filsD->salle.typePiece);
-
             }
             else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat == 0){
                 afficher_connexion_simple();
@@ -388,7 +362,36 @@ void affiche_auto(ArbrePiece *piece){
             else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat != 0){
                 afficher_connexion_double();
                 afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
-
+            }
+        }
+        else{
+            if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0 && piece->filsD->salle.etat != 0){
+                afficher_connexion_triple();
+                afficher_salles_alignees_3(piece->salle.typePiece, piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
+            }
+            else if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
+                afficher_connexion_double();
+                afficher_salles_alignees(piece->salle.typePiece, piece->filsG->salle.typePiece);
+            }
+            else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat != 0){
+                afficher_connexion_double();
+                afficher_salles_alignees(piece->salle.typePiece, piece->filsD->salle.typePiece);
+            }
+            else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat == 0){
+                afficher_connexion_simple();
+                afficher_salle_simple(piece->salle.typePiece);
+            }
+            else if(piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
+                afficher_connexion_simple();
+                afficher_salle_simple(piece->filsG->salle.typePiece);
+            }
+            else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat == 0){
+                afficher_connexion_simple();
+                afficher_salle_simple(piece->filsD->salle.typePiece);
+            }
+            else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat != 0){
+                afficher_connexion_double();
+                afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
             }
             affiche_auto(piece->filsG->filsG);
             affiche_auto(piece->filsG->filsD);
@@ -414,12 +417,12 @@ Piece initPieceStock(int id, Ressource *ressourceNecessaire, int quantiteRNecess
     piece.ressourceNecessaire = ressourceNecessaire;
     piece.ressourceStock = ressourceStock;
     piece.stock = 0;
-    piece.vie = 500;
+    piece.vie = 1000;
     piece.typePiece = typePiece;
-    piece.capaciteMax = 10;
+    piece.capaciteMax = 0;
     piece.quantiteRessourceNecessaire = quantiteRNecessaire;
     piece.etat = 1;
-    piece.capaciteMax = 10;
+    piece.capaciteMax = 25;
     return piece;
 }
 
@@ -506,10 +509,16 @@ void afficheStock(ArbrePiece *T){
     }
 }
 
-void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *pieces){
+void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *pieces, ListFourmi *fourmis){
     detruitPiece(T);
     ListRessource *temp;
     ListPiece *tempP;
+    ListFourmi *tempF;
+    int quantiteSeve = 0;
+    int quantiteEau = 0;
+    int quantiteBois = 0;
+    int quantiteFeuille = 0;
+    int quantiteNourriture = 0;
     int *quantiteAjout;
     quantiteAjout = malloc(sizeof(int));
     *quantiteAjout = 1;
@@ -518,6 +527,22 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
     *quantiteRetire = 1;
     temp = ressources;
     tempP = pieces;
+    tempF = fourmis;
+    while (tempF != NULL) {
+       if (tempF->fourmi != NULL && tempF->fourmi->inventaire != NULL) {
+            quantiteSeve += tempF->fourmi->inventaire->seve;
+            quantiteEau += tempF->fourmi->inventaire->eau;
+            quantiteFeuille += tempF->fourmi->inventaire->feuilles;
+            quantiteBois += tempF->fourmi->inventaire->bois;
+            quantiteNourriture += tempF->fourmi->inventaire->nourriture;
+            tempF->fourmi->inventaire->seve = 0;
+            tempF->fourmi->inventaire->eau = 0;
+            tempF->fourmi->inventaire->feuilles = 0;
+            tempF->fourmi->inventaire->bois = 0;
+            tempF->fourmi->inventaire->nourriture = 0;
+        }
+        tempF = tempF->next;
+    }
     while(temp != NULL){
         if(temp->ressource->quantiteRessource < temp->ressource->quantiteMax){
             temp->ressource->quantiteRessource++;
@@ -526,6 +551,7 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
         }
         temp = temp->suivant;
     }
+    afficheStock(T);
     temp = ressources;
     while(temp != NULL){
         if(temp->ressource->quantiteRessource >= temp->ressource->quantiteMax){
@@ -538,11 +564,13 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
                     tempP = tempP->suivant;
                 }
             }
-            *quantiteRetire = tempP->piece.quantiteRessourceNecessaire;
-            temp->ressource->quantiteMax += 10;
-            T = retireStock(T, quantiteRetire, temp->ressource);
-            temp->ressource->quantiteRessource -= tempP->piece.quantiteRessourceNecessaire;
-            ajoutePiece(T, tempP->piece);
+            if(tempP->piece.quantiteRessourceNecessaire <= tempP->piece.ressourceNecessaire->quantiteRessource){
+                *quantiteRetire = tempP->piece.quantiteRessourceNecessaire;
+                temp->ressource->quantiteMax += 25;
+                T = retireStock(T, quantiteRetire, tempP->piece.ressourceNecessaire);
+                tempP->piece.ressourceNecessaire->quantiteRessource -= tempP->piece.quantiteRessourceNecessaire;
+                ajoutePiece(T, tempP->piece);
+            }
         }
         tempP = pieces;
         temp = temp->suivant;
@@ -552,6 +580,92 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
     afficher_titre("Centre de la Terre");
     free(quantiteAjout);
     free(quantiteRetire);
+}
+
+Maladie initMaladie(int id, char *typeMaladie){
+    Maladie result;
+    result.id = id;
+    result.typeMaladie = typeMaladie;
+    return result;
+}
+
+ListMaladie *initListMaladie(Maladie maladie){
+    ListMaladie *result;
+    result = malloc(sizeof(ListMaladie *));
+    result->maladie = maladie;
+    result->suivant = NULL;
+    return result;
+}
+
+ListMaladie *ajouterMaladie(ListMaladie *maladies, Maladie maladie){
+    ListMaladie *temp;
+    temp = malloc(sizeof(ListMaladie *));
+    temp->maladie = maladie;
+    temp->suivant = maladies;
+    return temp;
+}
+
+ListFourmi *genererMaladie(ListFourmi *fourmis, ListMaladie *maladies){
+    int malade;
+    ListFourmi *tempF;
+    ListFourmi *result;
+    tempF = fourmis;
+    result = tempF;
+    ListMaladie *tempM;
+    tempM = maladies;
+    while(tempF->next != NULL){
+        tempM = maladies;
+        malade = rand()%100;
+        while(tempM != NULL){
+            if(tempM->maladie.id == malade){
+                tempF->fourmi->estMalade = true;
+                tempF->fourmi->maladie = tempM->maladie;
+            }
+            tempM = tempM->suivant;
+        }
+        tempF = tempF->next;
+    }
+    return result;
+}
+
+void effetMaladie(ListFourmi *fourmis){
+    ListFourmi *tempF;
+    tempF = fourmis;
+    while(tempF->next != NULL){
+        if(tempF->fourmi->estMalade == true){
+            if(tempF->fourmi->maladie.id == 1){
+                tempF->fourmi->besoin_faim += 2;
+            }
+            if(tempF->fourmi->maladie.id == 2){
+                tempF->fourmi->besoin_eau += 2;
+            }
+            if(tempF->fourmi->maladie.id >= 3){
+                tempF->fourmi->besoin_faim += 2;
+                tempF->fourmi->besoin_eau += 2;
+            }
+        }
+        tempF = tempF->next;
+    }
+}
+
+void soignerMaladie(ListFourmi *fourmis){
+    int malade;
+    Maladie soigne;
+    soigne = initMaladie(0, "rien");
+    ListFourmi *tempF;
+    tempF = fourmis;
+    while(tempF->next != NULL){
+        malade = rand()%10;
+        if(tempF->fourmi->estMalade){
+            if(tempF->fourmi->maladie.id == malade){
+                tempF->fourmi->estMalade = false;
+                tempF->fourmi->maladie = soigne;
+                tempF->fourmi->besoin_faim = 1;
+                tempF->fourmi->besoin_eau = 1;
+            }
+        }
+        tempF = tempF->next;
+    }
 }
 
 // int main(){

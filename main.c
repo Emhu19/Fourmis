@@ -178,6 +178,7 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP, ListFourmi* L
 
     // Ligne de séparation
     printf("\n========================================================================\n");
+    compter_Liste_fourmi(LF);
 
 
     trouver_id_predateurs_loin(LP);
@@ -217,37 +218,61 @@ void simulation() {
 
     ArbrePiece *T;
     Piece A;
+    Maladie maladie1;
+    Maladie maladie2;
+    Maladie maladie3;
+    ListMaladie *maladies;
+    maladie1 = initMaladie(1, "maladieFaim");
+    maladie2 = initMaladie(2, "maladieSoif");
+    maladie3 = initMaladie(3, "maladieFaimEtSoif");
+    maladies = initListMaladie(maladie1);
+    maladies = ajouterMaladie(maladies, maladie2);
+    maladies = ajouterMaladie(maladies, maladie3);
     ListRessource *ressources;
     ListPiece *pieces;
-    Ressource *metal;
-    Ressource *bois;
     Puceron puceron;
     Champignon champignon;
-    Piece stockBois;
-    Piece stockMetal;
     Piece stockPuce;
     Piece stockChampi;
+    Ressource *roche;
+    roche = initRessource(1, 0, "roche");
+    ressources = initListR(roche);
+    Ressource *bois;
+    bois = initRessource(2, 0, "bois");
+    ressources = ajouteRessource(ressources, bois);
+    Ressource *null;
+    null = initRessource(0, 0, "null");
+    Ressource *feuille;
+    feuille = initRessource(3, 0, "feuille");
+    ressources = ajouteRessource(ressources, feuille);
+    Ressource *nourriture;
+    nourriture = initRessource(4, 0, "nourriture");
+    ressources = ajouteRessource(ressources, nourriture);
+    Piece stockBois;
+    stockBois = initPieceStock(2, null, 0,  "stockBois", bois);
+    pieces = initListP(stockBois);
+    Piece stockRoche;
+    stockRoche = initPieceStock(3, bois, 10,  "stockRoche", roche);
+    pieces = ajoutePieceList(pieces, stockRoche);
+    Piece stockFeuille;
+    stockFeuille = initPieceStock(4, roche, 10, "sFeuille", feuille);
+    pieces = ajoutePieceList(pieces, stockFeuille);
+    Piece stockNourriture;
+    stockNourriture = initPieceStock(5, feuille, 10, "sNourriture", nourriture);
+    pieces = ajoutePieceList(pieces, stockNourriture);
     puceron.miellat_produit = 1;
     puceron.sante = 10;
     champignon.croissance = 1;
     champignon.parasite = false;
-    metal = initRessource(1, 10, "metal");
-    ressources = initListR(metal);
-    bois = initRessource(2, 10, "bois");
-    ressources = ajouteRessource(ressources, bois);
-    stockBois = initPieceStock(2, bois, 5,  "stockBois", bois);
-    pieces = initListP(stockBois);
-    stockMetal = initPieceStock(3, metal, 5,  "stockMetal", metal);
-    pieces = ajoutePieceList(pieces, stockMetal);
-    stockPuce = initPiecePuceron(4, bois, 1, "Pucerons", puceron);
-    stockChampi = initPieceChampignon(5, bois, 1, "Champignons", champignon);
+    stockPuce = initPiecePuceron(6, bois, 1, "Pucerons", puceron);
+    stockChampi = initPieceChampignon(7, bois, 1, "Champignons", champignon);
     pieces = ajoutePieceList(pieces, stockChampi);
     pieces = ajoutePieceList(pieces, stockPuce);
 
-    A = initPieceStock(1, bois, 0, "Principale", bois);
+    A = initPieceStock(1, bois, 0, "Principale", null);
     T = init(A);
-    T = ajoutePiece(T, stockChampi);
-    T = ajoutePiece(T, stockPuce);
+    // T = ajoutePiece(T, stockChampi);
+    // T = ajoutePiece(T, stockPuce);
 
     srand(time(NULL));
 
@@ -262,7 +287,10 @@ void simulation() {
         population.fourmis = cycle_jour(&population, &contexte);
         journee(contexte.map, contexte.meteo, contexte.temps, &predateurs, population.fourmis);
         // afficher_envi(environnement);
-        cycleFourmiliere(ressources, T, pieces);
+        cycleFourmiliere(ressources, T, pieces, population.fourmis);
+        // population.fourmis = genererMaladie(population.fourmis, maladies);
+        // effetMaladie(population.fourmis);
+        // soignerMaladie(population.fourmis);
         getchar();
 
     }
