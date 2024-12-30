@@ -7,6 +7,44 @@ bool fourmi_est_dans_base(Fourmi fourmi){
     return true;
 }
 
+void fourmi_go_coor_X_Y(Fourmi* fourmi, Environnement* map, int COOR_X, int COOR_Y){
+
+    for(int i = 0; i < 5; i++){
+        map->chunks[fourmi->coord_x][fourmi->coord_y].pheromones++;
+        if (fourmi->coord_x != COOR_X) {
+            fourmi->coord_x += (fourmi->coord_x > COOR_X) ? -1 : 1;
+        }
+        if (fourmi->coord_y != COOR_Y) {
+            fourmi->coord_y += (fourmi->coord_y > COOR_Y) ? -1 : 1;
+        }
+    }
+}
+
+void entendre_cri(ListFourmi* liste, Fourmi* fourmi, Environnement* map) {
+    int originX = fourmi->coord_x;
+    int originY = fourmi->coord_y;
+
+    for (int dx = -5; dx <= 5; dx++) {
+        for (int dy = -5; dy <= 5; dy++) {
+            int targetX = originX + dx;
+            int targetY = originY + dy;
+
+            if (targetX >= 0 && targetX < 25 &&
+                targetY >= 0 && targetY < 25) {
+
+                ListFourmi* current = liste;
+                while (current) {
+                    if(current->fourmi->coord_x  == originX && current->fourmi->coord_y == originY )
+                        fourmi_go_coor_X_Y(current->fourmi, map, originX, originY);
+                    current = current->next;
+                }
+            }
+        }
+    }
+
+}
+
+
 void fourmi_go_base(Fourmi* fourmi, Environnement* map){
     int nombre_deplacement_jour = 5;
     // maps.chunks[i][j].type == 1

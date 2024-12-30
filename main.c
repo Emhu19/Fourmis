@@ -270,7 +270,6 @@ void simulation() {
 
 }
 
-
 int main() {
     simulation();
     return 0;

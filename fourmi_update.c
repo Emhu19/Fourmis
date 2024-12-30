@@ -2,9 +2,21 @@
 
 
 void update_day_fourmi_inventaire(Fourmi* fourmi, Environnement* map){
-    if(map->chunks[fourmi->coord_x][fourmi->coord_y].nourriture > 0 && fourmi->inventaire->nourriture <= 5){
-        map->chunks[fourmi->coord_x][fourmi->coord_y].nourriture--;
+    if(map->chunks[fourmi->coord_x][fourmi->coord_y].p_miam > 0 && fourmi->inventaire->nourriture <= 5){
+        map->chunks[fourmi->coord_x][fourmi->coord_y].p_miam--;
         fourmi->inventaire->nourriture++;
+    }
+    if(map->chunks[fourmi->coord_x][fourmi->coord_y].p_bois > 0 && fourmi->inventaire->bois <= 5){
+        map->chunks[fourmi->coord_x][fourmi->coord_y].p_bois--;
+        fourmi->inventaire->bois++;
+    }
+    if(map->chunks[fourmi->coord_x][fourmi->coord_y].p_seve > 0 && fourmi->inventaire->seve <= 5){
+        map->chunks[fourmi->coord_x][fourmi->coord_y].p_seve--;
+        fourmi->inventaire->seve++;
+    }
+    if(map->chunks[fourmi->coord_x][fourmi->coord_y].p_feuilles > 0 && fourmi->inventaire->feuilles <= 5){
+        map->chunks[fourmi->coord_x][fourmi->coord_y].p_feuilles--;
+        fourmi->inventaire->feuilles++;
     }
 }
 
