@@ -42,6 +42,7 @@ void initialiserFourmi(Fourmi* fourmi, const FourmiTemplate* template) {
     fourmi->role_secondaire.estNageuse = template->estNageuse;
     fourmi->role_secondaire.estEleveur = template->estEleveur;
     fourmi->role_secondaire.estAustralienne = template->estAustralienne;
+    fourmi->inventaire = malloc(sizeof(Inventaire));
     fourmi->inventaire->eau = 0;
     fourmi->inventaire->nourriture = 0;
     fourmi->inventaire->feuilles = 0;
