@@ -42,6 +42,11 @@ void initialiserFourmi(Fourmi* fourmi, const FourmiTemplate* template) {
     fourmi->role_secondaire.estNageuse = template->estNageuse;
     fourmi->role_secondaire.estEleveur = template->estEleveur;
     fourmi->role_secondaire.estAustralienne = template->estAustralienne;
+    fourmi->inventaire->eau = 0;
+    fourmi->inventaire->nourriture = 0;
+    fourmi->inventaire->feuilles = 0;
+    fourmi->inventaire->bois = 0;
+    fourmi->inventaire->seve = 0;
 }
 
 Fourmi* creationFourmi(int id, int espece_fourmi, bool sexe) {
