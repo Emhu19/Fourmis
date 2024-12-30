@@ -526,16 +526,18 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
     tempP = pieces;
     tempF = fourmis;
     while(fourmis->next != NULL){
-        quantiteSeve += tempF->fourmi->inventaire->seve;
-        quantiteEau += tempF->fourmi->inventaire->eau;
-        quantiteFeuille += tempF->fourmi->inventaire->feuilles;
-        quantiteBois += tempF->fourmi->inventaire->bois;
-        quantiteNourriture += tempF->fourmi->inventaire->nourriture;
-        tempF->fourmi->inventaire->seve = 0;
-        tempF->fourmi->inventaire->eau = 0;
-        tempF->fourmi->inventaire->feuilles = 0;
-        tempF->fourmi->inventaire->bois = 0;
-        tempF->fourmi->inventaire->nourriture = 0;
+        if(fourmis->fourmi->inventaire != NULL){
+            quantiteSeve += tempF->fourmi->inventaire->seve;
+            quantiteEau += tempF->fourmi->inventaire->eau;
+            quantiteFeuille += tempF->fourmi->inventaire->feuilles;
+            quantiteBois += tempF->fourmi->inventaire->bois;
+            quantiteNourriture += tempF->fourmi->inventaire->nourriture;
+            tempF->fourmi->inventaire->seve = 0;
+            tempF->fourmi->inventaire->eau = 0;
+            tempF->fourmi->inventaire->feuilles = 0;
+            tempF->fourmi->inventaire->bois = 0;
+            tempF->fourmi->inventaire->nourriture = 0;
+        }
         tempF = tempF->next;
     }
     printf("quantiteSeve : %d\n", quantiteSeve);
