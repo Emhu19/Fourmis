@@ -178,6 +178,7 @@ void journee(Environnement* E, Meteo* M, Temps* T, Predateur** LP, ListFourmi* L
 
     // Ligne de séparation
     printf("\n========================================================================\n");
+    compter_Liste_fourmi(LF);
 
 
     trouver_id_predateurs_loin(LP);

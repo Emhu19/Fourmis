@@ -127,7 +127,7 @@ ArbrePiece *retireStock(ArbrePiece *T, int *quantiteRetire, Ressource *ressource
     if(T == NULL){
         return NULL;
     }
-    if(T->salle.ressourceStock == ressource && T->salle.etat != 0){
+    if(T->salle.ressourceStock == ressource && T->salle.etat != 0 && T->salle.stock >= *quantiteRetire){
         T->salle.stock -= *quantiteRetire;
         *quantiteRetire -= *quantiteRetire;
         return T;
@@ -307,66 +307,45 @@ void affiche_auto(ArbrePiece *piece){
         }
         else if(piece->taille== 2){
             if(piece->filsD != NULL){
-                if(piece->salle.etat != 0){
+                 if(piece->salle.etat != 0 && piece->filsD->salle.etat != 0){
                     afficher_connexion_double();
                     afficher_salles_alignees(piece->salle.typePiece, piece->filsD->salle.typePiece);
-
                 }
-                else if(piece->filsD->salle.etat != 0){
+                else if(piece->filsD->salle.etat == 0 && piece->salle.etat != 0){
                     afficher_connexion_simple();
+                    afficher_salle_simple(piece->salle.typePiece);
+                }
+                else if(piece->filsD->salle.etat != 0 && piece->salle.etat == 0){
                     afficher_salle_simple(piece->filsD->salle.typePiece);
                 }
             }
             else if(piece->filsG != NULL){
-                if(piece->salle.etat != 0){
+                if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0){
                     afficher_connexion_double();
                     afficher_salles_alignees(piece->salle.typePiece, piece->filsG->salle.typePiece);
-
                 }
-                else if(piece->filsG->salle.etat != 0){
+                else if(piece->filsG->salle.etat == 0 && piece->salle.etat != 0){
+                    afficher_connexion_simple();
+                    afficher_salle_simple(piece->salle.typePiece);
+                }
+                else if(piece->filsG->salle.etat != 0 && piece->salle.etat == 0){
                     afficher_connexion_simple();
                     afficher_salle_simple(piece->filsG->salle.typePiece);
-
                 }
             }
         }
         else if(piece->taille == 3){
-            if(piece->salle.etat != 0){
-                afficher_connexion_triple();
-                afficher_salles_alignees_3(piece->salle.typePiece, piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
-
-            }
-            else if(piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
-                afficher_connexion_simple();
-                afficher_salle_simple(piece->filsG->salle.typePiece);
-
-            }
-            else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat == 0){
-                afficher_connexion_simple();
-                afficher_salle_simple(piece->filsD->salle.typePiece);
-
-            }
-            else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat != 0){
-                afficher_connexion_double();
-                afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
-
-            }
-        }
-        else{
             if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0 && piece->filsD->salle.etat != 0){
                 afficher_connexion_triple();
                 afficher_salles_alignees_3(piece->salle.typePiece, piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
-
             }
             else if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
                 afficher_connexion_double();
                 afficher_salles_alignees(piece->salle.typePiece, piece->filsG->salle.typePiece);
-
             }
             else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat != 0){
                 afficher_connexion_double();
                 afficher_salles_alignees(piece->salle.typePiece, piece->filsD->salle.typePiece);
-
             }
             else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat == 0){
                 afficher_connexion_simple();
@@ -383,7 +362,36 @@ void affiche_auto(ArbrePiece *piece){
             else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat != 0){
                 afficher_connexion_double();
                 afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
-
+            }
+        }
+        else{
+            if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0 && piece->filsD->salle.etat != 0){
+                afficher_connexion_triple();
+                afficher_salles_alignees_3(piece->salle.typePiece, piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
+            }
+            else if(piece->salle.etat != 0 && piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
+                afficher_connexion_double();
+                afficher_salles_alignees(piece->salle.typePiece, piece->filsG->salle.typePiece);
+            }
+            else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat != 0){
+                afficher_connexion_double();
+                afficher_salles_alignees(piece->salle.typePiece, piece->filsD->salle.typePiece);
+            }
+            else if(piece->salle.etat != 0 && piece->filsG->salle.etat == 0 && piece->filsD->salle.etat == 0){
+                afficher_connexion_simple();
+                afficher_salle_simple(piece->salle.typePiece);
+            }
+            else if(piece->filsG->salle.etat != 0 && piece->filsD->salle.etat == 0){
+                afficher_connexion_simple();
+                afficher_salle_simple(piece->filsG->salle.typePiece);
+            }
+            else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat == 0){
+                afficher_connexion_simple();
+                afficher_salle_simple(piece->filsD->salle.typePiece);
+            }
+            else if(piece->filsD->salle.etat != 0 && piece->filsG->salle.etat != 0){
+                afficher_connexion_double();
+                afficher_salles_alignees(piece->filsG->salle.typePiece, piece->filsD->salle.typePiece);
             }
             affiche_auto(piece->filsG->filsG);
             affiche_auto(piece->filsG->filsD);
@@ -538,7 +546,6 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
     while(temp != NULL){
         if(temp->ressource->quantiteRessource < temp->ressource->quantiteMax){
             temp->ressource->quantiteRessource++;
-            printf("%s : %d\n", temp->ressource->typeRessource, temp->ressource->quantiteRessource);
             *quantiteAjout = 1;
             T = ajouteStock(T, quantiteAjout, temp->ressource);
         }
