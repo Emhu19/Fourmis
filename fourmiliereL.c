@@ -416,7 +416,7 @@ Piece initPieceStock(int id, Ressource *ressourceNecessaire, int quantiteRNecess
     piece.stock = 0;
     piece.vie = 500;
     piece.typePiece = typePiece;
-    piece.capaciteMax = 10;
+    piece.capaciteMax = 0;
     piece.quantiteRessourceNecessaire = quantiteRNecessaire;
     piece.etat = 1;
     piece.capaciteMax = 10;
@@ -540,19 +540,16 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
         }
         tempF = tempF->next;
     }
-    printf("quantiteSeve : %d\n", quantiteSeve);
-    printf("quantiteEau : %d\n", quantiteEau);
-    printf("quantiteFeuille : %d\n", quantiteFeuille);
-    printf("quantiteBois : %d\n", quantiteBois);
-    printf("quantiteNourriture : %d\n", quantiteNourriture);
     while(temp != NULL){
         if(temp->ressource->quantiteRessource < temp->ressource->quantiteMax){
             temp->ressource->quantiteRessource++;
+            printf("%s : %d\n", temp->ressource->typeRessource, temp->ressource->quantiteRessource);
             *quantiteAjout = 1;
             T = ajouteStock(T, quantiteAjout, temp->ressource);
         }
         temp = temp->suivant;
     }
+    afficheStock(T);
     temp = ressources;
     while(temp != NULL){
         if(temp->ressource->quantiteRessource >= temp->ressource->quantiteMax){
@@ -565,11 +562,13 @@ void cycleFourmiliere(ListRessource *ressources, ArbrePiece *T, ListPiece *piece
                     tempP = tempP->suivant;
                 }
             }
-            *quantiteRetire = tempP->piece.quantiteRessourceNecessaire;
-            temp->ressource->quantiteMax += 10;
-            T = retireStock(T, quantiteRetire, temp->ressource);
-            temp->ressource->quantiteRessource -= tempP->piece.quantiteRessourceNecessaire;
-            ajoutePiece(T, tempP->piece);
+            if(tempP->piece.quantiteRessourceNecessaire <= tempP->piece.ressourceNecessaire->quantiteRessource){
+                *quantiteRetire = tempP->piece.quantiteRessourceNecessaire;
+                temp->ressource->quantiteMax += 10;
+                T = retireStock(T, quantiteRetire, tempP->piece.ressourceNecessaire);
+                tempP->piece.ressourceNecessaire->quantiteRessource -= tempP->piece.quantiteRessourceNecessaire;
+                ajoutePiece(T, tempP->piece);
+            }
         }
         tempP = pieces;
         temp = temp->suivant;
