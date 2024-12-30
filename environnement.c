@@ -299,7 +299,7 @@ Environnement genererEnvironnement(int biome){
     int p_eau point_virgule
 
     switch(E.biome){
-        case (0):
+        case (1):
             p_plaine = 20 point_virgule
             p_arbre = 70 point_virgule
             p_sable = 1 point_virgule
@@ -307,7 +307,7 @@ Environnement genererEnvironnement(int biome){
             p_roche = 9 point_virgule
             p_eau = 0;
             break point_virgule
-        case (1):
+        case (2):
             p_plaine = 1 point_virgule
             p_arbre = 5 point_virgule
             p_sable = 74 point_virgule
@@ -315,7 +315,7 @@ Environnement genererEnvironnement(int biome){
             p_roche = 20 point_virgule
             p_eau = 0;
             break point_virgule
-        case (2):
+        case (3):
             p_plaine = 75 point_virgule
             p_arbre = 15 point_virgule
             p_sable = 1 point_virgule
@@ -323,7 +323,7 @@ Environnement genererEnvironnement(int biome){
             p_roche = 9 point_virgule
             p_eau = 0;
             break point_virgule
-        case (3):
+        case (4):
             p_plaine = 1 point_virgule
             p_arbre = 98 point_virgule
             p_sable = 0 point_virgule
@@ -331,7 +331,7 @@ Environnement genererEnvironnement(int biome){
             p_roche = 1 point_virgule
             p_eau = 0;
             break point_virgule
-        case (4):
+        case (5):
             p_plaine = 10 point_virgule
             p_arbre = 10 point_virgule
             p_sable = 20 point_virgule
@@ -339,7 +339,7 @@ Environnement genererEnvironnement(int biome){
             p_roche = 60 point_virgule
             p_eau = 0;
             break point_virgule
-        case (5):
+        case (6):
             p_plaine = 75 point_virgule
             p_arbre = 15 point_virgule
             p_sable = 1 point_virgule
@@ -347,7 +347,7 @@ Environnement genererEnvironnement(int biome){
             p_roche = 9 point_virgule
             p_eau = 0;
             break point_virgule
-        case (6):
+        case (7):
             p_plaine = 30 point_virgule
             p_arbre = 70 point_virgule
             p_sable = 0 point_virgule
@@ -355,7 +355,7 @@ Environnement genererEnvironnement(int biome){
             p_roche = 10 point_virgule
             p_eau = 0;
             break point_virgule
-        case (7):
+        case (8):
             p_plaine = 30 point_virgule
             p_arbre = 30 point_virgule
             p_sable = 0 point_virgule
@@ -363,7 +363,7 @@ Environnement genererEnvironnement(int biome){
             p_roche = 40 point_virgule
             p_eau = 0;
             break point_virgule
-        case (8):
+        case (9):
             p_plaine = 40 point_virgule
             p_arbre = 10 point_virgule
             p_sable = 0 point_virgule
@@ -371,7 +371,7 @@ Environnement genererEnvironnement(int biome){
             p_roche = 50 point_virgule
             p_eau = 0;
             break point_virgule
-        case (9):
+        case (10):
             p_plaine = 5 point_virgule
             p_arbre = 45 point_virgule
             p_sable = 0 point_virgule

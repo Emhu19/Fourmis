@@ -63,15 +63,27 @@ ArbrePiece *init(Piece e);
 int puiss2(int n);
 ArbrePiece *ajoutePiece(ArbrePiece *T, Piece R);
 void detruitPiece(ArbrePiece *T);
+
 void clear_terminal();
 void afficher_titre(const char *titre);
-void afficher_salle_simple(const char *nom);
+
 void afficher_salle_simple_milieu(const char *nom);
 void afficher_connexion_simple();
 void afficher_connexion_simple_milieu();
 void afficher_connexion_double();
+
+void afficher_salle_simple(const char *nom);
+void afficher_salle_simple_2(const char *nom);
+void afficher_salle_simple_3(const char *nom);
+void afficher_salle_simple_4(const char *nom);
+void afficher_salle_simple_5(const char *nom);
+void afficher_salle_simple_6(const char *nom);
 void afficher_salles_alignees(const char *nom1, const char *nom2);
 void afficher_salles_alignees_3(const char *nom1, const char *nom2, const char *nom3);
+void afficher_salles_alignees_4(const char *nom1, const char *nom2, const char *nom3, const char *nom4);
+void afficher_salles_alignees_5(const char *nom1, const char *nom2, const char *nom3, const char *nom4, const char *nom5);
+void afficher_salles_alignees_6(const char *nom1, const char *nom2, const char *nom3, const char *nom4, const char *nom5, const char *nom6);
+
 void afficher_fourmiliere_niveau(int niveau);
 void afficher_legende();
 void afficher_fourmiliere(int niveau, ListFourmi* liste, Reine* reine);
