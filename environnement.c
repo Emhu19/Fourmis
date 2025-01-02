@@ -607,7 +607,7 @@ Meteo init_meteo(Environnement E) {
         case 5: // Toundra
             m.proba_precipitation = 10;
             m.force_precipitation = 10;
-            m.temperature_moyenne = -10.0;
+            m.temperature_moyenne = 21.0;
             m.variation_temperature = 4.5;
             break;
 
