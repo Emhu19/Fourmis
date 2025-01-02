@@ -259,7 +259,7 @@ void simulation() {
     stockFeuille = initPieceStock(4, roche, 10, "sFeuille", feuille);
     pieces = ajoutePieceList(pieces, stockFeuille);
     Piece stockNourriture;
-    stockNourriture = initPieceStock(5, feuille, 10, "sNourriture", nourriture);
+    stockNourriture = initPieceStock(5, feuille, 10, "Nourriture", nourriture);
     pieces = ajoutePieceList(pieces, stockNourriture);
     puceron.miellat_produit = 1;
     puceron.sante = 10;
