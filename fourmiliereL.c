@@ -501,7 +501,7 @@ void afficheList(ListRessource *T){
 
 void afficheStock(ArbrePiece *T){
     if(T != NULL){
-        if(T->salle.etat != 0){
+        if(T->salle.etat != 0 && T->salle.id != 1){
             printf("%s contient %d %s\n", T->salle.typePiece, T->salle.stock, T->salle.ressourceStock->typeRessource);
         }
         afficheStock(T->filsG);
